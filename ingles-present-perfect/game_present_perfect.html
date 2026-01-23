@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Present Perfect: Chrono Bridge PRO</title>
+    <style>
+        body { margin: 0; padding: 0; overflow: hidden; background-color: #020617; }
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Poppins:wght@400;600&family=JetBrains+Mono:wght@500&display=swap');
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
+</head>
+<body>
+
+<script>
+    const COLORS = {
+        bg_dark: 0x020617,
+        bg_light: 0x0f172a,
+        primary: 0x14b8a6, // Teal
+        secondary: 0xfbbf24, // Gold
+        accent: 0x8b5cf6, // Purple
+        success: 0x10b981,
+        error: 0xef4444,
+        text_main: '#f1f5f9',
+        text_dim: '#94a3b8'
+    };
+
+    // --- ENHANCED QUESTION BANK WITH DETAILED FEEDBACK ---
+    const QUESTION_BANK = [
+        { 
+            q: "I ______ sushi twice in my life.", 
+            options: ["ate", "have eaten", "eaten"], 
+            correct: 1, 
+            clue: "Think about life experiences.",
+            success: "Correct! We use Present Perfect for life experiences when we don't specify the exact time.",
+            fail: "Wrong. 'Ate' is Past Simple (needs a specific time like yesterday). 'Have eaten' connects your past to your current experience."
+        },
+        { 
+            q: "She ______ her homework yet.", 
+            options: ["has finished", "hasn't finished", "didn't finish"], 
+            correct: 1, 
+            clue: "Look at the word 'YET'.",
+            success: "Perfect! 'Yet' is used in negative sentences and questions to show something hasn't happened until now.",
+            fail: "Incorrect. 'Yet' usually triggers a negative Present Perfect verb (hasn't/haven't)."
+        },
+        { 
+            q: "Where is Tom? He has ______ to the bank.", 
+            options: ["been", "gone", "going"], 
+            correct: 1, 
+            clue: "Is he here right now?",
+            success: "Exactly! 'Gone' means he is still at the bank or on his way. He is not here.",
+            fail: "Nope. 'Been' would mean he went and came back. Since we are asking 'Where is he?', he must be 'Gone'."
+        },
+        { 
+            q: "We have lived here ______ 2010.", 
+            options: ["for", "since", "ago"], 
+            correct: 1, 
+            clue: "Is 2010 a period or a point in time?",
+            success: "Correct! 'Since' is used for a specific starting point in time.",
+            fail: "Wrong. 'For' is for durations (e.g., 10 years). 'Since' is for points (e.g., 2010)."
+        },
+        { 
+            q: "They ______ already left.", 
+            options: ["have", "has", "are"], 
+            correct: 0, 
+            clue: "What auxiliary does 'They' use?",
+            success: "Right! 'They' is plural, so we use 'Have'.",
+            fail: "Error. 'Has' is only for 3rd person singular (He, She, It). 'They' always takes 'Have'."
+        },
+        { 
+            q: "I have ______ seen that movie.", 
+            options: ["just", "ever", "yet"], 
+            correct: 0, 
+            clue: "It happened a very short time ago.",
+            success: "Nice! 'Just' indicates an action that happened very recently.",
+            fail: "Incorrect. 'Ever' is for questions, and 'Yet' goes at the end. 'Just' fits perfectly here."
+        },
+        { 
+            q: "Shakespeare ______ many plays.", 
+            options: ["has written", "wrote", "written"], 
+            correct: 1, 
+            clue: "Is Shakespeare still alive?",
+            success: "Spot on! Shakespeare is dead, so his career is finished. We use Past Simple.",
+            fail: "Wrong. We use Present Perfect for living people whose career continues. For historical figures, we use Past Simple."
+        },
+        { 
+            q: "I ______ my keys last night.", 
+            options: ["lost", "have lost", "lose"], 
+            correct: 0, 
+            clue: "Check the time expression: 'Last night'.",
+            success: "Correct! 'Last night' is a finished time, so we must use Past Simple.",
+            fail: "Incorrect. You cannot use Present Perfect with specific finished times like 'Last night'."
+        },
+        { 
+            q: "How long ______ you known him?", 
+            options: ["have", "has", "did"], 
+            correct: 0, 
+            clue: "This is a state that started in the past and continues.",
+            success: "Yes! 'How long' questions about duration usually require Present Perfect.",
+            fail: "Wrong. 'Did' would be for a finished event. 'Have you known' covers the time from the past until now."
+        },
+        { 
+            q: "It's the first time I ______ this.", 
+            options: ["do", "did", "have done"], 
+            correct: 2, 
+            clue: "It's a new experience.",
+            success: "Perfect! Phrases like 'It's the first time' always take the Present Perfect.",
+            fail: "Incorrect. When talking about the 'first/second time' of an experience, use Present Perfect."
+        }
+    ];
+
+    class MenuScene extends Phaser.Scene {
+        constructor() { super({ key: 'MenuScene' }); }
+        create() {
+            this.add.rectangle(400, 300, 800, 600, COLORS.bg_dark);
+            this.add.text(400, 200, 'CHRONO BRIDGE', { font: '900 60px Montserrat', color: '#14b8a6' }).setOrigin(0.5);
+            this.add.text(400, 280, 'Pro Edition: Clues & Advice', { font: '400 20px Poppins', color: '#ffffff' }).setOrigin(0.5);
+            
+            const startBtn = this.add.container(400, 450);
+            const bg = this.add.graphics().fillStyle(COLORS.primary, 1).fillRoundedRect(-120, -30, 240, 60, 30);
+            const txt = this.add.text(0, 0, 'START MISSION', { font: '800 20px Montserrat', color: '#020617' }).setOrigin(0.5);
+            startBtn.add([bg, txt]);
+            startBtn.setSize(240, 60).setInteractive({ useHandCursor: true }).on('pointerdown', () => this.scene.start('QuizScene'));
+        }
+    }
+
+    class QuizScene extends Phaser.Scene {
+        constructor() { super({ key: 'QuizScene' }); }
+
+        create() {
+            this.score = 0;
+            this.currentIndex = 0;
+            this.roundQuestions = [...QUESTION_BANK].sort(() => 0.5 - Math.random()).slice(0, 10);
+
+            this.createUI();
+            this.showQuestion();
+        }
+
+        createUI() {
+            this.add.rectangle(400, 300, 800, 600, COLORS.bg_dark);
+            
+            // Progress
+            this.add.rectangle(400, 40, 600, 6, 0x1e293b);
+            this.progressBar = this.add.rectangle(100, 40, 0, 6, COLORS.primary).setOrigin(0, 0.5);
+            
+            // Score & Counter
+            this.scoreText = this.add.text(750, 40, 'Score: 0', { font: '600 18px Montserrat', color: '#fbbf24' }).setOrigin(1, 0.5);
+            this.counterText = this.add.text(50, 40, '1/10', { font: '600 18px Montserrat', color: '#94a3b8' }).setOrigin(0, 0.5);
+
+            // Clue Button
+            this.clueBtn = this.add.container(400, 560);
+            const cBg = this.add.graphics().lineStyle(1, 0xffffff, 0.3).strokeRoundedRect(-80, -20, 160, 40, 10);
+            const cTxt = this.add.text(0, 0, 'GET CLUE', { font: '600 14px Poppins', color: '#94a3b8' }).setOrigin(0.5);
+            this.clueBtn.add([cBg, cTxt]);
+            this.clueBtn.setSize(160, 40).setInteractive({ useHandCursor: true }).on('pointerdown', () => this.showClue());
+        }
+
+        showClue() {
+            const qData = this.roundQuestions[this.currentIndex];
+            if (this.clueText) this.clueText.destroy();
+            this.clueText = this.add.text(400, 510, `💡 ${qData.clue}`, { font: 'italic 16px Poppins', color: '#fbbf24' }).setOrigin(0.5).setAlpha(0);
+            this.tweens.add({ targets: this.clueText, alpha: 1, y: 500, duration: 300 });
+            this.clueBtn.disableInteractive().setAlpha(0.2);
+        }
+
+        showQuestion() {
+            if (this.qContainer) this.qContainer.destroy();
+            if (this.clueText) this.clueText.destroy();
+            this.clueBtn.setInteractive().setAlpha(1);
+            
+            this.qContainer = this.add.container(400, 300);
+            const qData = this.roundQuestions[this.currentIndex];
+            this.counterText.setText(`${this.currentIndex + 1}/10`);
+
+            // Question Box
+            const box = this.add.graphics().fillStyle(0xffffff, 0.03).fillRoundedRect(-350, -180, 700, 120, 20);
+            const txt = this.add.text(0, -120, qData.q, { font: '600 28px Poppins', color: '#fff', align: 'center', wordWrap: { width: 600 } }).setOrigin(0.5);
+            this.qContainer.add([box, txt]);
+
+            // Options
+            qData.options.forEach((opt, i) => {
+                const optBtn = this.createOption(0, 20 + (i * 70), opt, i);
+                this.qContainer.add(optBtn);
+            });
+
+            this.qContainer.setAlpha(0);
+            this.tweens.add({ targets: this.qContainer, alpha: 1, duration: 400 });
+            this.progressBar.width = (this.currentIndex / 10) * 600;
+        }
+
+        createOption(x, y, text, index) {
+            const container = this.add.container(x, y);
+            const bg = this.add.graphics().fillStyle(0x1e293b, 1).lineStyle(1, 0x14b8a6, 0.3).fillRoundedRect(-250, -25, 500, 50, 10).strokeRoundedRect(-250, -25, 500, 50, 10);
+            const txt = this.add.text(0, 0, text, { font: '400 20px Poppins', color: '#fff' }).setOrigin(0.5);
+            container.add([bg, txt]);
+            container.setSize(500, 50).setInteractive({ useHandCursor: true });
+
+            container.on('pointerover', () => bg.clear().fillStyle(0x14b8a6, 0.2).lineStyle(2, 0x14b8a6, 1).fillRoundedRect(-250, -25, 500, 50, 10).strokeRoundedRect(-250, -25, 500, 50, 10));
+            container.on('pointerout', () => bg.clear().fillStyle(0x1e293b, 1).lineStyle(1, 0x14b8a6, 0.3).fillRoundedRect(-250, -25, 500, 50, 10).strokeRoundedRect(-250, -25, 500, 50, 10));
+            container.on('pointerdown', () => this.handleAnswer(index, bg));
+            return container;
+        }
+
+        handleAnswer(idx, bg) {
+            const qData = this.roundQuestions[this.currentIndex];
+            const isCorrect = idx === qData.correct;
+            
+            // Disable inputs
+            this.qContainer.list.forEach(c => { if (c.type === 'Container') c.disableInteractive(); });
+            this.clueBtn.disableInteractive();
+
+            bg.clear();
+            if (isCorrect) {
+                this.score += 10;
+                this.scoreText.setText(`Score: ${this.score}`);
+                bg.fillStyle(COLORS.success, 1).fillRoundedRect(-250, -25, 500, 50, 10);
+                this.showFeedback(true, qData.success);
+            } else {
+                bg.fillStyle(COLORS.error, 1).fillRoundedRect(-250, -25, 500, 50, 10);
+                this.showFeedback(false, qData.fail);
+            }
+
+            this.time.delayedCall(3500, () => {
+                this.currentIndex++;
+                if (this.currentIndex < 10) this.showQuestion();
+                else this.scene.start('ResultScene', { score: this.score });
+            });
+        }
+
+        showFeedback(correct, msg) {
+            const panel = this.add.container(400, 650);
+            const bg = this.add.graphics().fillStyle(correct ? 0x064e3b : 0x7f1d1d, 0.95).fillRoundedRect(-380, -50, 760, 100, 15);
+            const icon = this.add.text(-350, 0, correct ? '✅' : '❌', { font: '30px Arial' }).setOrigin(0, 0.5);
+            const txt = this.add.text(-300, 0, msg, { font: '600 14px Poppins', color: '#fff', wordWrap: { width: 620 } }).setOrigin(0, 0.5);
+            panel.add([bg, icon, txt]);
+            this.tweens.add({ targets: panel, y: 300, duration: 500, ease: 'Back.out' });
+        }
+    }
+
+    class ResultScene extends Phaser.Scene {
+        constructor() { super({ key: 'ResultScene' }); }
+        init(data) { this.score = data.score; }
+        create() {
+            this.add.rectangle(400, 300, 800, 600, COLORS.bg_dark);
+            this.add.text(400, 200, 'MISSION REPORT', { font: '800 40px Montserrat', color: '#fff' }).setOrigin(0.5);
+            this.add.text(400, 300, `${this.score} / 100`, { font: '900 80px Montserrat', color: COLORS.secondary }).setOrigin(0.5);
+            
+            const btn = this.add.container(400, 450);
+            const btnBg = this.add.graphics().fillStyle(COLORS.primary, 1).fillRoundedRect(-100, -25, 200, 50, 25);
+            const btnTxt = this.add.text(0, 0, 'RETRY', { font: '700 18px Montserrat', color: '#020617' }).setOrigin(0.5);
+            btn.add([btnBg, btnTxt]).setSize(200, 50).setInteractive({ useHandCursor: true }).on('pointerdown', () => this.scene.start('QuizScene'));
+        }
+    }
+
+    new Phaser.Game({
+        type: Phaser.AUTO, width: 800, height: 600, backgroundColor: '#020617', parent: document.body,
+        scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
+        scene: [MenuScene, QuizScene, ResultScene]
+    });
+</script>
+</body>
+</html>

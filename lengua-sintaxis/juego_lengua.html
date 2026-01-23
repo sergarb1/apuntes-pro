@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Sintaxis Mastery: Professional Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
+    <style>
+        :root { --bg: #020617; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); overflow: hidden; font-family: 'Outfit', sans-serif; display: flex; justify-content: center; align-items: center; height: 100dvh; width: 100vw; }
+        #game-container { width: 100%; height: 100%; }
+    </style>
+</head>
+<body>
+    <div id="game-container"></div>
+    <script>
+        // --- 📊 BANCO DE DATOS MAESTRO PROFESIONAL (SIN ABREVIATURAS) ---
+        const MASTER_DATABASE = [
+            { s: "Me gustan mucho los libros de aventuras.", q: "¿Cuál es el SUJETO?", ops: ["Sujeto Elidido (Yo)", "Pronombre Me", "Los libros de aventuras"], ok: 2, ana: "Sujeto: Concuerda en número con el verbo 'gustan'.", adv: "CONSEJO: Cambia el verbo a singular (gusta) y verás que el sujeto debe cambiar a 'el libro'." },
+            { s: "Confío plenamente en tus posibilidades.", q: "¿Función de 'EN TUS POSIBILIDADES'?", ops: ["Complemento de Régimen", "Complemento Indirecto", "Circunstancial de Modo"], ok: 0, ana: "Complemento de Régimen: El verbo 'confiar' exige la preposición 'en'.", adv: "CONSEJO: Si la preposición es obligatoria para el sentido del verbo, es Régimen." },
+            { s: "La noticia fue difundida por los medios.", q: "Función de 'POR LOS MEDIOS'?", ops: ["Circunstancial de Lugar", "Complemento Agente", "Complemento Indirecto"], ok: 1, ana: "Complemento Agente: Realiza la acción en una oración en voz pasiva.", adv: "CONSEJO: Busca siempre la preposición 'por' acompañando a un verbo pasivo." },
+            { s: "Ayer me encontré a tu hermano.", q: "Función de 'A TU HERMANO'?", ops: ["Complemento Indirecto", "Complemento Directo", "Sujeto"], ok: 1, ana: "Complemento Directo de persona determinada.", adv: "CONSEJO: Prueba la sustitución por 'LO'. 'Ayer LO encontré'. Es directo." },
+            { s: "Juan le dio un regalo a su amiga.", q: "Función de 'A SU AMIGA'?", ops: ["Complemento Directo", "Complemento Indirecto", "Atributo"], ok: 1, ana: "Complemento Indirecto: Destinatario de la acción.", adv: "CONSEJO: Prueba la sustitución por 'LE'. 'Juan LE dio un regalo'." },
+            { s: "Había muchas personas allí.", q: "Identifica el SUJETO.", ops: ["Muchas personas", "Ellos", "No tiene (Impersonal)"], ok: 2, ana: "Oración Impersonal: El verbo 'haber' en significado de existencia no admite sujeto.", adv: "CONSEJO: El sustantivo que sigue a 'haber' es siempre Complemento Directo." },
+            { s: "Los niños corren alegres.", q: "Función de 'ALEGRES'?", ops: ["Circunstancial de Modo", "Complemento Predicativo", "Atributo"], ok: 1, ana: "Complemento Predicativo: Adjetivo que concuerda con el sujeto.", adv: "CONSEJO: Si fuera 'La niña', diríamos 'alegre'. Al variar, es predicativo." },
+            { s: "Luis es pianista.", q: "Analiza 'PIANISTA'.", ops: ["Complemento Directo", "Atributo", "Complemento Predicativo"], ok: 1, ana: "Atributo: Complemento tras verbo copulativo (Ser, Estar, Parecer).", adv: "CONSEJO: Sustituye por 'LO'. 'Luis LO es'." },
+            { s: "Se venden pisos.", q: "Valor del SE.", ops: ["Pasiva Refleja", "Impersonal", "Pronominal"], ok: 0, ana: "Pasiva Refleja: 'Pisos' es el sujeto paciente que concuerda.", adv: "CONSEJO: Si puedes decir 'Los pisos son vendidos', es Pasiva Refleja." },
+            { s: "Se vive bien aquí.", q: "Valor del SE.", ops: ["Pasiva Refleja", "Impersonal", "Reflexivo"], ok: 1, ana: "Impersonal: No admite sujeto y el verbo está en singular.", adv: "CONSEJO: Si no hay nada con lo que concuerde el verbo, es Impersonal." },
+            { s: "Dijo que vendría pronto.", q: "Tipo de oración subordinada.", ops: ["Subordinada Sustantiva", "Subordinada Adjetiva", "Subordinada Adverbial"], ok: 0, ana: "Subordinada Sustantiva funcionando como Complemento Directo.", adv: "CONSEJO: Reemplaza toda la subordinada por 'ESO'. 'Dijo ESO'." },
+            { s: "El bus que paró en la esquina.", q: "Tipo de oración subordinada.", ops: ["Subordinada Sustantiva", "Subordinada Adjetiva", "Subordinada Adverbial"], ok: 1, ana: "Subordinada Adjetiva de Relativo: Califica al nombre 'bus'.", adv: "CONSEJO: Reemplaza el nexo por 'EL CUAL'. 'El bus EL CUAL paró'." },
+            { s: "Vino porque estaba solo.", q: "Tipo de subordinada adverbial.", ops: ["Causal", "Consecutiva", "Final"], ok: 0, ana: "Subordinada Adverbial Causal: Indica el motivo.", adv: "CONSEJO: Responde a la pregunta ¿Por qué?" },
+            { s: "Luis se parece a su padre.", q: "Función de 'A SU PADRE'.", ops: ["Complemento Indirecto", "Atributo", "Complemento de Régimen"], ok: 1, ana: "Atributo: Con el verbo 'parecer' el complemento es atributo.", adv: "CONSEJO: Prueba 'Luis LO parece'. Funciona." },
+            { s: "Ella se lava la cara.", q: "Valor del SE.", ops: ["Reflexivo Directo", "Reflexivo Indirecto", "Recíproco"], ok: 1, ana: "Reflexivo Indirecto: 'La cara' es el Complemento Directo.", adv: "CONSEJO: Ella realiza la acción sobre una parte de sí misma." },
+            { s: "Los novios se miran.", q: "Valor del SE.", ops: ["Reflexivo", "Recíproco", "Dativo"], ok: 1, ana: "Recíproco: Acción mutua entre los sujetos.", adv: "CONSEJO: Añade mentalmente 'el uno al otro'." },
+            { s: "Se arrepintió pronto.", q: "Valor del SE.", ops: ["Pronominal", "Reflexivo", "Pasiva Refleja"], ok: 0, ana: "Pronominal: El pronombre forma parte del verbo 'arrepentirse'.", adv: "CONSEJO: No existe el verbo 'arrepentir' sin el pronombre." },
+            { s: "Se comió todo el pan.", q: "Valor del SE.", ops: ["Pronominal", "Dativo Ético", "Impersonal"], ok: 1, ana: "Dativo Ético: Valor enfático o de interés.", adv: "CONSEJO: Se puede eliminar sin cambiar el sentido: 'Comió todo el pan'." },
+            { s: "Se lo entregué ayer.", q: "Valor del SE.", ops: ["Reflexivo", "Variante de LE (Falso SE)", "Recíproco"], ok: 1, ana: "Falso SE: Sustituye a 'LE' para evitar la cacofonía.", adv: "CONSEJO: 'LE lo entregué' -> 'SE lo entregué'." },
+            { s: "Confía en mí.", q: "Función de 'EN MÍ'.", ops: ["Complemento de Régimen", "Complemento Indirecto", "Circunstancial"], ok: 0, ana: "Complemento de Régimen exigido por 'confiar'.", adv: "CONSEJO: ¿En quién confías? En mí. La preposición se mantiene." }
+        ];
+
+        // --- 🎮 MOTOR ACADEMY LANDSCAPE (PROPORCIONES AJUSTADAS) ---
+
+        class Boot extends Phaser.Scene {
+            constructor() { super('Boot'); }
+            create() {
+                const gfx = this.make.graphics({x:0, y:0, add:false});
+                gfx.fillStyle(0xffffff); gfx.fillRoundedRect(0,0,100,100,40);
+                gfx.generateTexture('card', 100, 100);
+                this.scene.start('Menu');
+            }
+        }
+
+        class Menu extends Phaser.Scene {
+            constructor() { super('Menu'); }
+            create() {
+                this.cameras.main.setBackgroundColor('#020617');
+                const bgGfx = this.add.graphics();
+                bgGfx.fillGradientStyle(0x0f172a, 0x0f172a, 0x020617, 0x020617, 1);
+                bgGfx.fillRect(0, 0, this.scale.width, this.scale.height);
+
+                this.add.text(this.scale.width/2, this.scale.height*0.3, "SINTAXIS MASTER", {
+                    fontFamily: 'Outfit', fontSize: '100px', fontWeight: '900', color: '#fff'
+                }).setOrigin(0.5).setShadow(0, 10, '#38bdf8', 20, true, true);
+
+                this.createBtn(this.scale.width/2, this.scale.height*0.6, "COMENZAR RETO", 0x38bdf8, () => this.scene.start('Play'));
+                
+                this.add.text(this.scale.width/2, this.scale.height*0.85, "Edición Profesional: Terminología Completa.", {
+                    fontFamily: 'Outfit', fontSize: '24px', color: '#94a3b8', fontWeight: '400'
+                }).setOrigin(0.5);
+            }
+
+            createBtn(x, y, txt, color, cb) {
+                const c = this.add.container(x, y);
+                const bg = this.add.nineslice(0, 0, 'card', 0, 500, 110, 40, 40, 40, 40).setTint(color);
+                const t = this.add.text(0, 0, txt, { fontFamily: 'Outfit', fontSize: '36px', fontWeight: '900', color: '#020617' }).setOrigin(0.5);
+                c.add([bg, t]);
+                c.setSize(500, 110).setInteractive().on('pointerdown', () => {
+                    this.tweens.add({ targets: c, scale: 0.92, duration: 100, yoyo: true, onComplete: cb });
+                });
+                return c;
+            }
+        }
+
+        class Play extends Phaser.Scene {
+            constructor() { super('Play'); }
+            init() {
+                this.score = 0; this.qIdx = 0; this.lives = 3; this.isPaused = false;
+                this.qs = [...MASTER_DATABASE].sort(() => Math.random() - 0.5).slice(0, 10);
+            }
+
+            create() {
+                this.cameras.main.setBackgroundColor('#020617');
+                this.createUI();
+                this.showQuestion();
+            }
+
+            createUI() {
+                const headerBg = this.add.graphics();
+                headerBg.fillStyle(0x0f172a, 0.85);
+                headerBg.fillRoundedRect(60, 20, this.scale.width - 120, 80, 40);
+                headerBg.lineStyle(2, 0x38bdf8, 0.3);
+                headerBg.strokeRoundedRect(60, 20, this.scale.width - 120, 80, 40);
+
+                this.sTxt = this.add.text(120, 60, `PTS: 0`, { fontFamily: 'Outfit', fontSize: '28px', fontWeight: '800', color: '#38bdf8' }).setOrigin(0, 0.5);
+                this.lTxt = this.add.text(this.scale.width - 120, 60, `❤❤❤`, { fontSize: '32px' }).setOrigin(1, 0.5);
+                this.progressFill = this.add.graphics();
+            }
+
+            showQuestion() {
+                if (this.qIdx >= 10) { this.scene.start('End', { s: this.score }); return; }
+                const data = this.qs[this.qIdx];
+                this.mainCont = this.add.container(this.scale.width/2, this.scale.height/2 - 30);
+
+                const card = this.add.nineslice(0, 0, 'card', 0, 1100, 280, 45, 45, 45, 45).setTint(0x1e293b);
+                const sentence = this.add.text(0, -50, `"${data.s}"`, { 
+                    fontFamily: 'Outfit', fontSize: '38px', fontWeight: '700', color: '#38bdf8', align: 'center', wordWrap: { width: 1000 } 
+                }).setOrigin(0.5);
+                const question = this.add.text(0, 60, data.q, { 
+                    fontFamily: 'Outfit', fontSize: '28px', color: '#f1f5f9', align: 'center', wordWrap: { width: 1000 } 
+                }).setOrigin(0.5);
+
+                this.mainCont.add([card, sentence, question]);
+
+                data.ops.forEach((op, i) => {
+                    const btn = this.createOptionBtn(-380 + (i * 380), 260, op, i === data.ok, data);
+                    this.mainCont.add(btn);
+                });
+
+                this.updateProgress();
+            }
+
+            updateProgress() {
+                this.progressFill.clear().fillStyle(0x38bdf8, 0.5).fillRoundedRect(this.scale.width/2 - 150, 90, 300, 4, 2);
+                this.progressFill.fillStyle(0x38bdf8, 1).fillRoundedRect(this.scale.width/2 - 150, 90, 300 * (this.qIdx / 10), 4, 2);
+            }
+
+            createOptionBtn(x, y, txt, isOk, data) {
+                const c = this.add.container(x, y);
+                const bg = this.add.nineslice(0, 0, 'card', 0, 360, 130, 30, 30, 30, 30).setTint(0x334155);
+                const t = this.add.text(0, 0, txt, { fontFamily: 'Outfit', fontSize: '22px', fontWeight: '600', color: '#fff', align: 'center', wordWrap: { width: 320 } }).setOrigin(0.5);
+                c.add([bg, t]);
+                c.setSize(360, 130).setInteractive().on('pointerdown', () => {
+                    if (!this.isPaused) { this.isPaused = true; this.handleResult(isOk, bg, data); }
+                });
+                return c;
+            }
+
+            handleResult(win, bg, data) {
+                bg.setTint(win ? 0x10b981 : 0xf43f5e);
+                if (win) this.score += 100; else { this.lives--; this.lTxt.setText('❤'.repeat(this.lives)); this.cameras.main.shake(200, 0.01); }
+                this.sTxt.setText(`PTS: ${this.score}`);
+                this.showFeedback(win, data);
+            }
+
+            showFeedback(win, data) {
+                const overlay = this.add.graphics().fillStyle(0x020617, 0.9).fillRect(0, 0, this.scale.width, this.scale.height).setAlpha(0);
+                this.tweens.add({ targets: overlay, alpha: 1, duration: 250 });
+
+                const f = this.add.container(this.scale.width/2, this.scale.height/2);
+                const fBg = this.add.nineslice(0, 0, 'card', 0, 1000, 520, 50, 50, 50, 50).setTint(0x0f172a);
+                const fT = this.add.text(0, -170, win ? "ANÁLISIS CORRECTO" : "ERROR DE ANÁLISIS", { fontFamily: 'Outfit', fontSize: '56px', fontWeight: '900', color: win ? '#10b981' : '#f43f5e' }).setOrigin(0.5);
+                const fD = this.add.text(0, -30, data.ana, { fontFamily: 'Outfit', fontSize: '28px', color: '#fff', align: 'center', wordWrap: { width: 900 } }).setOrigin(0.5);
+                const fA = this.add.text(0, 100, data.adv, { fontFamily: 'Outfit', fontSize: '24px', fontStyle: 'italic', color: '#38bdf8', align: 'center', wordWrap: { width: 900 } }).setOrigin(0.5);
+                
+                const nextBtn = this.add.container(0, 210);
+                const nBg = this.add.nineslice(0, 0, 'card', 0, 400, 90, 25, 25, 25, 25).setTint(0x38bdf8);
+                const nT = this.add.text(0, 0, "CONTINUAR >", { fontFamily: 'Outfit', fontSize: '30px', fontWeight: '900', color: '#020617' }).setOrigin(0.5);
+                nextBtn.add([nBg, nT]).setSize(400, 90).setInteractive().on('pointerdown', () => {
+                    this.tweens.add({ targets: [this.mainCont, f, overlay], alpha: 0, duration: 200, onComplete: () => {
+                        this.mainCont.destroy(); f.destroy(); overlay.destroy();
+                        this.qIdx++; this.isPaused = false;
+                        if (this.lives <= 0) this.scene.start('End', { s: this.score }); else this.showQuestion();
+                    }});
+                });
+
+                f.add([fBg, fT, fD, fA, nextBtn]).setScale(0.85).setAlpha(0);
+                this.tweens.add({ targets: f, alpha: 1, scale: 1, duration: 400, ease: 'Back.out' });
+            }
+        }
+
+        class End extends Phaser.Scene {
+            constructor() { super('End'); }
+            create(d) {
+                this.add.text(this.scale.width/2, this.scale.height*0.4, "RETO FINALIZADO", { fontFamily: 'Outfit', fontSize: '90px', fontWeight: '900', color: '#fff' }).setOrigin(0.5);
+                this.add.text(this.scale.width/2, this.scale.height*0.55, `PTS TOTALES: ${d.s}`, { fontFamily: 'Outfit', fontSize: '60px', color: '#38bdf8', fontWeight: '800' }).setOrigin(0.5);
+                const b = this.add.text(this.scale.width/2, this.scale.height*0.75, "REINTENTAR", { 
+                    fontFamily: 'Outfit', fontSize: '36px', fontWeight: '900', color: '#020617', backgroundColor: '#38bdf8', padding: {x:60, y:30} 
+                }).setOrigin(0.5).setInteractive().on('pointerdown', () => this.scene.start('Menu'));
+            }
+        }
+
+        const config = {
+            type: Phaser.AUTO, parent: 'game-container', width: 1280, height: 720,
+            scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
+            scene: [Boot, Menu, Play, End]
+        };
+        new Phaser.Game(config);
+    </script>
+</body>
+</html>

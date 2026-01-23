@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafío Conceptual: Dinámica 4º ESO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Space+Grotesk:wght@500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050508;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --accent: #50fa7b;
+            --error: #ff5555;
+            --text: #f8f8f2;
+            --dim: #6272a4;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            background-image: radial-gradient(circle at center, #111 0%, #000 100%);
+        }
+
+        #quiz-container {
+            background: var(--card-bg);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 30px;
+            padding: 50px;
+            max-width: 700px;
+            width: 100%;
+            backdrop-filter: blur(15px);
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        h1 { 
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--accent); 
+            margin-bottom: 30px; 
+            font-size: 2.5em; 
+            letter-spacing: -1px;
+        }
+
+        .question { 
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.4em; 
+            margin-bottom: 35px; 
+            min-height: 80px; 
+            font-weight: 500;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        button {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            padding: 18px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Inter', sans-serif;
+        }
+
+        button:hover:not(:disabled) {
+            background: rgba(80, 250, 123, 0.1);
+            border-color: var(--accent);
+            transform: translateX(5px);
+        }
+
+        button.correct { background: #50fa7b !important; color: black !important; font-weight: bold; }
+        button.wrong { background: #ff5555 !important; color: white !important; }
+
+        .feedback-box {
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 20px;
+            font-size: 0.95em;
+            line-height: 1.5;
+            display: none;
+            text-align: left;
+            border-left: 5px solid;
+        }
+
+        .fb-correct { background: rgba(80, 250, 123, 0.05); border-color: var(--accent); color: var(--accent); }
+        .fb-wrong { background: rgba(255, 85, 85, 0.05); border-color: var(--error); color: var(--error); }
+
+        .fb-title { font-weight: 900; text-transform: uppercase; margin-bottom: 10px; display: block; }
+
+        #next-btn, #restart-btn {
+            display: none;
+            margin-top: 30px;
+            background: var(--accent);
+            color: black;
+            font-weight: 900;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        #score-board { margin-top: 30px; font-weight: bold; color: #8be9fd; font-size: 1.2em; }
+    </style>
+</head>
+<body>
+
+<div id="quiz-container">
+    <h1 id="title">Dinámica Check</h1>
+    <div id="question-box" class="question">¿Listo para el diagnóstico conceptual?</div>
+    <div id="options-box" class="options">
+        <button onclick="startQuiz()">¡INICIAR EVALUACIÓN! 🚀</button>
+    </div>
+    
+    <div id="feedback-box" class="feedback-box">
+        <span class="fb-title" id="fb-status"></span>
+        <p id="fb-text"></p>
+    </div>
+
+    <button id="next-btn" onclick="showQuestion()">Siguiente Desafío →</button>
+    <div id="score-board"></div>
+    <button id="restart-btn" onclick="location.reload()">Reiniciar Sistema</button>
+</div>
+
+<script>
+    const questions = [
+        {
+            q: "¿Cómo se llama la propiedad de los cuerpos de mantener su estado de reposo o movimiento?",
+            options: ["Fuerza", "Aceleración", "Inercia", "Peso"],
+            correct: 2,
+            why: "La inercia es la resistencia natural de cualquier objeto a cambiar su estado. Cuanta más masa tiene un cuerpo, mayor es su inercia.",
+            hack: "En el examen, si te preguntan quién tiene más inercia, busca siempre el objeto con más kilogramos.",
+            error: "La fuerza NO es una propiedad, es una interacción. Un objeto no 'tiene' fuerza, la ejerce o la recibe."
+        },
+        {
+            q: "Si la fuerza neta sobre un objeto es cero, ¿qué podemos afirmar?",
+            options: ["Está parado necesariamente", "Acelera positivamente", "Mantiene su velocidad constante", "Se está parando"],
+            correct: 2,
+            why: "Según la 1ª Ley de Newton, si ΣF = 0, no hay cambio de velocidad. Esto incluye estar en reposo (v=0) o en MRU (v constante).",
+            hack: "Muchos problemas dicen 'se mueve a velocidad constante'. Tradúcelo inmediatamente a 'Fuerza Neta = 0'.",
+            error: "Es un error común pensar que para moverse hace falta fuerza. Solo hace falta fuerza para CAMBIAR el movimiento."
+        },
+        {
+            q: "En una curva, ¿hacia dónde apunta la fuerza que nos mantiene girando?",
+            options: ["Hacia fuera", "Tangente a la curva", "Hacia el centro", "Hacia atrás"],
+            correct: 2,
+            why: "La Fuerza Centrípeta siempre apunta hacia el centro del giro. Es la encargada de cambiar la dirección del vector velocidad.",
+            hack: "Si vas en coche y giras, tú sientes que te vas 'hacia fuera'. Eso es inercia (fuerza centrífuga ficticia), pero la fuerza real es la que te tira hacia el centro.",
+            error: "La fuerza 'hacia fuera' es una sensación por tu propia inercia, no una fuerza real aplicada sobre ti."
+        },
+        {
+            q: "Tercera Ley: Si empujas una pared con 50N, ¿qué ocurre?",
+            options: ["La pared no hace fuerza", "La pared te empuja con 50N", "La pared te empuja con 25N", "Se anulan y nadie siente nada"],
+            correct: 1,
+            why: "Acción y Reacción. Las fuerzas aparecen simultáneamente en parejas de igual valor pero en cuerpos distintos.",
+            hack: "Nunca sumes la Acción y la Reacción en el mismo dibujo, porque actúan sobre objetos diferentes.",
+            error: "No se anulan porque para anularse tendrían que estar aplicadas sobre el mismo cuerpo."
+        }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    function startQuiz() {
+        showQuestion();
+    }
+
+    function showQuestion() {
+        document.getElementById('feedback-box').style.display = 'none';
+        document.getElementById('next-btn').style.display = 'none';
+        
+        if (currentQuestion >= questions.length) {
+            showResults();
+            return;
+        }
+
+        const q = questions[currentQuestion];
+        document.getElementById('question-box').innerText = q.q;
+        const optionsBox = document.getElementById('options-box');
+        optionsBox.innerHTML = '';
+        
+        q.options.forEach((opt, index) => {
+            const btn = document.createElement('button');
+            btn.innerText = opt;
+            btn.onclick = () => checkAnswer(index);
+            optionsBox.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(index) {
+        const q = questions[currentQuestion];
+        const buttons = document.querySelectorAll('.options button');
+        const fbBox = document.getElementById('feedback-box');
+        const fbStatus = document.getElementById('fb-status');
+        const fbText = document.getElementById('fb-text');
+        
+        buttons.forEach(b => b.disabled = true);
+
+        if (index === q.correct) {
+            buttons[index].classList.add('correct');
+            score++;
+            fbStatus.innerText = "¡SISTEMA NOMINAL (CORRECTO)!";
+            fbBox.className = "feedback-box fb-correct";
+            fbText.innerHTML = `<strong>Base Física:</strong> ${q.why}<br><br><strong>🚀 HACK:</strong> ${q.hack}`;
+        } else {
+            buttons[index].classList.add('wrong');
+            buttons[q.correct].classList.add('correct');
+            fbStatus.innerText = "¡ANOMALÍA DETECTADA (FALLO)!";
+            fbBox.className = "feedback-box fb-wrong";
+            fbText.innerHTML = `<strong>¿Por qué es error?:</strong> ${q.error}<br><br><strong>La lógica correcta:</strong> ${q.why}`;
+        }
+
+        fbBox.style.display = 'block';
+        document.getElementById('next-btn').style.display = 'block';
+        currentQuestion++;
+    }
+
+    function showResults() {
+        document.getElementById('question-box').innerText = "Diagnóstico Finalizado";
+        document.getElementById('options-box').innerHTML = "";
+        document.getElementById('feedback-box').style.display = 'none';
+        document.getElementById('score-board').innerText = `Puntuación: ${score} de ${questions.length}`;
+        
+        let finalMsg = "";
+        if (score === questions.length) finalMsg = "¡Sobresaliente! Has dominado el ballet de fuerzas del universo.";
+        else if (score >= questions.length / 2) finalMsg = "Buen trabajo, pero revisa los 'Hacks' para evitar trampas en el examen.";
+        else finalMsg = "Recomendamos volver a la Master Class para reforzar los cimientos físicos.";
+        
+        document.getElementById('question-box').innerHTML += `<br><br><span style="font-size: 0.7em; color: var(--dim)">${finalMsg}</span>`;
+        document.getElementById('restart-btn').style.display = "block";
+    }
+</script>
+
+</body>
+</html>

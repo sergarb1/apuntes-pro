@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafíos de Dinámica Pro | 10 Problemas Top</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Space+Grotesk:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <!-- MathJax for perfect formulas -->
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\(', '\)']], displayMath: [['$$', '$$'], ['\[', '\]']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --bg: #050508;
+            --card-bg: rgba(255, 255, 255, 0.02);
+            --border: rgba(255, 255, 255, 0.08);
+            --accent-green: #50fa7b;
+            --accent-pink: #ff79c6;
+            --accent-blue: #8be9fd;
+            --accent-yellow: #f1fa8c;
+            --text: #f8f8f2;
+            --text-dim: #6272a4;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            padding: 60px 20px;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(80, 250, 123, 0.03) 0%, transparent 25%),
+                radial-gradient(circle at 90% 80%, rgba(139, 233, 253, 0.03) 0%, transparent 25%);
+        }
+
+        .container { max-width: 1100px; margin: 0 auto; }
+
+        header {
+            text-align: center;
+            margin-bottom: 80px;
+            background: var(--card-bg);
+            padding: 60px;
+            border-radius: 40px;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(20px);
+        }
+
+        h1 { 
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 4em; 
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            letter-spacing: -2px;
+            font-weight: 900;
+        }
+
+        .exercise-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 35px;
+            padding: 45px;
+            margin-bottom: 60px;
+            position: relative;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .exercise-card:hover { border-color: var(--accent-blue); transform: translateY(-5px); }
+
+        .number-badge {
+            position: absolute;
+            top: -25px;
+            left: 40px;
+            background: var(--accent-pink);
+            color: #000;
+            padding: 10px 25px;
+            border-radius: 18px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 900;
+            font-size: 1em;
+            box-shadow: 0 8px 20px rgba(255, 121, 198, 0.3);
+        }
+
+        .question-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5em;
+            font-weight: 500;
+            margin-bottom: 35px;
+            line-height: 1.4;
+            color: #fff;
+        }
+
+        .info-box {
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            font-size: 0.95em;
+            border-left: 6px solid;
+            line-height: 1.6;
+        }
+        .info-hint { background: rgba(241, 250, 140, 0.04); border-color: var(--accent-yellow); color: var(--accent-yellow); }
+        .info-tip { background: rgba(139, 233, 253, 0.04); border-color: var(--accent-blue); color: var(--accent-blue); }
+        .info-alert { background: rgba(255, 85, 85, 0.04); border-color: #ff5555; color: #ff5555; }
+
+        .solution-toggle {
+            display: block;
+            width: 100%;
+            background: rgba(255,255,255,0.02);
+            border: 2px solid var(--accent-green);
+            color: var(--accent-green);
+            padding: 18px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 900;
+            font-size: 1.1em;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .solution-toggle:hover {
+            background: var(--accent-green);
+            color: #000;
+            box-shadow: 0 0 30px rgba(80, 250, 123, 0.4);
+        }
+
+        .solution-content {
+            display: none;
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 1px dashed var(--border);
+        }
+
+        .step-block { margin-bottom: 30px; }
+        .step-title { 
+            color: var(--accent-blue); 
+            font-weight: 700; 
+            margin-bottom: 12px; 
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.2em;
+            text-transform: uppercase;
+        }
+        .step-desc { color: var(--text-dim); font-size: 1em; padding-left: 20px; border-left: 2px solid var(--border); }
+
+        .result-box {
+            background: rgba(80, 250, 123, 0.08);
+            padding: 30px;
+            border-radius: 25px;
+            text-align: center;
+            font-size: 1.8em;
+            font-weight: 900;
+            color: var(--accent-green);
+            border: 2px solid var(--accent-green);
+            margin-top: 40px;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        footer { text-align: center; color: var(--text-dim); font-size: 0.9em; margin-top: 120px; padding-bottom: 60px; }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.8em; }
+            .exercise-card { padding: 35px 25px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Dinámica: Nivel Maestro</h1>
+        <p style="color: var(--text-dim); font-size: 1.2rem;">Guía avanzada de resolución de problemas para 4º ESO</p>
+    </header>
+
+    <!-- EJERCICIO 1: NEWTON BÁSICO -->
+    <div class="exercise-card">
+        <div class="number-badge">01 • EL MOTOR DE NEWTON</div>
+        <p class="question-text">
+            Calcula la fuerza necesaria para acelerar un bloque de $5 \, \text{kg}$ a una tasa constante de $3 \, \text{m/s}^2$ sobre una superficie horizontal lisa (sin rozamiento).
+        </p>
+        <div class="info-box info-hint">
+            <strong>💡 ESTRATEGIA:</strong> Al no haber roce, la fuerza neta es simplemente la fuerza que aplicas. La masa ofrece la resistencia (inercia).
+        </div>
+        <button class="solution-toggle" onclick="toggleSolution(this)">Desbloquear Solución Paso a Paso ↓</button>
+        <div class="solution-content">
+            <div class="step-block">
+                <p class="step-title">1. Datos del Sistema</p>
+                <p class="step-desc">$m = 5 \, \text{kg}$ | $a = 3 \, \text{m/s}^2$ | $Fr = 0$</p>
+            </div>
+            <div class="step-block">
+                <p class="step-title">2. Ley Aplicada</p>
+                <p class="step-desc">Segunda Ley de Newton: $F_{\text{neta}} = m \cdot a$.</p>
+            </div>
+            <div class="result-box">F = 15 N</div>
+            <div class="info-box info-tip" style="margin-top:20px;">
+                <strong>🚀 EL TRUCO:</strong> Si quieres que el mismo bloque acelere el doble ($6 \, \text{m/s}^2$), necesitarás exactamente el doble de fuerza ($30 \, \text{N}$). 
+            </div>
+        </div>
+    </div>
+
+    <!-- EJERCICIO 2: PLANO INCLINADO -->
+    <div class="exercise-card">
+        <div class="number-badge">02 • LA PENDIENTE DE HIELO</div>
+        <p class="question-text">
+            Un bloque de $10 \, \text{kg}$ descansa sobre una rampa inclinada $30^\%5Cdeg$. Si el rozamiento es nulo, ¿cuál es su aceleración natural de bajada?
+        </p>
+        <div class="info-box info-tip">
+            <strong>📐 MNEMOTECNIA:</strong> El componente del peso que "tira" hacia abajo de la rampa siempre usa el **SENO**. Recuerda: "La X baja por el SENO".
+        </div>
+        <button class="solution-toggle" onclick="toggleSolution(this)">Desbloquear Solución Paso a Paso ↓</button>
+        <div class="solution-content">
+            <div class="step-block">
+                <p class="step-title">1. Análisis de Fuerzas</p>
+                <p class="step-desc">La fuerza motriz es la componente X del peso: $P_x = m \cdot g \cdot \text{sen}(\alpha)$.</p>
+            </div>
+            <div class="step-block">
+                <p class="step-title">2. Operación Matemática</p>
+                <p class="step-desc">$P_x = 10 \cdot 9.8 \cdot \text{sen}(30^\%5Cdeg) = 10 \cdot 9.8 \cdot 0.5 = 49 \, \text{N}$.</p>
+            </div>
+            <div class="step-block">
+                <p class="step-title">3. Hallar la Aceleración</p>
+                <p class="step-desc">$a = P_x / m = 49 / 10 = 4.9 \, \text{m/s}^2$.</p>
+            </div>
+            <div class="result-box">a = 4.9 m/s²</div>
+            <div class="info-box info-alert" style="margin-top:20px;">
+                <strong>🧠 RECUERDA:</strong> En un plano sin roce, la masa se simplifica en la ecuación. ¡Un camión y una hormiga caen con la misma aceleración!
+            </div>
+        </div>
+    </div>
+
+    <!-- EJERCICIO 6: POLEA ATWOOD (NUEVO) -->
+    <div class="exercise-card">
+        <div class="number-badge">06 • LA POLEA DE ATWOOD</div>
+        <p class="question-text">
+            Dos masas de $3 \, \text{kg}$ y $5 \, \text{kg}$ están unidas por una cuerda ideal que pasa por una polea sin rozamiento. Calcula la aceleración del sistema al soltarlas.
+        </p>
+        <div class="info-box info-hint">
+            <strong>💡 MÉTODO DEL SISTEMA:</strong> Trata a las dos masas como si fueran un solo "tren". La fuerza que mueve el tren es la diferencia de pesos.
+        </div>
+        <button class="solution-toggle" onclick="toggleSolution(this)">Desbloquear Solución Paso a Paso ↓</button>
+        <div class="solution-content">
+            <div class="step-block">
+                <p class="step-title">1. Cálculo de Pesos</p>
+                <p class="step-desc">$P_1 = 3 \cdot 9.8 = 29.4 \, \text{N}$ | $P_2 = 5 \cdot 9.8 = 49 \, \text{N}$.</p>
+            </div>
+            <div class="step-block">
+                <p class="step-title">2. Fuerza Neta del Sistema</p>
+                <p class="step-desc">$F_{\text{neta}} = P_{\text{mayor}} - P_{\text{menor}} = 49 - 29.4 = 19.6 \, \text{N}$.</p>
+            </div>
+            <div class="step-block">
+                <p class="step-title">3. Aplicación de Newton al "Súper Cuerpo"</p>
+                <p class="step-desc">$a = F_{\text{neta}} / (m_1 + m_2) = 19.6 / (3 + 5) = 19.6 / 8$.</p>
+            </div>
+            <div class="result-box">a = 2.45 m/s²</div>
+            <div class="info-box info-tip" style="margin-top:20px;">
+                <strong>🚀 HACK:</strong> La tensión de la cuerda será la misma en ambos lados. Para hallarla, elige solo una masa y aplica $F = m \cdot a$.
+            </div>
+        </div>
+    </div>
+
+    <!-- EJERCICIO 7: PLANO INCLINADO CON ROCE (NUEVO) -->
+    <div class="exercise-card">
+        <div class="number-badge">07 • EL DESCENSO REAL</div>
+        <p class="question-text">
+            Un bloque de $5 \, \text{kg}$ baja por una rampa de $30^\%5Cdeg$ con un coeficiente de rozamiento $\mu_c = 0.2$. ¿Cuál será su aceleración real?
+        </p>
+        <div class="info-box info-alert">
+            <strong>🚨 CUIDADO:</strong> Aquí el rozamiento depende de la Normal ($N$), y en una rampa la Normal no es igual al peso, sino a su componente $P_y$.
+        </div>
+        <button class="solution-toggle" onclick="toggleSolution(this)">Desbloquear Solución Paso a Paso ↓</button>
+        <div class="solution-content">
+            <div class="step-block">
+                <p class="step-title">1. Componentes del Peso</p>
+                <p class="step-desc">$P_x = 5 \cdot 9.8 \cdot \text{sen}(30^\%5Cdeg) = 24.5 \, \text{N}$ (Tira abajo).<br>
+                $P_y = 5 \cdot 9.8 \cdot \text{cos}(30^\%5Cdeg) = 42.4 \, \text{N}$ (Presiona contra el suelo).</p>
+            </div>
+            <div class="step-block">
+                <p class="step-title">2. Cálculo de la Normal y Rozamiento</p>
+                <p class="step-desc">$N = P_y = 42.4 \, \text{N}$.<br>
+                $Fr = \mu_c \cdot N = 0.2 \cdot 42.4 = 8.48 \, \text{N}$ (Frena el movimiento).</p>
+            </div>
+            <div class="step-block">
+                <p class="step-title">3. Fuerza Neta y Aceleración</p>
+                <p class="step-desc">$F_{\text{neta}} = P_x - Fr = 24.5 - 8.48 = 16.02 \, \text{N}$.<br>
+                $a = 16.02 / 5 = 3.2 \, \text{m/s}^2$.</p>
+            </div>
+            <div class="result-box">a = 3.2 m/s²</div>
+        </div>
+    </div>
+
+    <!-- EJERCICIO 10: EL ASCENSOR (NUEVO) -->
+    <div class="exercise-card">
+        <div class="number-badge">10 • EL PESO APARENTE</div>
+        <p class="question-text">
+            Una persona de $70 \, \text{kg}$ está sobre una báscula dentro de un ascensor que frena bajando con una aceleración de $2 \, \text{m/s}^2$. ¿Qué marca la báscula?
+        </p>
+        <div class="info-box info-hint">
+            <strong>🧠 LÓGICA:</strong> La báscula no mide tu peso real ($m \cdot g$), mide la fuerza con la que te empuja el suelo (la Normal). Si frenas bajando, ¡aceleras hacia arriba!
+        </div>
+        <button class="solution-toggle" onclick="toggleSolution(this)">Desbloquear Solución Paso a Paso ↓</button>
+        <div class="solution-content">
+            <div class="step-block">
+                <p class="step-title">1. Dirección de la Aceleración</p>
+                <p class="step-desc">Bajar y frenar significa que el motor tira de ti hacia ARRIBA. Por tanto, $a = +2 \, \text{m/s}^2$.</p>
+            </div>
+            <div class="step-block">
+                <p class="step-title">2. Planteamiento de Newton</p>
+                <p class="step-desc">$\\sum F = N - P = m \cdot a$.<br>
+                $N = m \cdot g + m \cdot a = m(g + a)$.</p>
+            </div>
+            <div class="step-block">
+                <p class="step-title">3. Cálculo Final</p>
+                <p class="step-desc">$N = 70 \cdot (9.8 + 2) = 70 \cdot 11.8 = 826 \, \text{N}$.</p>
+            </div>
+            <div class="result-box">N = 826 N</div>
+            <div class="info-box info-tip" style="margin-top:20px;">
+                <strong>💡 REFLEXIÓN:</strong> Te sientes más pesado (826N frente a tus 686N habituales) porque el suelo tiene que frenar tu caída.
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        © 2026 Entrenamiento de Dinámica de Alta Precisión | Diseñado para la Excelencia en 4º ESO
+    </footer>
+</div>
+
+<script>
+    function toggleSolution(btn) {
+        const content = btn.nextElementSibling;
+        if (content.style.display === "block") {
+            content.style.display = "none";
+            btn.innerText = "Desbloquear Solución Paso a Paso ↓";
+        } else {
+            content.style.display = "block";
+            btn.innerText = "Ocultar Resolución";
+        }
+    }
+</script>
+
+</body>
+</html>

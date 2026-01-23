@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Modal Quest - Ultimate Educational Edition</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.60.0/phaser.min.js"></script>
+    <style>
+        body { margin: 0; background: #020617; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: 'Segoe UI', sans-serif; overflow: hidden; touch-action: none; }
+        #game-container { width: 100%; height: 100%; }
+        
+        #orientation-msg {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #020617;
+            color: white;
+            z-index: 1000;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        @media screen and (orientation: portrait) {
+            #orientation-msg { display: flex; }
+        }
+    </style>
+</head>
+<body>
+    <div id="orientation-msg">
+        <div style="font-size: 50px; margin-bottom: 20px;">🔄</div>
+        <h2>PLEASE ROTATE YOUR DEVICE</h2>
+        <p>This quest is designed for landscape mode.</p>
+    </div>
+    <div id="game-container"></div>
+
+    <script>
+        class MainScene extends Phaser.Scene {
+            constructor() {
+                super('MainScene');
+                this.score = 0;
+                this.lives = 3;
+                this.level = 1;
+                this.questionsPool = [];
+                this.currentQuestion = null;
+                this.options = [];
+                this.isPaused = false;
+            }
+
+            init() {
+                this.score = 0;
+                this.lives = 3;
+                this.level = 1;
+                this.isPaused = false;
+                this.questionsPool = this.getQuestions();
+                Phaser.Utils.Array.Shuffle(this.questionsPool);
+            }
+
+            create() {
+                const { width, height } = this.scale;
+
+                // Background
+                let bg = this.add.graphics();
+                bg.fillGradientStyle(0x0f172a, 0x0f172a, 0x1e293b, 0x1e293b, 1);
+                bg.fillRect(0, 0, width, height);
+
+                // UI Header
+                this.add.graphics().fillStyle(0x1e293b, 0.9).fillRect(0, 0, width, 80).lineStyle(2, 0x3b82f6).strokeLineShape(new Phaser.Geom.Line(0, 80, width, 80));
+
+                this.scoreText = this.add.text(30, 25, 'SCORE: 0', { fontSize: '24px', color: '#fbbf24', fontStyle: 'bold' });
+                this.livesText = this.add.text(width / 2, 25, '❤️❤️❤️', { fontSize: '24px' }).setOrigin(0.5);
+                this.levelText = this.add.text(width - 30, 25, 'LVL 1', { fontSize: '24px', color: '#89b4fa' }).setOrigin(1, 0);
+
+                // Sentence Area
+                this.add.graphics().fillStyle(0xffffff, 0.05).fillRoundedRect(width*0.1, 110, width*0.8, 120, 15);
+                this.sentenceText = this.add.text(width / 2, 170, '', { 
+                    fontSize: '28px', color: '#fff', align: 'center', wordWrap: { width: width * 0.7 }, fontStyle: 'bold' 
+                }).setOrigin(0.5);
+
+                this.categoryLabel = this.add.text(width / 2, 250, '', { 
+                    fontSize: '18px', color: '#3b82f6', fontStyle: 'italic' 
+                }).setOrigin(0.5);
+
+                // Feedback Message Container
+                this.feedbackBox = this.add.container(width / 2, height / 2).setDepth(10).setAlpha(0);
+                let fbg = this.add.graphics().fillStyle(0x000000, 0.95).fillRoundedRect(-280, -90, 560, 180, 20).lineStyle(4, 0x3b82f6).strokeRoundedRect(-280, -90, 560, 180, 20);
+                this.feedbackTitle = this.add.text(0, -40, '', { fontSize: '36px', fontStyle: 'bold' }).setOrigin(0.5);
+                this.feedbackSub = this.add.text(0, 20, '', { fontSize: '20px', color: '#ccc', align: 'center', wordWrap: { width: 500 } }).setOrigin(0.5);
+                this.feedbackBox.add([fbg, this.feedbackTitle, this.feedbackSub]);
+
+                this.nextQuestion();
+            }
+
+            update() {
+                if (this.isPaused) return;
+
+                const { height } = this.scale;
+                this.options.forEach(opt => {
+                    opt.y += 0.8 + (this.level * 0.4);
+                    if (opt.y > height + 100) {
+                        this.destroyOption(opt);
+                        if (this.options.length === 0) this.handleFailure("TIME OUT!", `The correct answer was: ${this.currentQuestion.a}`);
+                    }
+                });
+            }
+
+            nextQuestion() {
+                if (this.questionsPool.length === 0) {
+                    this.scene.start('GameOverScene', { win: true, score: this.score });
+                    return;
+                }
+
+                this.isPaused = false;
+                this.currentQuestion = this.questionsPool.pop();
+                this.sentenceText.setText(this.currentQuestion.s.replace("____", "_______"));
+                this.categoryLabel.setText(this.currentQuestion.cat.toUpperCase());
+                
+                this.options.forEach(o => o.destroy());
+                this.options = [];
+
+                let shuffled = [...this.currentQuestion.o].sort(() => Math.random() - 0.5);
+                const { width } = this.scale;
+
+                shuffled.forEach((text, index) => {
+                    let container = this.add.container(width * (0.2 + (index * 0.3)), -60);
+                    let bg = this.add.graphics().fillStyle(0x2563eb, 1).fillRoundedRect(-100, -40, 200, 80, 12).lineStyle(3, 0x60a5fa).strokeRoundedRect(-100, -40, 200, 80, 12);
+                    let label = this.add.text(0, 0, text, { fontSize: '22px', color: '#fff', fontStyle: 'bold', align: 'center', wordWrap: {width: 190} }).setOrigin(0.5);
+                    container.add([bg, label]);
+                    container.setInteractive(new Phaser.Geom.Rectangle(-100, -40, 200, 80), Phaser.Geom.Rectangle.Contains);
+                    container.on('pointerdown', () => this.checkAnswer(text));
+                    this.options.push(container);
+                });
+            }
+
+            checkAnswer(selected) {
+                if (this.isPaused) return;
+                
+                if (selected === this.currentQuestion.a) {
+                    this.showFeedback("CORRECT!", "Excellent job! Keep it up!", 0x22c55e);
+                    this.score += 100;
+                    this.scoreText.setText('SCORE: ' + this.score);
+                    this.level = Math.floor(this.score / 600) + 1;
+                    this.levelText.setText('LVL ' + this.level);
+                    this.playSynthSound(660, 0.1); 
+                } else {
+                    this.handleFailure("WRONG!", `The correct answer was: ${this.currentQuestion.a}`);
+                }
+            }
+
+            handleFailure(msg, sub) {
+                this.lives--;
+                this.updateLivesText();
+                this.playSynthSound(220, 0.3); 
+                this.cameras.main.shake(300, 0.02);
+                this.showFeedback(msg, sub, 0xef4444);
+                
+                if (this.lives <= 0) {
+                    this.time.delayedCall(1500, () => this.scene.start('GameOverScene', { win: false, score: this.score }));
+                }
+            }
+
+            showFeedback(title, sub, color) {
+                this.isPaused = true;
+                this.feedbackTitle.setText(title).setColor(Phaser.Display.Color.IntegerToColor(color).rgba);
+                this.feedbackSub.setText(sub);
+                
+                this.tweens.add({
+                    targets: this.feedbackBox,
+                    alpha: 1,
+                    scaleX: 1.1,
+                    scaleY: 1.1,
+                    duration: 300,
+                    ease: 'Back.out',
+                    onComplete: () => {
+                        this.time.delayedCall(1500, () => {
+                            this.tweens.add({
+                                targets: this.feedbackBox,
+                                alpha: 0,
+                                scaleX: 0.8,
+                                scaleY: 0.8,
+                                duration: 200,
+                                onComplete: () => this.nextQuestion()
+                            });
+                        });
+                    }
+                });
+            }
+
+            playSynthSound(freq, duration) {
+                try {
+                    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = freq > 400 ? 'triangle' : 'sawtooth';
+                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + duration);
+                } catch(e) {}
+            }
+
+            updateLivesText() {
+                let h = "";
+                for(let i=0; i<3; i++) h += (i < this.lives) ? "❤️" : "🖤";
+                this.livesText.setText(h);
+            }
+
+            destroyOption(opt) {
+                this.options = this.options.filter(o => o !== opt);
+                opt.destroy();
+            }
+
+            getQuestions() {
+                return [
+                    { s: "I ____ play the piano when I was 5.", a: "could", o: ["can", "could", "must"], cat: "Ability" },
+                    { s: "Birds ____ fly, but dogs can't.", a: "can", o: ["can", "should", "might"], cat: "Ability" },
+                    { s: "____ I go to the bathroom, please?", a: "May", o: ["Will", "May", "Must"], cat: "Permission" },
+                    { s: "You ____ eat more vegetables.", a: "should", o: ["mustn't", "should", "could"], cat: "Advice" },
+                    { s: "I ____ wear a uniform at work.", a: "have to", o: ["can", "have to", "might"], cat: "Obligation" },
+                    { s: "You ____ touch that! It's dangerous.", a: "mustn't", o: ["don't have to", "mustn't", "should"], cat: "Prohibition" },
+                    { s: "He has a Ferrari. He ____ be rich.", a: "must", o: ["can", "must", "should"], cat: "Deduction" },
+                    { s: "Tomorrow is Sunday. I ____ work.", a: "don't have to", o: ["mustn't", "don't have to", "can't"], cat: "No Necessity" },
+                    { s: "I ____ live in London years ago.", a: "used to", o: ["used to", "would", "shall"], cat: "Past Habits" },
+                    { s: "You ______ driven so fast! It was wet.", a: "shouldn't have", o: ["shouldn't have", "mustn't", "couldn't"], cat: "Past Regret" },
+                    { s: "He ______ forgotten the keys at home.", a: "must have", o: ["must have", "should have", "might"], cat: "Past Deduction" },
+                    { s: "____ we dance, my lady?", a: "Shall", o: ["Shall", "Will", "Would"], cat: "Offers" },
+                    { s: "I ____ speak French fluently now.", a: "can", o: ["can", "could", "must"], cat: "Ability" },
+                    { s: "We ____ to arrive on time for the meeting.", a: "ought", o: ["ought", "must", "should"], cat: "Moral Advice" },
+                    { s: "You ____ smoke in the restaurant.", a: "mustn't", o: ["don't have to", "mustn't", "can't"], cat: "Prohibition" },
+                    { s: "It ____ rain this evening, bring an umbrella.", a: "might", o: ["might", "must", "should"], cat: "Possibility" },
+                    { s: "You ____ better study for the test.", a: "had", o: ["must", "had", "should"], cat: "Strong Advice" },
+                    { s: "____ you help me with this box?", a: "Could", o: ["Could", "Must", "Should"], cat: "Request" },
+                    { s: "I ____ go to the gym yesterday.", a: "had to", o: ["must", "had to", "should"], cat: "Past Obligation" },
+                    { s: "You ____ have told me! I was worried.", a: "should", o: ["should", "must", "could"], cat: "Criticism" },
+                    { s: "It ____ be him, he's on vacation.", a: "can't", o: ["can't", "must", "might"], cat: "Negative Deduction" },
+                    { s: "____ I carry your bags?", a: "Shall", o: ["Shall", "Will", "Would"], cat: "Offer" },
+                    { s: "You ____ pay for the tickets, they are free.", a: "don't have to", o: ["mustn't", "don't have to", "can't"], cat: "Lack of Necessity" },
+                    { s: "When I was young, I ____ swim every day.", a: "would", o: ["would", "should", "must"], cat: "Past Action" },
+                    { s: "They ____ be exhausted after the hike.", a: "must", o: ["must", "can", "should"], cat: "Deduction" },
+                    { s: "You ____ park here, it's illegal.", a: "mustn't", o: ["don't have to", "mustn't", "should"], cat: "Prohibition" },
+                    { s: "____ you mind closing the window?", a: "Would", o: ["Will", "Would", "Should"], cat: "Polite Request" },
+                    { s: "I ____ finish the project by Friday.", a: "must", o: ["must", "could", "might"], cat: "Obligation" },
+                    { s: "He ____ have seen us, he didn't wave.", a: "couldn't", o: ["couldn't", "must", "should"], cat: "Past Deduction" },
+                    { s: "We ____ to respect our elders.", a: "ought", o: ["ought", "must", "should"], cat: "Moral Advice" }
+                ];
+            }
+        }
+
+        class MenuScene extends Phaser.Scene {
+            constructor() { super('MenuScene'); }
+            create() {
+                const { width, height } = this.scale;
+                this.add.graphics().fillGradientStyle(0x1e293b, 0x1e293b, 0x0f172a, 0x0f172a, 1).fillRect(0, 0, width, height);
+                this.add.text(width / 2, height * 0.15, 'MODAL QUEST', { fontSize: '72px', color: '#fbbf24', fontStyle: 'bold' }).setOrigin(0.5);
+                
+                let ibox = this.add.graphics().fillStyle(0xffffff, 0.05).fillRoundedRect(width*0.1, 160, width*0.8, 240, 20);
+                this.add.text(width / 2, 200, 'LEARNING CHALLENGE', { fontSize: '24px', color: '#fbbf24', fontStyle: 'bold' }).setOrigin(0.5);
+                let rules = "• Select the correct modal for each sentence.\n• Correct = +100 pts | Error = -1 Heart ❤️\n• Speed increases with each level!\n• If you fail, we'll show you the right answer.";
+                this.add.text(width / 2, 300, rules, { fontSize: '18px', color: '#fff', lineSpacing: 12, align: 'center' }).setOrigin(0.5);
+
+                let startBtn = this.add.graphics().fillStyle(0x22c55e, 1).fillRoundedRect(width/2 - 140, height*0.75, 280, 80, 20);
+                this.add.text(width / 2, height * 0.75 + 40, 'START QUEST', { fontSize: '32px', color: '#fff', fontStyle: 'bold' }).setOrigin(0.5);
+                this.add.zone(width/2, height*0.75 + 40, 280, 80).setInteractive({ useHandCursor: true }).on('pointerdown', () => this.scene.start('MainScene'));
+            }
+        }
+
+        class GameOverScene extends Phaser.Scene {
+            constructor() { super('GameOverScene'); }
+            create(data) {
+                const { width, height } = this.scale;
+                this.add.graphics().fillGradientStyle(0x0f172a, 0x0f172a, 0x1e293b, 0x1e293b, 1).fillRect(0, 0, width, height);
+                let title = data.win ? 'QUEST COMPLETED' : 'GAME OVER';
+                let sub = data.win ? 'You are a Modal Verbs Master!' : 'Keep studying the roadmap!';
+                let color = data.win ? '#4ade80' : '#f87171';
+                this.add.text(width / 2, height * 0.3, title, { fontSize: '60px', color: color, fontStyle: 'bold' }).setOrigin(0.5);
+                this.add.text(width / 2, height * 0.42, sub, { fontSize: '24px', color: '#94a3b8' }).setOrigin(0.5);
+                this.add.text(width / 2, height * 0.58, 'SCORE: ' + data.score, { fontSize: '48px', color: '#fff', fontStyle: 'bold' }).setOrigin(0.5);
+                let replayBtn = this.add.graphics().fillStyle(0x3b82f6, 1).fillRoundedRect(width/2 - 110, height*0.75, 220, 70, 15);
+                this.add.text(width / 2, height * 0.75 + 35, 'PLAY AGAIN', { fontSize: '24px', color: '#fff', fontStyle: 'bold' }).setOrigin(0.5);
+                this.add.zone(width/2, height*0.75 + 35, 220, 70).setInteractive({ useHandCursor: true }).on('pointerdown', () => this.scene.start('MainScene'));
+            }
+        }
+
+        const config = {
+            type: Phaser.AUTO,
+            parent: 'game-container',
+            scale: { 
+                mode: Phaser.Scale.FIT, 
+                autoCenter: Phaser.Scale.CENTER_BOTH, 
+                width: 960, 
+                height: 540 // 16:9 Landscape Optimized
+            },
+            scene: [MenuScene, MainScene, GameOverScene]
+        };
+        new Phaser.Game(config);
+    </script>
+</body>
+</html>

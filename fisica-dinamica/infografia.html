@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Infografía Master: Dinámica 4º ESO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- MathJax Configuration -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\(', '\)']],
+                displayMath: [['$$', '$$'], ['\[', '\]']],
+                processEscapes: true
+            },
+            options: {
+                enableMenu: false
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --bg: #050508;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
+            --accent-green: #50fa7b;
+            --accent-pink: #ff79c6;
+            --accent-blue: #8be9fd;
+            --accent-yellow: #f1fa8c;
+            --text: #f8f8f2;
+            --dim: #6272a4;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg);
+            background-image: radial-gradient(circle at center, #111 0%, #000 100%);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        .container { max-width: 1300px; margin: 0 auto; }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 50px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            backdrop-filter: blur(15px);
+        }
+
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.5em, 8vw, 5em);
+            font-weight: 900;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -3px;
+        }
+
+        /* Bento Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .span-2 { grid-column: span 2; }
+        .span-3 { grid-column: span 3; }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 35px;
+            padding: 35px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .card:hover { border-color: var(--accent-blue); transform: translateY(-5px); }
+
+        h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8em;
+            color: var(--accent-green);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        h2 img { width: 35px; height: 35px; }
+
+        .box {
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 15px 0;
+            border: 1px solid var(--border);
+        }
+
+        .formula-block {
+            text-align: center;
+            padding: 15px;
+            color: var(--accent-pink);
+            font-size: 1.2em;
+        }
+
+        /* Seccion Trucos */
+        .master-hacks {
+            margin-top: 60px;
+            background: linear-gradient(135deg, rgba(80, 250, 123, 0.05), rgba(139, 233, 253, 0.05));
+            border: 2px solid var(--accent-green);
+            border-radius: 40px;
+            padding: 50px;
+        }
+
+        .hack-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .hack-item {
+            background: rgba(0,0,0,0.2);
+            padding: 25px;
+            border-radius: 20px;
+            border-left: 5px solid var(--accent-yellow);
+        }
+
+        .hack-item h4 { color: var(--accent-yellow); text-transform: uppercase; margin-bottom: 10px; font-family: 'Space Grotesk'; }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 0.7em;
+            font-weight: 800;
+            text-transform: uppercase;
+            border: 1px solid;
+            margin-bottom: 10px;
+        }
+
+        footer { text-align: center; margin-top: 80px; color: var(--dim); font-size: 0.9em; padding-bottom: 40px; }
+
+        @media (max-width: 1024px) { .grid { grid-template-columns: repeat(2, 1fr); } .span-3 { grid-column: span 2; } }
+        @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } .span-2, .span-3 { grid-column: span 1; } }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="badge" style="color: var(--accent-blue)">Enciclopedia Pro • Física 4º ESO</div>
+            <h1>DINÁMICA MASTER</h1>
+            <p style="color: var(--dim); font-size: 1.3em;">Todo el poder de Newton en una sola página</p>
+        </header>
+
+        <div class="grid">
+            
+            <!-- LEYES DE NEWTON -->
+            <div class="card span-2">
+                <h2><img src="assets/img/brain.svg"> Leyes del Movimiento</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                    <div class="box">
+                        <span class="badge" style="color: var(--accent-pink)">1ª: Inercia</span>
+                        <p>Sin fuerza neta, no hay cambio. El reposo y el MRU son equivalentes.</p>
+                        <div class="formula-block">$\sum \vec{F} = 0 \Rightarrow \vec{a} = 0$</div>
+                    </div>
+                    <div class="box">
+                        <span class="badge" style="color: var(--accent-green)">2ª: Ley del Motor</span>
+                        <p>La fuerza causa la aceleración. La masa es la resistencia.</p>
+                        <div class="formula-block">$\vec{F} = m \cdot \vec{a}$</div>
+                    </div>
+                </div>
+                <div class="box" style="border-left: 5px solid var(--accent-yellow)">
+                    <span class="badge" style="color: var(--accent-yellow)">3ª: Acción y Reacción</span>
+                    <p>Las fuerzas son interacciones mutuas entre dos cuerpos. Son iguales y opuestas.</p>
+                    <div class="formula-block">$\vec{F}_{12} = -\vec{F}_{21}$</div>
+                </div>
+            </div>
+
+            <!-- CASTING DE FUERZAS -->
+            <div class="card">
+                <h2><img src="assets/img/physics.svg"> Casting de Fuerzas</h2>
+                <div class="box">
+                    <p><strong>Peso ($P$):</strong> Atracción de la Tierra.</p>
+                    <div class="formula-block">$P = m \cdot g$</div>
+                </div>
+                <div class="box">
+                    <p><strong>Normal ($N$):</strong> Repulsión del suelo. Es perpendicular al apoyo.</p>
+                </div>
+                <div class="box">
+                    <p><strong>Rozamiento ($Fr$):</strong> Oposición por rugosidad.</p>
+                    <div class="formula-block">$F_r = \mu \cdot N$</div>
+                </div>
+            </div>
+
+            <!-- PLANO INCLINADO -->
+            <div class="card span-2">
+                <h2><img src="assets/img/target.svg"> El Plano Inclinado Real</h2>
+                <p>El peso se descompone según el ángulo $\alpha$ de la rampa:</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="box">
+                        <p style="color: var(--accent-pink); font-weight: 700;">Eje X (Baja la rampa):</p>
+                        <div class="formula-block">$P_x = P \cdot \text{sen}(\alpha)$</div>
+                    </div>
+                    <div class="box">
+                        <p style="color: var(--accent-blue); font-weight: 700;">Eje Y (Normal):</p>
+                        <div class="formula-block">$P_y = P \cdot \text{cos}(\alpha)$</div>
+                    </div>
+                </div>
+                <p style="font-size: 0.85em; text-align: center; color: var(--dim)">💡 Recuerda: En equilibrio sobre rampa, $N = P_y$.</p>
+            </div>
+
+            <!-- DINÁMICA CIRCULAR -->
+            <div class="card">
+                <h2><img src="assets/img/loop.svg"> Giros y Curvas</h2>
+                <p>Para cambiar de dirección necesitas una fuerza hacia el centro.</p>
+                <div class="box">
+                    <div class="formula-block">$F_c = m \cdot \frac{v^2}{R}$</div>
+                </div>
+                <p style="font-size: 0.8em; color: var(--dim)">La fuerza centrípeta es el "papel" que hace el rozamiento o la tensión.</p>
+            </div>
+
+        </div>
+
+        <!-- SECCIÓN MASIVA DE TRUCOS Y CONSEJOS -->
+        <div class="master-hacks">
+            <h2 style="color: var(--accent-green); font-size: 2.5em; justify-content: center;">🚀 Trucos y Consejos Maestros</h2>
+            <div class="hack-grid">
+                
+                <div class="hack-item">
+                    <h4>📐 Mnemotecnia Trigonométrica</h4>
+                    <p>En el plano inclinado no dudes nunca:</p>
+                    <ul style="list-style: none; margin-top: 10px; color: var(--accent-blue)">
+                        <li>• La <strong>X</strong> baja por el <strong>SENO</strong>.</li>
+                        <li>• La <strong>Y</strong> aplasta con <strong>COSENO</strong>.</li>
+                    </ul>
+                </div>
+
+                <div class="hack-item">
+                    <h4>🛑 El Secreto de la v = cte</h4>
+                    <p>Si el problema dice "velocidad constante" o "MRU", tu mente debe decir: <strong>$\\sum F = 0$</strong>. No importa si se mueve, las fuerzas están equilibradas.</p>
+                </div>
+
+                <div class="hack-item">
+                    <h4>⚙️ El Atajo de Atwood (Poleas)</h4>
+                    <p>Para sistemas enlazados, no pierdas tiempo con tensiones si solo pides la aceleración:</p>
+                    <p style="color: var(--accent-green); margin-top: 10px; font-weight: 700;">$a = \frac{\\sum F_{\text{favor}} - \sum F_{\text{contra}}}{\\sum \text{Masas}}$</p>
+                </div>
+
+                <div class="hack-item">
+                    <h4>🚨 Protocolo de Unidades SI</h4>
+                    <p>Revisa esto antes de calcular o fallarás:</p>
+                    <p>• Masa siempre en <strong>Kilogramos</strong> (trampa: g).</p>
+                    <p>• Distancia siempre en <strong>Metros</strong> (trampa: cm).</p>
+                    <p>• Tiempo siempre en <strong>Segundos</strong> (trampa: min).</p>
+                </div>
+
+                <div class="hack-item">
+                    <h4>🧠 Lógica de Rozamiento</h4>
+                    <p>Si aplicas una fuerza y el objeto no se mueve, el rozamiento es <strong>exactamente igual</strong> a tu fuerza, no a $\\mu \cdot N$. $\\mu \cdot N$ es solo el valor máximo que puede aguantar el suelo.</p>
+                </div>
+
+                <div class="hack-item">
+                    <h4>⚖️ El Hack del Dinamómetro</h4>
+                    <p>Un dinamómetro no mide masa, mide la fuerza que estira su muelle. Si cuelgas algo, mide el Peso ($m \cdot 9.8$). Si quieres masa, divide el resultado entre 9.8.</p>
+                </div>
+
+                <div class="hack-item">
+                    <h4>🛡️ Seguridad en Examen</h4>
+                    <p>Dibuja el <strong>DCL</strong> (Diagrama de Cuerpo Libre) siempre. Aunque creas que es fácil, dibujar las flechas evita que te olvides fuerzas como el rozamiento o la Normal.</p>
+                </div>
+
+                <div class="hack-item">
+                    <h4>📺 Modo Calculadora</h4>
+                    <p>Asegúrate de que en la pantalla aparezca una <strong>"D"</strong> o <strong>"DEG"</strong>. Si aparece una "R" (Radianes), todos tus senos y cosenos darán números locos.</p>
+                </div>
+
+            </div>
+        </div>
+
+        <footer>
+            © 2026 Infografía Master de Dinámica | Diseñada para la Excelencia en Física 4º ESO
+        </footer>
+    </div>
+
+</body>
+</html>

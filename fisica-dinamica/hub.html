@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recursos de Dinámica: 4º ESO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #000000;
+            --accent: #8be9fd;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            background-color: var(--bg);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-image: radial-gradient(circle at center, #111 0%, #000 100%);
+        }
+
+        .hub-container {
+            text-align: center;
+            max-width: 800px;
+            padding: 40px;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 40px;
+            background: linear-gradient(90deg, #50fa7b, #8be9fd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .resource-card {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            padding: 30px;
+            border-radius: 20px;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.1);
+            border-color: var(--accent);
+        }
+
+        .resource-card img { width: 64px; height: 64px; }
+        .resource-card span { font-weight: bold; font-size: 1.2em; }
+        .resource-card p { font-size: 0.8em; color: #6272a4; }
+
+        @media (max-width: 600px) {
+            .resource-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="hub-container">
+    <h1>Academia de Dinámica</h1>
+    <div class="resource-grid">
+        <a href="index.html" class="resource-card">
+            <img src="assets/img/physics.svg">
+            <span>Presentación</span>
+            <p>29 Diapositivas de teoría pura.</p>
+        </a>
+        <a href="index_narra.html" class="resource-card" style="border-color: #ff79c6;">
+            <img src="assets/img/brain.svg">
+            <span>Versión Narrada</span>
+            <p>Lecciones guiadas por voz.</p>
+        </a>
+        <a href="infografia.html" class="resource-card">
+            <img src="assets/img/target.svg">
+            <span>Infografía Master</span>
+            <p>Toda la dinámica en un póster.</p>
+        </a>
+        <a href="ejercicios.html" class="resource-card">
+            <img src="assets/img/tools.svg">
+            <span>Ficha de Ejercicios</span>
+            <p>Problemas resueltos paso a paso.</p>
+        </a>
+        <a href="quiz.html" class="resource-card" style="border-color: #50fa7b;">
+            <img src="assets/img/puzzle.svg">
+            <span>Quiz Rápido</span>
+            <p>Reto conceptual de refuerzo.</p>
+        </a>
+        <a href="phaser_quiz.html" class="resource-card" style="border-color: #ffb86c;">
+            <img src="assets/img/rocket.svg">
+            <span>Phaser Master Quiz</span>
+            <p>Experiencia interactiva premium.</p>
+        </a>
+    </div>
+</div>
+
+</body>
+</html>

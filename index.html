@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hub de Apuntes | Repositorio Educativo</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Vue.js (CDN) -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+        }
+        .filter-btn-active {
+            background-color: #4f46e5;
+            color: white;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+        .card-enter-active, .card-leave-active {
+            transition: all 0.4s ease;
+        }
+        .card-enter-from, .card-leave-to {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        .glass-header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <!-- BARRA SUPERIOR / FILTROS -->
+    <header class="sticky top-0 z-50 glass-header py-4">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div class="flex items-center gap-2">
+                    <div class="bg-indigo-600 p-2 rounded-lg">
+                        <i class="fas fa-graduation-cap text-white"></i>
+                    </div>
+                    <h1 class="text-xl font-extrabold tracking-tight text-slate-900">STUDY HUB</h1>
+                </div>
+                
+                <nav class="flex flex-wrap gap-2">
+                    <button 
+                        v-for="filter in filters" 
+                        :key="filter.id"
+                        @click="currentFilter = filter.id"
+                        :class="['px-4 py-2 rounded-full text-xs font-bold transition-all duration-200 uppercase tracking-wider border', 
+                                 currentFilter === filter.id ? 'bg-indigo-600 border-indigo-600 text-white shadow-lg' : 'bg-white border-slate-200 text-slate-600 hover:border-indigo-300 hover:text-indigo-600']"
+                    >
+                        <i :class="['me-2', filter.icon]"></i>{{ filter.label }}
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <div class="bg-indigo-600 pt-16 pb-32">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-white mb-4">Mis Recursos de Estudio</h2>
+            <p class="text-indigo-100 text-lg max-w-2xl mx-auto opacity-90">
+                Selecciona una asignatura para filtrar los materiales interactivos y juegos didácticos.
+            </p>
+        </div>
+    </div>
+
+    <!-- GRID DE TARJETAS -->
+    <main class="max-w-7xl mx-auto px-6 -mt-20 pb-20">
+        <transition-group 
+            name="card" 
+            tag="div" 
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
+            <div 
+                v-for="item in filteredItems" 
+                :key="item.path"
+                class="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 flex flex-col"
+            >
+                <div :class="['h-2 w-full', item.colorClass]"></div>
+                <div class="p-8 flex flex-col flex-grow">
+                    <div class="flex justify-between items-start mb-6">
+                        <span :class="['px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest', item.badgeClass]">
+                            {{ item.level }}
+                        </span>
+                        <div :class="['w-12 h-12 rounded-2xl flex items-center justify-center text-xl shadow-inner', item.iconBg]">
+                            <i :class="item.icon"></i>
+                        </div>
+                    </div>
+                    
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">{{ item.title }}</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed mb-8">
+                        {{ item.description }}
+                    </p>
+                    
+                    <div class="mt-auto">
+                        <a 
+                            :href="item.path" 
+                            class="inline-flex items-center justify-center w-full bg-slate-900 hover:bg-indigo-600 text-white font-bold py-4 px-6 rounded-2xl transition-colors duration-200 group"
+                        >
+                            ACCEDER AHORA
+                            <i class="fas fa-arrow-right ms-2 group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </transition-group>
+
+        <!-- EMPTY STATE -->
+        <div v-if="filteredItems.length === 0" class="text-center py-20">
+            <i class="fas fa-search text-slate-300 text-5xl mb-4"></i>
+            <p class="text-slate-500 font-bold">No se encontraron apuntes en esta categoría.</p>
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-slate-100 py-12">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <p class="text-slate-400 text-xs font-bold uppercase tracking-widest">
+                &copy; 2026 Educational Repository // Hub de Apuntes
+            </p>
+        </div>
+    </footer>
+</div>
+
+<script>
+    const { createApp, ref, computed } = Vue;
+
+    createApp({
+        setup() {
+            const currentFilter = ref('all');
+
+            const filters = [
+                { id: 'all', label: 'Todo', icon: 'fas fa-th-large' },
+                { id: 'math', label: 'Matemáticas', icon: 'fas fa-calculator' },
+                { id: 'science', label: 'Física', icon: 'fas fa-flask' },
+                { id: 'spanish', label: 'Lengua', icon: 'fas fa-pen-nib' },
+                { id: 'english', label: 'Inglés', icon: 'fas fa-language' }
+            ];
+
+            const items = [
+                {
+                    category: 'math',
+                    level: '5º Primaria',
+                    title: 'Maestro de Fracciones',
+                    description: 'Juego interactivo de Phaser para dominar las fracciones básicas, lectura y sumas/restas.',
+                    path: 'mates-fracciones/index.html',
+                    icon: 'fas fa-pie-chart',
+                    colorClass: 'bg-emerald-500',
+                    badgeClass: 'bg-emerald-50 text-emerald-600',
+                    iconBg: 'bg-emerald-50 text-emerald-500'
+                },
+                {
+                    category: 'math',
+                    level: '4º ESO',
+                    title: 'Álgebra y Ecuaciones',
+                    description: 'Material avanzado sobre polinomios, identidades notables y sistemas de ecuaciones.',
+                    path: 'mates-algebra/index.html',
+                    icon: 'fas fa-square-root-variable',
+                    colorClass: 'bg-blue-500',
+                    badgeClass: 'bg-blue-50 text-blue-600',
+                    iconBg: 'bg-blue-50 text-blue-500'
+                },
+                {
+                    category: 'science',
+                    level: '4º ESO',
+                    title: 'Dinámica: Leyes de Newton',
+                    description: 'Estudio de las fuerzas, el movimiento y la dinámica clásica con ejercicios resueltos.',
+                    path: 'fisica-dinamica/index.html',
+                    icon: 'fas fa-atom',
+                    colorClass: 'bg-purple-500',
+                    badgeClass: 'bg-purple-50 text-purple-600',
+                    iconBg: 'bg-purple-50 text-purple-500'
+                },
+                {
+                    category: 'spanish',
+                    level: '4º ESO',
+                    title: 'Análisis Sintáctico',
+                    description: 'Guía visual y ejercicios sobre la estructura de la oración simple y compuesta.',
+                    path: 'lengua-sintaxis/index.html',
+                    icon: 'fas fa-quote-left',
+                    colorClass: 'bg-orange-500',
+                    badgeClass: 'bg-orange-50 text-orange-600',
+                    iconBg: 'bg-orange-50 text-orange-500'
+                },
+                {
+                    category: 'english',
+                    level: '4º ESO',
+                    title: 'Modal Verbs Lab',
+                    description: 'Misiones interactivas para dominar Can, Must, Should y otros verbos modales.',
+                    path: 'ingles-modals/index.html',
+                    icon: 'fas fa-flag-usa',
+                    colorClass: 'bg-rose-500',
+                    badgeClass: 'bg-rose-50 text-rose-600',
+                    iconBg: 'bg-rose-50 text-rose-500'
+                },
+                {
+                    category: 'english',
+                    level: '4º ESO',
+                    title: 'Present Perfect Mastery',
+                    description: 'Laboratorio gramatical sobre el tiempo Present Perfect y sus usos temporales.',
+                    path: 'ingles-present-perfect/index.html',
+                    icon: 'fas fa-clock',
+                    colorClass: 'bg-teal-500',
+                    badgeClass: 'bg-teal-50 text-teal-600',
+                    iconBg: 'bg-teal-50 text-teal-500'
+                }
+            ];
+
+            const filteredItems = computed(() => {
+                if (currentFilter.value === 'all') return items;
+                return items.filter(item => item.category === currentFilter.value);
+            });
+
+            return {
+                currentFilter,
+                filters,
+                items,
+                filteredItems
+            };
+        }
+    }).mount('#app');
+</script>
+
+</body>
+</html>

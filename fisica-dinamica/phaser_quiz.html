@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <title>Dynamic Master Quiz v6.0 | 100 Questions</title>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser-arcade-physics.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { margin: 0; padding: 0; background-color: #0a0a1a; overflow: hidden; font-family: 'Space Grotesk', sans-serif; height: 100dvh; }
+        #game-container { width: 100%; height: 100%; position: fixed; }
+    </style>
+</head>
+<body>
+    <div id="game-container"></div>
+    <script>
+        const QUESTION_POOL = [
+            // --- CONCEPTOS Y ESCENARIOS (1-60 ya verificadas) ---
+            { q: "Estás en un ascensor que acelera hacia arriba. ¿Cómo es tu peso aparente?", options: ["Igual al real", "Mayor que el real", "Menor que el real", "Cero"], correct: 1, why: "La Normal debe vencer a la gravedad y además acelerarte arriba.", advice: "N = m(g+a). Sientes más presión en los pies.", error_basis: "Confundir masa con peso aparente.", hint: "Más apoyo." },
+            { q: "¿Por qué es más difícil arrancar un mueble que mantenerlo deslizando?", options: ["Inercia", "μe > μc", "Gravedad", "Newton 3"], correct: 1, why: "Las rugosidades se encajan más en reposo (enlaces estáticos).", advice: "μe es el pico de fuerza necesario para romper el reposo.", error_basis: "La inercia no es una fuerza disipativa.", hint: "Estático > Cinético." },
+            { q: "Doblas la v en una curva. La fuerza centrípeta necesaria:", options: ["Doble", "Igual", "Cuádruple", "Mitad"], correct: 2, why: "Fc = mv²/r. Al doblar v, v² es 4 veces mayor.", advice: "La velocidad es el factor más peligroso en curvas.", error_basis: "Relación lineal.", hint: "Exponente 2." },
+            { q: "Fuerza neta para mover 2kg a 5 m/s²:", options: ["2.5 N", "10 N", "7 N", "0.4 N"], correct: 1, why: "F = m·a = 2 · 5 = 10N.", advice: "Cálculo directo de la 2ª Ley.", error_basis: "Dividir m/a.", hint: "Multiplicar." },
+            { q: "¿Qué fuerza nos permite caminar?", options: ["Gravedad", "Rozamiento", "Inercia", "Normal"], correct: 1, why: "Empujas el suelo atrás y el roce te empuja adelante.", advice: "Sin agarre (μ=0) no hay avance.", error_basis: "Solo fuerza muscular.", hint: "Tracción." },
+            { q: "Un cohete acelera en el vacío porque:", options: ["Empuja aire", "Expulsa gases", "No hay g", "Es ligero"], correct: 1, why: "Acción (gases) y Reacción (cohete). Newton 3.", advice: "La materia empuja materia, no hace falta aire.", error_basis: "Necesidad de apoyo.", hint: "Retropropulsión." },
+            { q: "La Normal es siempre:", options: ["Igual al peso", "Hacia arriba", "Perpendicular al suelo", "Vertical"], correct: 2, why: "Es la reacción de la superficie a la compresión.", advice: "En rampas N = P·cos(α).", error_basis: "N = P universal.", hint: "Ortogonal." },
+            { q: "Si ΣF = 0, el objeto:", options: ["Para", "Sigue MRU", "Para o MRU", "Acelera"], correct: 2, why: "Sin fuerza neta no hay cambio de estado (Inercia).", advice: "Equilibrio ≠ Reposo necesariamente.", error_basis: "Movimiento requiere F.", hint: "Newton 1." },
+            { q: "¿Unidad SI de la fuerza?", options: ["Kg", "Julio", "Newton", "Pascal"], correct: 2, why: "Newton (N) = kg·m/s².", advice: "Fuerza ≠ Masa.", error_basis: "Confusión unidades.", hint: "Sir Isaac." },
+            { q: "Dirección de Fr:", options: ["Abajo", "Con v", "Contra v", "Al centro"], correct: 2, why: "Se opone al deslizamiento relativo.", advice: "Frena el movimiento.", error_basis: "Con el peso.", hint: "Oposición." },
+            { q: "Dinamómetro mide:", options: ["Masa", "Fuerza", "A", "v"], correct: 1, why: "Usa muelles para medir Newtons.", advice: "Hooke: F = kΔx.", error_basis: "Confundir con balanza.", hint: "Peso." },
+            { q: "Peso 600N en Tierra. En Luna (g/6):", options: ["600", "100", "1200", "0"], correct: 1, why: "P = m·g. g es 6 veces menor.", advice: "Masa igual, Peso distinto.", error_basis: "Masa cambia.", hint: "Divide por 6." },
+            { q: "Constante k indica:", options: ["Longitud", "Rigidez", "Masa", "Color"], correct: 1, why: "Dureza del muelle.", advice: "N/m.", error_basis: "Distancia.", hint: "Hooke." },
+            { q: "Airbag funciona por:", options: ["Menos m", "Más tiempo", "Vacío", "Cero g"], correct: 1, why: "Δt sube -> a baja -> F baja.", advice: "F=ma.", error_basis: "Quita inercia.", hint: "Tiempo." },
+            { q: "Fuerza en cuerdas:", options: ["N", "Fr", "Tensión", "Fe"], correct: 2, why: "Transmisión sólida.", advice: "T es constante.", error_basis: "Peso cuerda.", hint: "Empieza por T." },
+            { q: "Frenazo guagua. Vas a:", options: ["Atrás", "Delante", "Arriba", "Abajo"], correct: 1, why: "Tu cuerpo quiere seguir a v constante.", advice: "Inercia.", error_basis: "F externa.", hint: "Vagancia." },
+            { q: "Masa es medida de:", options: ["F", "Inercia", "v", "P"], correct: 1, why: "Resistencia a aceleración.", advice: "Newton 2.", error_basis: "Volumen.", hint: "Kg." },
+            { q: "μ depende de:", options: ["Área", "Superficies", "v", "Masa"], correct: 1, why: "Material y rugosidad.", advice: "Área no importa en 4º ESO.", error_basis: "Área contacto.", hint: "Material." },
+            { q: "Hooke: Fe es proporcional a:", options: ["v", "Δx", "m", "t"], correct: 1, why: "Relación lineal estiramiento.", advice: "F = kΔx.", error_basis: "Cuadrático.", hint: "Distancia muelle." },
+            { q: "3ª Ley: Fuerzas son:", options: ["Iguales", "Opuestas", "En cuerpos distintos", "Todo lo anterior"], correct: 2, why: "Interacción mutua.", advice: "Nunca se anulan.", error_basis: "Se anulan.", hint: "Parejas." },
+
+            // --- BLOQUE EJERCICIOS MAESTROS (61-100) ---
+            { q: "Bloque 5kg, F=20N, μc=0.2. ¿Aceleración?", options: ["2.04 m/s²", "4 m/s²", "1.2 m/s²", "0.5 m/s²"], correct: 0, why: "Fr=9.8N. Fnet=10.2N. a=10.2/5.", advice: "Calcula Fr primero.", error_basis: "Ignorar roce.", hint: "F-Fr." },
+            { q: "10kg en muelle k=500. Δx en cm:", options: ["2 cm", "19.6 cm", "5 cm", "98 cm"], correct: 1, why: "Δx=98/500=0.196m.", advice: "Pasar m a cm.", error_basis: "Metros.", hint: "x100." },
+            { q: "Ascensor 500kg frena bajando a 1m/s². Tensión:", options: ["4400 N", "5400 N", "4900 N", "500 N"], correct: 1, why: "a arriba -> T=m(g+a)=500(10.8).", advice: "Frenar bajando = pesar más.", error_basis: "Restar a.", hint: "T=m(g+a)." },
+            { q: "Bloque 10kg sube rampa 30º con F=100N (sin roce). ¿a?", options: ["5.1 m/s²", "10 m/s²", "0.2 m/s²", "4.9 m/s²"], correct: 0, why: "Fnet = 100 - Px = 100 - 49 = 51N. a = 5.1.", advice: "Px siempre resta si subes.", error_basis: "No restar peso.", hint: "100-49." },
+            { q: "Dos bloques (4+6kg) empujados con 20N. ¿F entre ellos?", options: ["20 N", "12 N", "8 N", "2 N"], correct: 1, why: "a=2. El de 6kg es empujado por el de 4kg con F=6·2=12N.", advice: "Calcula a total primero.", error_basis: "Transmitir 20N.", hint: "m2 · a." },
+            { q: "Coche 1000kg frena de 20m/s a 0 en 50m. ¿F?", options: ["2000 N", "4000 N", "8000 N", "1000 N"], correct: 1, why: "a=v²/2d=4. F=1000·4.", advice: "Cinemática + Newton.", error_basis: "Error v/d.", hint: "400/100." },
+            { q: "Muelle 10N -> 5cm. ¿Fuerza para 15cm?", options: ["20 N", "30 N", "45 N", "15 N"], correct: 1, why: "Relación lineal. Triple Δx = Triple F.", advice: "No calcules k si no hace falta.", error_basis: "Cuadrático.", hint: "Regla de 3." },
+            { q: "Normal 5kg en rampa 60º:", options: ["49 N", "24.5 N", "42.4 N", "5 N"], correct: 1, why: "N = mg·cos(60) = 49·0.5 = 24.5.", advice: "Normal usa Coseno.", error_basis: "Usar Seno.", hint: "mg·0.5." },
+            { q: "Atwood 3kg y 2kg. Aceleración:", options: ["1.96 m/s²", "9.8 m/s²", "5 m/s²", "0.5 m/s²"], correct: 0, why: "a = (P1-P2)/(m1+m2) = 9.8/5.", advice: "Diff pesos / Suma masas.", error_basis: "Una masa sola.", hint: "9.8 / 5." },
+            { q: "F=50N, a=2. ¿Masa?", options: ["100 kg", "25 kg", "10 kg", "50 kg"], correct: 1, why: "m = F/a = 50/2.", advice: "Newton 2.", error_basis: "Multiplicar.", hint: "50 / 2." },
+            { q: "Satélite triplica R de órbita. Su peso es:", options: ["3x menor", "9x menor", "Igual", "Cero"], correct: 1, why: "F proporcional a 1/R².", advice: "Leyes gravitatorias.", error_basis: "Lineal.", hint: "3 al cuadrado." },
+            { q: "Calcula Px de 2kg en 45º:", options: ["13.8 N", "19.6 N", "9.8 N", "14.1 N"], correct: 0, why: "2·9.8·sen(45) ≈ 13.8.", advice: "P·sen.", error_basis: "P·cos.", hint: "19.6 · 0.7." },
+            { q: "Fuerzas 3N y 4N a 90º. Resultante:", options: ["7 N", "1 N", "5 N", "12 N"], correct: 2, why: "Pitágoras √(3²+4²).", advice: "Suma vectorial.", error_basis: "Suma escalar.", hint: "Raíz de 25." },
+            { q: "Muelle k=200, límite 40N. ¿Cuelgas 5kg?", options: ["Aguanta", "Se rompe", "Se estira 1m", "No pasa nada"], correct: 1, why: "P=49N > Límite.", advice: "Revisa límites elásticos.", error_basis: "Aguanta.", hint: "49 vs 40." },
+            { q: "Coche 1000kg, curva R=50m, v=10m/s. ¿Fc?", options: ["2000 N", "1000 N", "500 N", "5000 N"], correct: 0, why: "Fc = 1000·100/50 = 2000N.", advice: "mv²/r.", error_basis: "v sin cuadrado.", hint: "100.000 / 50." },
+            { q: "Normal en techo empujando 2kg arriba con 30N:", options: ["10.4 N", "19.6 N", "49.6 N", "30 N"], correct: 0, why: "N = 30 - 19.6.", advice: "ΣFy = 0.", error_basis: "Sumar P.", hint: "30 - 19.6." },
+            { q: "Patinador 60kg empuja con 120N. Su aceleración:", options: ["2 m/s²", "3 m/s²", "0.5 m/s²", "5 m/s²"], correct: 0, why: "Acción-Reacción sobre él.", advice: "a = F/m.", error_basis: "Masa del otro.", hint: "120 / 60." },
+            { q: "Planeta doble Masa, mismo Radio. g:", options: ["9.8", "19.6", "4.9", "39.2"], correct: 1, why: "g proporcional a M.", advice: "Ley gravitación.", error_basis: "Igual.", hint: "9.8 x 2." },
+            { q: "F para v cte a 5kg (μc=0.4):", options: ["19.6 N", "29.4 N", "10 N", "5 N"], correct: 0, why: "F = Fr = 0.4·49.", advice: "MRU = equilibrio.", error_basis: "μe.", hint: "Rozamiento." },
+            { q: "0.01kg a 400m/s. Impulso recibido:", options: ["4 Ns", "40 Ns", "0.4 Ns", "400 Ns"], correct: 0, why: "I = m·v.", advice: "Momento lineal.", error_basis: "Comas.", hint: "400/100." },
+            { q: "¿Qué fuerza siente un piloto en la base de un rizo?", options: ["Normal > Peso", "Normal < Peso", "Normal = Peso", "Cero"], correct: 0, why: "La Normal debe vencer al peso y dar la Fc necesaria.", advice: "Te sientes aplastado en el asiento.", error_basis: "Ingravidez.", hint: "Curva cóncava." },
+            { q: "Si μe=0.8 y aplicas 30N a 5kg. ¿Se mueve?", options: ["Sí", "No", "Depende de v", "Acelera"], correct: 1, why: "Frmax = 0.8·49 = 39.2N. 30N < 39.2N.", advice: "Compara F con Frmax.", error_basis: "Calcula a.", hint: "30 vs 39." },
+            { q: "¿Área influye en rozamiento?", options: ["Mucho", "Nada", "Solo en sólidos", "Solo si es grande"], correct: 1, why: "Fr solo depende de μ y Normal.", advice: "Independiente del área de contacto.", error_basis: "Sí influye.", hint: "Fr = μN." },
+            { q: "Calcula k si 50N estiran 10cm:", options: ["500 N/m", "5 N/m", "50 N/m", "0.5 N/m"], correct: 0, why: "k = 50 / 0.1.", advice: "Pasar cm a m.", error_basis: "50/10.", hint: "Divide entre 0.1." },
+            { q: "Ascensor cable roto (caída libre). Peso aparente:", options: ["Normal", "Doble", "Cero", "Triple"], correct: 2, why: "No hay fuerza de apoyo (N=0).", advice: "Ingravidez aparente.", error_basis: "Infinito.", hint: "Sin suelo." },
+            { q: "Fuerza para frenar 1000kg de 10m/s a 0 en 2s:", options: ["5000 N", "10000 N", "2000 N", "1000 N"], correct: 0, why: "a = 10/2 = 5. F = 1000·5.", advice: "F = m·Δv/t.", error_basis: "1000/2.", hint: "5000." },
+            { q: "Py en rampa 0º (horizontal):", options: ["P", "0", "P/2", "9.8"], correct: 0, why: "cos(0) = 1. Py = P.", advice: "Toda la fuerza presiona abajo.", error_basis: "Cero.", hint: "Coseno de 0." },
+            { q: "Px en rampa 90º (caída vertical):", options: ["0", "P", "P/2", "9.8"], correct: 1, why: "sen(90) = 1. Px = P.", advice: "Caída libre pura.", error_basis: "Cero.", hint: "Seno de 90." },
+            { q: "Un coche de 2000kg a 10m/s choca y para en 0.5s. ¿F?", options: ["40000 N", "20000 N", "10000 N", "4000 N"], correct: 0, why: "F = 2000·(10/0.5) = 2000·20.", advice: "Choque corto = Fuerza enorme.", error_basis: "2000/0.5.", hint: "40.000." },
+            { q: "Si ΣF es opuesta a v, el objeto:", options: ["Gira", "Acelera", "Frena", "Para en seco"], correct: 2, why: "Aceleración negativa.", advice: "Frenado dinámico.", error_basis: "Retrocede YA.", hint: "Sentido contrario." },
+            { q: "Muelle k=500 estirado 2cm. Fe:", options: ["1000 N", "10 N", "100 N", "1 N"], correct: 1, why: "500 · 0.02.", advice: "Unidades SI.", error_basis: "1000.", hint: "500/50." },
+            { q: "Atwood m1=m2. Aceleración:", options: ["9.8", "4.9", "0", "1"], correct: 2, why: "Pesos iguales se anulan.", advice: "Equilibrio estático.", error_basis: "9.8.", hint: "Sin diferencia." },
+            { q: "Tensión cable ascensor a v constante:", options: ["T > P", "T < P", "T = P", "T = 0"], correct: 2, why: "v cte = equilibrio (ΣF=0).", advice: "MRU = Reposo para Newton.", error_basis: "T > P.", hint: "Aceleración cero." },
+            { q: "Componente peso que genera rozamiento:", options: ["Px", "Py", "P total", "Ninguna"], correct: 1, why: "Py determina la Normal (N=Py).", advice: "Sin Py no hay Normal ni Fr.", error_basis: "Px.", hint: "La que aplasta." },
+            { q: "Si cortas el cable de un ascensor subiendo:", options: ["Flotas", "Subes y luego caes", "Bajas directo", "Te pegas al techo"], correct: 1, why: "Mantienes v de subida por inercia mientras g te frena.", advice: "Trayectoria parabólica.", error_basis: "Bajas ya.", hint: "Inercia inicial." },
+            { q: "¿Por qué los paracaídas son grandes?", options: ["Menos m", "Más rozamiento aire", "Más g", "Estética"], correct: 1, why: "Aumentan la superficie de choque con el aire.", advice: "Fr proporcional a superficie en fluidos.", error_basis: "Menos peso.", hint: "Freno aire." },
+            { q: "Muelle k=100 con 2kg. Δx en cm:", options: ["19.6 cm", "2 cm", "10 cm", "50 cm"], correct: 0, why: "19.6/100 = 0.196m.", advice: "Peso/k.", error_basis: "2cm.", hint: "19.6 Newtons." },
+            { q: "Fuerza para girar 5kg a 2m/s en R=2m:", options: ["10 N", "4 N", "20 N", "5 N"], correct: 0, why: "5·2²/2 = 10.", advice: "mv²/r.", error_basis: "20N.", hint: "5·4 / 2." },
+            { q: "Si la Tierra dejara de atraer a la Luna:", options: ["Caería", "Saldría recta", "Orbitaría igual", "Volaría al Sol"], correct: 1, why: "Sin F centrípeta, manda la inercia tangente.", advice: "Movimiento rectilíneo.", error_basis: "Cae.", hint: "Tangente." },
+            { q: "Newton unificó la física de:", options: ["Átomos y luz", "Tierra y Cielos", "Calor y frío", "Electricidad"], correct: 1, why: "Mismas leyes para manzanas y planetas.", advice: "Gravedad universal.", error_basis: "Química.", hint: "Cielos." }
+        ];
+
+        class StartScene extends Phaser.Scene {
+            constructor() { super('StartScene'); }
+            create() {
+                this.add.graphics().fillGradientStyle(0x0a0a2a, 0x0a0a2a, 0x1a1a4a, 0x1a1a4a, 1).fillRect(0, 0, 1280, 720);
+                this.add.text(640, 150, 'DINÁMICA MASTER QUIZ', { fontFamily: 'Space Grotesk', fontSize: '80px', fontWeight: '900', fill: '#8be9fd' }).setOrigin(0.5);
+                const instBox = this.add.container(640, 380);
+                const bg = this.add.graphics().fillStyle(0xffffff, 0.1).fillRoundedRect(-450, -140, 900, 280, 30).lineStyle(4, 0x50fa7b, 1).strokeRoundedRect(-450, -140, 900, 280, 30);
+                const txt = this.add.text(0, 0, `MISIÓN: Superar 10 desafíos aleatorios de un banco de 100.\n\n• Cada partida es un entrenamiento nuevo.\n• Feedback hiper-detallado con base científica.\n• Domina los ejercicios reales de 4º ESO.`, { 
+                    fontFamily: 'Space Grotesk', fontSize: '26px', fill: '#ffffff', align: 'center', lineSpacing: 12 
+                }).setOrigin(0.5);
+                instBox.add([bg, txt]);
+                const startBtn = this.add.container(640, 600);
+                const btnBg = this.add.graphics().fillStyle(0x50fa7b, 1).fillRoundedRect(-180, -45, 360, 90, 25).lineStyle(4, 0xffffff, 0.5).strokeRoundedRect(-180, -45, 360, 90, 25);
+                const btnTxt = this.add.text(0, 0, 'INICIAR MISIÓN', { fontFamily: 'Space Grotesk', fontSize: '36px', fontWeight: '900', fill: '#050508' }).setOrigin(0.5);
+                startBtn.add([btnBg, btnTxt]).setSize(360, 90).setInteractive({ useHandCursor: true }).on('pointerdown', () => this.scene.start('QuizScene'));
+            }
+        }
+
+        class QuizScene extends Phaser.Scene {
+            constructor() { super('QuizScene'); }
+            init() {
+                this.score = 0;
+                this.currentCount = 0;
+                this.questions = Phaser.Utils.Array.Shuffle([...QUESTION_POOL]).slice(0, 10);
+            }
+            create() {
+                this.add.graphics().fillGradientStyle(0x1a1a4a, 0x1a1a4a, 0x0a0a2a, 0x0a0a2a, 1).fillRect(0, 0, 1280, 720);
+                this.setupUI();
+                this.showQuestion();
+            }
+            setupUI() {
+                this.header = this.add.text(640, 60, '', { fontFamily: 'Space Grotesk', fontSize: '24px', fontWeight: '700', fill: '#50fa7b' }).setOrigin(0.5);
+                this.qText = this.add.text(640, 180, '', { fontFamily: 'Space Grotesk', fontSize: '42px', fontWeight: '700', fill: '#ffffff', align: 'center', wordWrap: { width: 1100 } }).setOrigin(0.5);
+                this.buttons = [];
+                for (let i = 0; i < 4; i++) {
+                    let btn = this.add.container(640, 360 + (i * 90));
+                    let bg = this.add.graphics().fillStyle(0xffffff, 0.15).fillRoundedRect(-450, -40, 900, 80, 20).lineStyle(2, 0x8be9fd, 1).strokeRoundedRect(-450, -40, 900, 80, 20);
+                    let txt = this.add.text(0, 0, '', { fontFamily: 'Space Grotesk', fontSize: '30px', fontWeight: '700', fill: '#ffffff' }).setOrigin(0.5);
+                    btn.add([bg, txt]).setSize(900, 80).setInteractive({ useHandCursor: true }).on('pointerdown', () => this.handleAnswer(i));
+                    this.buttons.push({ container: btn, bg, txt });
+                }
+                this.feedbackModal = this.add.container(640, 360).setAlpha(0).setDepth(100);
+                const overlay = this.add.graphics().fillStyle(0x000000, 0.85).fillRect(-640, -360, 1280, 720);
+                const panel = this.add.graphics().fillStyle(0x2a2a5a, 1).lineStyle(6, 0x50fa7b, 1).fillRoundedRect(-500, -240, 1000, 480, 35).strokeRoundedRect(-500, -240, 1000, 480, 35);
+                this.fbTitle = this.add.text(0, -160, '', { fontFamily: 'Space Grotesk', fontSize: '55px', fontWeight: '900' }).setOrigin(0.5);
+                this.fbMain = this.add.text(0, -10, '', { fontFamily: 'Space Grotesk', fontSize: '30px', fill: '#ffffff', align: 'center', wordWrap: { width: 900 } }).setOrigin(0.5);
+                this.fbSub = this.add.text(0, 120, '', { fontFamily: 'Space Grotesk', fontSize: '26px', fill: '#ff79c6', fontStyle: 'italic', align: 'center', wordWrap: { width: 900 } }).setOrigin(0.5);
+                const contBtn = this.add.container(0, 200);
+                const cBg = this.add.graphics().fillStyle(0x50fa7b, 1).fillRoundedRect(-150, -35, 300, 70, 20);
+                const cTxt = this.add.text(0, 0, 'CONTINUAR', { fontFamily: 'Space Grotesk', fontSize: '28px', fontWeight: '900', fill: '#050508' }).setOrigin(0.5);
+                contBtn.add([cBg, cTxt]).setSize(300, 70).setInteractive({ useHandCursor: true }).on('pointerdown', () => this.nextStep());
+                this.feedbackModal.add([overlay, panel, this.fbTitle, this.fbMain, this.fbSub, contBtn]);
+            }
+            showQuestion() {
+                let q = this.questions[this.currentCount];
+                if (!q) return;
+                this.header.setText(`DESAFÍO ${this.currentCount + 1} / 10`);
+                this.qText.setText(q.q);
+                q.options.forEach((opt, i) => {
+                    this.buttons[i].txt.setText(opt);
+                    this.buttons[i].bg.clear().fillStyle(0xffffff, 0.15).fillRoundedRect(-450, -40, 900, 80, 20).lineStyle(2, 0x8be9fd, 1).strokeRoundedRect(-450, -40, 900, 80, 20);
+                });
+            }
+            handleAnswer(idx) {
+                let q = this.questions[this.currentCount];
+                if (!q) return;
+                let correct = idx === q.correct;
+                if (correct) {
+                    this.score++;
+                    this.fbTitle.setText('✔ SISTEMA NOMINAL').setFill('#50fa7b');
+                    this.fbMain.setText(`FÍSICA: ${q.why}`);
+                    this.fbSub.setText(`🚀 CONSEJO PRO: ${q.advice}`);
+                } else {
+                    this.fbTitle.setText('✘ ANOMALÍA DETECTADA').setFill('#ff5555');
+                    this.fbMain.setText(`BASE DEL ERROR: ${q.error_basis}`);
+                    this.fbSub.setText(`💡 PISTA CORRECTA: ${q.why}`);
+                }
+                this.feedbackModal.setAlpha(1);
+            }
+            nextStep() {
+                this.feedbackModal.setAlpha(0);
+                this.currentCount++;
+                if (this.currentCount < 10) this.showQuestion();
+                else this.scene.start('ResultScene', { score: this.score });
+            }
+        }
+
+        class ResultScene extends Phaser.Scene {
+            constructor() { super('ResultScene'); }
+            create(data) {
+                this.add.graphics().fillGradientStyle(0x0a0a2a, 0x0a0a2a, 0x1a1a4a, 0x1a1a4a, 1).fillRect(0, 0, 1280, 720);
+                const finalScore = data.score;
+                let message = "";
+                let color = "#ffffff";
+                if (finalScore >= 9) { message = "¡EXCELENTE! Eres un maestro de la dinámica.\n¡Newton estaría orgulloso de tu precisión!"; color = "#50fa7b"; }
+                else if (finalScore >= 7) { message = "¡MUY BIEN! Tienes los conceptos claros.\nUn poco más de práctica y serás imparable."; color = "#8be9fd"; }
+                else if (finalScore >= 5) { message = "APROBADO. Conoces las bases físicas,\npero revisa los trucos de la infografía."; color = "#f1fa8c"; }
+                else { message = "NO TE RINDAS. La física requiere tiempo.\nEscucha el podcast y vuelve a por la revancha."; color = "#ff79c6"; }
+                this.add.text(640, 180, 'MISIÓN FINALIZADA', { fontFamily: 'Space Grotesk', fontSize: '35px', fontWeight: '700', fill: '#50fa7b' }).setOrigin(0.5);
+                this.add.text(640, 300, `NOTA: ${finalScore} / 10`, { fontFamily: 'Space Grotesk', fontSize: '120px', fontWeight: '900', fill: color }).setOrigin(0.5);
+                this.add.text(640, 450, message, { fontFamily: 'Space Grotesk', fontSize: '32px', fill: '#ffffff', align: 'center', lineSpacing: 12 }).setOrigin(0.5);
+                const restartBtn = this.add.container(640, 620);
+                const rBg = this.add.graphics().fillStyle(0x50fa7b, 1).fillRoundedRect(-180, -45, 360, 90, 25);
+                const rTxt = this.add.text(0, 0, 'REINTENTAR', { fontFamily: 'Space Grotesk', fontSize: '36px', fontWeight: '900', fill: '#050508' }).setOrigin(0.5);
+                restartBtn.add([rBg, rTxt]).setSize(360, 90).setInteractive({ useHandCursor: true }).on('pointerdown', () => window.location.reload());
+            }
+        }
+
+        const config = { type: Phaser.AUTO, parent: 'game-container', width: 1280, height: 720, scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH }, scene: [StartScene, QuizScene, ResultScene] };
+        new Phaser.Game(config);
+    </script>
+</body>
+</html>

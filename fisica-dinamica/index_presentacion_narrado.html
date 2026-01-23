@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Class Narrada: Dinámica - 4º ESO</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/black.min.css">
+    <style>
+        :root { 
+            --r-main-font-size: 42px;
+            --r-heading-color: #50fa7b; 
+            --r-background-color: #000000;
+            --r-selection-background-color: #44475a;
+            --accent: #ff79c6;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+        .reveal { background-color: #000000; background: radial-gradient(circle at center, #111 0%, #000 100%); }
+        .reveal .slides section { text-align: center; padding: 40px !important; }
+        .reveal h1 { font-size: 4.5em !important; text-transform: none !important; }
+        .reveal h2 { font-size: 3.5em !important; text-transform: none !important; margin-bottom: 50px !important; border-bottom: 4px solid var(--r-heading-color); display: inline-block; padding-bottom: 15px; }
+        .highlight { color: var(--accent); font-weight: bold; text-shadow: 0 0 15px rgba(255, 121, 198, 0.4); }
+        
+        .concept-card { 
+            background: var(--glass); 
+            backdrop-filter: blur(15px);
+            padding: 50px; 
+            border-radius: 40px; 
+            border: 2px solid var(--glass-border); 
+            margin: 30px 0;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            width: 100%;
+            font-size: 1.2em;
+        }
+
+        .icon-text { display: flex; align-items: center; justify-content: center; gap: 30px; margin-bottom: 30px; }
+        .icon-small { width: 100px; height: 100px; filter: drop-shadow(0 0 10px var(--r-heading-color)); }
+        
+        .v-p { color: #bd93f9; font-weight: 900; }
+        .v-n { color: #8be9fd; font-weight: 900; }
+        .v-f { color: #ff5555; font-weight: 900; }
+        .v-fr { color: #f1fa8c; font-weight: 900; }
+        
+        .flex-container { display: flex; align-items: center; justify-content: space-around; gap: 80px; width: 100%; margin-top: 40px; }
+        .diagram { flex: 1.5; background: rgba(255,255,255,0.03); border-radius: 30px; padding: 40px; border: 1px solid var(--glass-border); }
+        .text-content { flex: 1; text-align: left; font-size: 1.1em; }
+        
+        .error-box { 
+            border-left: 10px solid #ff5555; 
+            background: rgba(255, 85, 85, 0.1); 
+            padding: 30px; 
+            margin: 25px 0; 
+            border-radius: 0 20px 20px 0;
+            font-size: 0.9em;
+        }
+        
+        #audio-controls {
+            position: fixed; bottom: 20px; left: 20px; z-index: 1000;
+            background: var(--glass); padding: 15px 30px; border-radius: 40px;
+            border: 1px solid var(--glass-border); display: flex; align-items: center; gap: 20px;
+            backdrop-filter: blur(10px);
+        }
+        #start-narration {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer;
+        }
+        .btn-start {
+            background: var(--r-heading-color); color: black; border: none; padding: 30px 60px;
+            font-size: 2em; border-radius: 60px; font-weight: bold; box-shadow: 0 0 30px var(--r-heading-color);
+        }
+    </style>
+</head>
+<body>
+    <div id="start-narration">
+        <button class="btn-start">🚀 Empezar Master Class Narrada</button>
+    </div>
+
+    <div id="audio-controls" style="display: none;">
+        <img src="assets/img/brain.svg" style="width: 40px; height: 40px;">
+        <span id="narration-status" style="font-size: 0.8em; color: #50fa7b;">Reproduciendo audio...</span>
+    </div>
+
+    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L0,10 L10,5 Z" fill="#ff5555" /></marker>
+            <marker id="arrow-green" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L0,10 L10,5 Z" fill="#50fa7b" /></marker>
+            <marker id="arrow-purple" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L0,10 L10,5 Z" fill="#bd93f9" /></marker>
+            <marker id="arrow-blue" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L0,10 L10,5 Z" fill="#8be9fd" /></marker>
+            <marker id="arrow-yellow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L0,10 L10,5 Z" fill="#f1fa8c" /></marker>
+        </defs>
+    </svg>
+
+    <div class="reveal">
+        <div class="slides">
+            <!-- SLIDE 1: PORTADA -->
+            <section data-audio="assets/audio/audio1.mp3">
+                <div style="background: var(--glass); padding: 80px; border-radius: 60px; border: 2px solid var(--glass-border); display: inline-block;">
+                    <h1>DINÁMICA</h1>
+                    <h3 style="color: #8be9fd; font-weight: 300; font-size: 2em; margin-top: 20px;">Física 4º ESO</h3>
+                    <div style="margin: 60px 0;">
+                        <img src="assets/img/physics.svg" style="width: 250px; filter: drop-shadow(0 0 30px #8be9fd);">
+                    </div>
+                    <p style="font-size: 1.5em; color: #6272a4;">El arte de entender el movimiento</p>
+                </div>
+            </section>
+
+            <!-- SLIDE 2: CONCEPTO FUERZA -->
+            <section data-audio="assets/audio/audio2.mp3">
+                <div class="icon-text">
+                    <img src="assets/img/brain.svg" class="icon-small">
+                    <h2>1. Concepto de Fuerza</h2>
+                </div>
+                <div class="concept-card">
+                    Una <span class="highlight">fuerza</span> es una interacción entre dos cuerpos que cambia el movimiento o deforma la materia.
+                </div>
+                <div class="flex-container">
+                    <div class="text-content">
+                        <ul>
+                            <li>Es un <span class="highlight">vector</span>.</li>
+                            <li>Causa aceleración.</li>
+                            <li>Se mide en Newtons.</li>
+                        </ul>
+                    </div>
+                    <div class="diagram">
+                        <svg width="600" height="180" viewBox="0 0 600 180">
+                            <line x1="50" y1="130" x2="550" y2="130" stroke="#ff5555" stroke-width="12" marker-end="url(#arrow)" />
+                            <text x="300" y="50" fill="#ff5555" text-anchor="middle" font-size="36" font-weight="bold">Módulo, Dirección y Sentido</text>
+                        </svg>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 3: SUMA FUERZAS -->
+            <section data-audio="assets/audio/audio3.mp3">
+                <div class="icon-text">
+                    <img src="assets/img/puzzle.svg" class="icon-small">
+                    <h2>1.1 Suma de Fuerzas</h2>
+                </div>
+                <div class="concept-card">
+                    💡 <span class="highlight">TRUCO:</span> Sumar fuerzas depende de la dirección. No es una suma normal.
+                </div>
+                <div class="flex-container">
+                    <div class="concept-card">
+                        <strong>Misma dirección:</strong><br>
+                        → 10N + → 5N = <span class="highlight">15N</span>
+                    </div>
+                    <div class="concept-card">
+                        <strong>Sentidos opuestos:</strong><br>
+                        → 10N + ← 5N = <span class="highlight">5N</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 4: INERCIA -->
+            <section data-audio="assets/audio/audio4.mp3">
+                <div class="icon-text">
+                    <img src="assets/img/brain.svg" class="icon-small">
+                    <h2>2. Ley de Inercia (1ª Ley)</h2>
+                </div>
+                <div class="flex-container">
+                    <div class="text-content">
+                        <div class="concept-card" style="text-align: center;">
+                            "Si ΣF = 0, el objeto mantiene su estado".
+                        </div>
+                        <p style="margin-top: 30px;">Si estás quieto, sigues quieto. Si vas en MRU, sigues en MRU para siempre.</p>
+                    </div>
+                    <div class="diagram">
+                        <svg width="600" height="250" viewBox="0 0 600 250">
+                            <!-- Caso 1: Reposo -->
+                            <line x1="50" y1="200" x2="250" y2="200" stroke="white" stroke-width="3" />
+                            <circle cx="150" cy="170" r="30" fill="#6272a4" />
+                            <text x="150" y="100" fill="#f8f8f2" text-anchor="middle" font-size="20">v = 0</text>
+                            <text x="150" y="130" fill="#50fa7b" text-anchor="middle" font-size="24" font-weight="bold">ΣF = 0</text>
+                            
+                            <!-- Divisor -->
+                            <line x1="300" y1="50" x2="300" y2="200" stroke="var(--glass-border)" stroke-dasharray="10,10" />
+                            
+                            <!-- Caso 2: MRU -->
+                            <line x1="350" y1="200" x2="550" y2="200" stroke="white" stroke-width="3" />
+                            <circle cx="400" cy="170" r="30" fill="#ffb86c" />
+                            <line x1="430" y1="170" x2="530" y2="170" stroke="#ff79c6" stroke-width="6" marker-end="url(#arrow-blue)" />
+                            <text x="480" y="140" fill="#ff79c6" text-anchor="middle" font-size="20">v = cte</text>
+                            <text x="450" y="100" fill="#50fa7b" text-anchor="middle" font-size="24" font-weight="bold">ΣF = 0</text>
+                        </svg>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 5: SEGURIDAD VIAL -->
+            <section data-audio="assets/audio/audio5.mp3">
+                <div class="icon-text">
+                    <img src="assets/img/shield.svg" class="icon-small">
+                    <h2>2.1 Inercia y Seguridad</h2>
+                </div>
+                <div class="flex-container">
+                    <div class="text-content">
+                        <p><strong>El cinturón de seguridad 🛡️</strong></p>
+                        <p>Tu cuerpo "quiere" seguir a la velocidad del coche. El cinturón es la fuerza externa que vence tu inercia.</p>
+                        <div class="error-box">
+                            ⚠️ <span class="highlight">PELIGRO:</span> Sin cinturón, saldrías disparado a la misma velocidad del impacto.
+                        </div>
+                    </div>
+                    <div class="diagram">
+                        <!-- Aplicado filtro para visibilidad del rayo -->
+                        <img src="assets/img/collision.svg" style="width: 250px; filter: drop-shadow(0 0 15px var(--accent)) brightness(1.5);">
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 6: 2ª LEY -->
+            <section data-audio="assets/audio/audio6.mp3">
+                <div class="icon-text">
+                    <img src="assets/img/target.svg" class="icon-small">
+                    <h2>3. Ley Fundamental (2ª Ley)</h2>
+                </div>
+                <!-- Reducido padding y margen para evitar desbordamiento -->
+                <div class="concept-card" style="text-align: center; font-size: 2.2em; border: 4px solid var(--accent); padding: 30px; margin: 10px 0;">
+                    $$ F = m \cdot a $$ 
+                </div>
+                <div class="flex-container" style="margin-top: 20px;">
+                    <div class="concept-card" style="padding: 30px;">
+                        <p>Fuerza y Aceleración son <span class="highlight">proporcionales</span>.</p>
+                    </div>
+                    <div class="concept-card" style="padding: 30px;">
+                        <p>Masa y Aceleración son <span class="highlight">inversas</span>.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 7: MASA VS PESO -->
+            <section data-audio="assets/audio/audio7.mp3">
+                <div class="icon-text">
+                    <img src="assets/img/weight.svg" class="icon-small">
+                    <h2>3.1 Masa vs Peso</h2>
+                </div>
+                <div class="flex-container">
+                    <div class="concept-card">
+                        <h4 class="highlight">Masa (kg)</h4>
+                        <p>Cantidad de materia. Universal.</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4 class="highlight">Peso (N)</h4>
+                        <p>Fuerza de gravedad. Depende del lugar.</p>
+                    </div>
+                </div>
+                <div class="error-box" style="text-align: center; font-size: 1.2em;">
+                    💡 En la Luna pesas 6 veces menos, ¡pero tu masa es idéntica!
+                </div>
+            </section>
+
+            <!-- SLIDE 8: ACCIÓN REACCIÓN -->
+            <section data-audio="assets/audio/audio8.mp3">
+                <div class="icon-text">
+                    <img src="assets/img/strategy.svg" class="icon-small">
+                    <h2>4. Acción y Reacción (3ª Ley)</h2>
+                </div>
+                <div class="flex-container">
+                    <div class="text-content">
+                        <div class="concept-card">
+                            "Las fuerzas siempre van por parejas".
+                        </div>
+                        <p>Si empujas algo, ese algo te empuja a ti con la misma fuerza y dirección, pero sentido opuesto.</p>
+                    </div>
+                    <div class="diagram">
+                        <svg width="400" height="500" viewBox="0 0 300 350">
+                            <rect x="120" y="50" width="60" height="150" fill="#8be9fd" rx="10" />
+                            <path d="M120 200 L150 300 L180 200 Z" fill="#ff5555" />
+                            <text x="190" y="130" fill="#8be9fd" font-size="24" font-weight="bold">F Reacción</text>
+                            <text x="190" y="260" fill="#ff5555" font-size="24" font-weight="bold">F Acción</text>
+                        </svg>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 9: ¿POR QUÉ NO SE ANULAN? -->
+            <section data-audio="assets/audio/audio9.mp3">
+                <div class="icon-text">
+                    <img src="assets/img/idea.svg" class="icon-small">
+                    <h2>4.1 ¿Por qué no se anulan?</h2>
+                </div>
+                <div class="concept-card">
+                    El secreto es que actúan sobre <span class="highlight">cuerpos distintos</span>.
+                </div>
+                <div class="error-box">
+                    Solo puedes sumar fuerzas que estén en el mismo objeto. Acción y Reacción están en objetos diferentes.
+                </div>
+            </section>
+
+            <!-- SLIDE 10: CASTING -->
+            <section data-audio="assets/audio/audio10.mp3">
+                <div class="icon-text">
+                    <img src="assets/img/physics.svg" class="icon-small">
+                    <h2>5. El Casting de Fuerzas</h2>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; width: 100%;">
+                    <div class="concept-card"><p class="v-p">Peso (m · g)</p></div>
+                    <div class="concept-card"><p class="v-n">Normal (N)</p></div>
+                    <div class="concept-card"><p class="v-fr">Rozamiento (μ · N)</p></div>
+                    <div class="concept-card"><p style="color: #ffb86c; font-weight: bold;">Tensión (T)</p></div>
+                </div>
+            </section>
+
+            <!-- SLIDE 11: LA FUERZA NORMAL -->
+            <section data-audio="assets/audio/audio11.mp3">
+                <div class="icon-text">
+                    <img src="assets/img/brain.svg" class="icon-small">
+                    <h2>5.1 ¿Qué es realmente la Normal?</h2>
+                </div>
+                <div class="flex-container">
+                    <div class="diagram">
+                        <svg width="200" height="200">
+                            <circle cx="60" cy="120" r="10" fill="#8be9fd" opacity="0.6" />
+                            <circle cx="100" cy="120" r="10" fill="#8be9fd" opacity="0.6" />
+                            <circle cx="140" cy="120" r="10" fill="#8be9fd" opacity="0.6" />
+                            <circle cx="80" cy="100" r="10" fill="#ff79c6" />
+                            <circle cx="120" cy="100" r="10" fill="#ff79c6" />
+                            <path d="M100 110 L100 60" stroke="#8be9fd" stroke-width="3" marker-end="url(#arrow-blue)" />
+                        </svg>
+                    </div>
+                    <div class="text-content">
+                        <p>Es una fuerza de origen <span style="color:#8be9fd">electromagnético</span>.</p>
+                        <p>La repulsión entre los electrones de los átomos impide que los objetos se atraviesen.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 12: ROZAMIENTO -->
+            <section data-audio="assets/audio/audio12.mp3">
+                <div class="icon-text">
+                    <img src="assets/img/collision.svg" class="icon-small">
+                    <h2>6. Fuerza de Rozamiento</h2>
+                </div>
+                <div class="flex-container">
+                    <div class="text-content">
+                        <p>Resistencia al deslizamiento. Depende de las superficies y de la fuerza Normal.</p>
+                        <div class="concept-card" style="font-size: 0.9em;">
+                            μ estático > μ cinético
+                        </div>
+                    </div>
+                    <div class="diagram">
+                        <svg width="400" height="250" viewBox="0 0 400 250">
+                            <line x1="50" y1="200" x2="350" y2="200" stroke="white" stroke-width="5" />
+                            <rect x="150" y="140" width="100" height="60" fill="#ffb86c" rx="5" />
+                            <line x1="150" y1="170" x2="50" y2="170" stroke="#f1fa8c" stroke-width="8" marker-end="url(#arrow-yellow)" />
+                            <text x="50" y="80" fill="#f1fa8c" font-size="32" font-weight="bold">Fr = μ · N</text>
+                        </svg>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 13: ESTÁTICO VS CINÉTICO -->
+            <section data-audio="assets/audio/audio13.mp3">
+                <div class="icon-text">
+                    <img src="assets/img/sand.svg" class="icon-small">
+                    <h2>6.1 ¿Por qué cuesta arrancar?</h2>
+                </div>
+                <div class="concept-card">
+                    💡 <span class="highlight">TRUCO:</span> Existe un rozamiento <strong>Estático</strong> (parado) y uno <strong>Cinético</strong> (movimiento).
+                </div>
+                <div class="error-box">
+                    <p>El rozamiento estático es siempre MAYOR. Por eso cuesta mucho empezar a empujar un mueble, pero una vez que se mueve, parece más ligero.</p>
+                    <p style="font-size: 0.7em; text-align: center;">μ<sub>estático</sub> > μ_{cinético}</p>
+                </div>
+            </section>
+
+            <!-- SLIDE 14: ESTRATEGIA -->
+            <section data-audio="assets/audio/audio14.mp3">
+                <div class="icon-text">
+                    <img src="assets/img/strategy.svg" class="icon-small">
+                    <h2>7. Estrategia de Resolución</h2>
+                </div>
+                <div class="flex-container">
+                    <div class="text-content">
+                        <ol>
+                            <li><strong>Dibujar</strong> el DCL.</li>
+                            <li>Elegir <strong>ejes</strong> (X=movimiento).</li>
+                            <li><strong>Descomponer</strong> fuerzas.</li>
+                            <li>Aplicar <span class="highlight">Σ F = m · a</span>.</li>
+                        </ol>
+                    </div>
+                    <div class="concept-card" style="flex: 1;">
+                        <p>💡 <span class="highlight">Truco:</span> En el Eje Y, si no vuela ni se hunde, <span class="highlight">Σ F_y = 0</span>.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 15: ELECCIÓN DE EJES -->
+            <section data-audio="assets/audio/audio15.mp3">
+                <div class="icon-text">
+                    <img src="assets/img/tools.svg" class="icon-small">
+                    <h2>7.1 Cómo elegir los ejes</h2>
+                </div>
+                <div class="concept-card">
+                    💡 <span class="highlight">TRUCO PRO:</span> El eje X siempre debe ser la dirección en la que se mueve (o se movería) el objeto.
+                </div>
+                <div class="error-box" style="font-size: 0.8em;">
+                    Si eliges mal los ejes, tendrás que descomponer TODAS las fuerzas. Si los eliges bien (X paralelo al suelo/plano), solo tendrás que descomponer el Peso o fuerzas raras.
+                </div>
+            </section>
+
+            <!-- SLIDE 16: PLANO INCLINADO -->
+            <section data-audio="assets/audio/audio16.mp3">
+                <div class="icon-text">
+                    <img src="assets/img/target.svg" class="icon-small">
+                    <h2>8. Plano Inclinado</h2>
+                </div>
+                <div class="flex-container">
+                    <div class="text-content">
+                        <div class="concept-card">
+                            • <span class="highlight">Px = P · sen(α)</span> (Baja)<br>
+                            • <span class="highlight">Py = P · cos(α)</span> (Aplasta)
+                        </div>
+                    </div>
+                    <div class="diagram">
+                        <svg width="400" height="300" viewBox="0 0 400 300">
+                            <path d="M50 250 L350 250 L350 100 Z" fill="rgba(255,255,255,0.1)" stroke="white" stroke-width="3" />
+                            <rect x="200" y="150" width="60" height="40" fill="#ffb86c" transform="rotate(-25 230 170)" />
+                            <line x1="230" y1="170" x2="230" y2="260" stroke="#bd93f9" stroke-width="5" marker-end="url(#arrow-purple)" />
+                            <line x1="230" y1="170" x2="190" y2="80" stroke="#8be9fd" stroke-width="5" marker-end="url(#arrow-blue)" />
+                        </svg>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 17: PLANO SIN ROZAMIENTO -->
+            <section data-audio="assets/audio/audio17.mp3">
+                <div class="icon-text">
+                    <img src="assets/img/idea.svg" class="icon-small">
+                    <h2>8.1 ¿Y si no hay rozamiento?</h2>
+                </div>
+                <div class="concept-card">
+                    En un mundo ideal (hielo perfecto), la única fuerza que mueve el objeto es $P_x$.
+                </div>
+                <div class="error-box" style="text-align: center; font-size: 1.2em;">
+                    $a = g \cdot \text{sen}(\alpha)$
+                </div>
+                <p style="font-size: 0.7em;">Fíjate: ¡La masa se anula! Dos objetos distintos caerían igual de rápido por la pendiente.</p>
+            </section>
+
+            <!-- SLIDE 18: CON FRENOS -->
+            <section data-audio="assets/audio/audio18.mp3">
+                <div class="icon-text">
+                    <img src="assets/img/collision.svg" class="icon-small">
+                    <h2>8.2 Descenso con Frenos</h2>
+                </div>
+                <div class="error-box">
+                    <p style="text-align: center;">Σ F_x = P_x - Fr = m \cdot a</p>
+                </div>
+            </section>
+
+            <!-- SLIDE 19: ALERTAS -->
+            <section data-audio="assets/audio/audio19.mp3">
+                <div class="icon-text">
+                    <img src="assets/img/warning.svg" class="icon-small">
+                    <h2>9. Claves y Alertas</h2>
+                </div>
+                <div class="error-box">
+                    <span class="highlight">¡OJO!</span> La fuerza neta indica aceleración, no velocidad.
+                </div>
+                <div class="error-box">
+                    <span class="highlight">RECUERDA:</span> El rozamiento siempre se opone al deslizamiento.
+                </div>
+            </section>
+
+            <!-- SLIDE 20: HOOKE -->
+            <section data-audio="assets/audio/audio20.mp3">
+                <div class="icon-text">
+                    <img src="assets/img/spring.svg" class="icon-small">
+                    <h2>10. Fuerza Elástica (Hooke)</h2>
+                </div>
+                <div class="flex-container">
+                    <div class="text-content">
+                        <div class="concept-card">
+                            💡 <span class="highlight">TRUCO:</span> La Δ x de la fórmula es el <span class="highlight">estiramiento</span>, no la longitud total del muelle.
+                        </div>
+                        <p><strong>Ejemplo: El Dinamómetro ⚖️</strong></p>
+                        <p style="font-size: 0.8em;">Cuelgas 1 kg ($P \approx 9.8N$). Si el muelle se estira 2 cm, la <span class="highlight">$k$</span> será $9.8/0.02 = 490 N/m$.</p>
+                    </div>
+                    <div class="diagram">
+                        <svg width="250" height="150" viewBox="0 0 250 150">
+                            <path d="M10 75 L30 75 L40 50 L60 100 L80 50 L100 100 L120 50 L140 100 L160 75 L180 75" fill="none" stroke="#50fa7b" stroke-width="3" />
+                            <circle cx="195" cy="75" r="15" fill="#ffb86c" />
+                            <line x1="195" y1="75" x2="140" y2="75" stroke="#ff5555" stroke-width="4" marker-end="url(#arrow-red)" />
+                        </svg>
+                        <p style="font-size: 0.6em; color: #ff5555;">La fuerza siempre tira hacia el centro</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 21: HOOKE REAL -->
+            <section data-audio="assets/audio/audio21.mp3">
+                <div class="icon-text">
+                    <img src="assets/img/idea.svg" class="icon-small">
+                    <h2>10.1 ¿Dónde hay muelles?</h2>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="concept-card" style="font-size: 0.7em;">
+                        <h4 class="highlight">Amortiguadores 🚗</h4>
+                        <p>Absorben la energía de los baches para que el coche no salte.</p>
+                    </div>
+                    <div class="concept-card" style="font-size: 0.7em;">
+                        <h4 class="highlight">Bolígrafos 🖊️</h4>
+                        <p>Ese pequeño muelle "terco" que devuelve la punta al interior.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 22: CENTRÍPETA -->
+            <section data-audio="assets/audio/audio22.mp3">
+                <div class="icon-text">
+                    <img src="assets/img/loop.svg" class="icon-small">
+                    <h2>11. Fuerza Centrípeta</h2>
+                </div>
+                <div class="concept-card">
+                    La fuerza que te obliga a girar apuntando al centro.
+                </div>
+                <div class="flex-container">
+                    <div class="text-content">
+                        <p style="font-size: 1.5em; text-align: center;" class="highlight">Fc = m · v² / R</p>
+                    </div>
+                    <div class="diagram">
+                        <svg width="350" height="350" viewBox="0 0 300 300">
+                            <!-- Órbita con más contraste -->
+                            <circle cx="150" cy="150" r="100" fill="none" stroke="rgba(139, 233, 253, 0.5)" stroke-width="3" stroke-dasharray="12,12" />
+                            <!-- Punto central -->
+                            <circle cx="150" cy="150" r="6" fill="#50fa7b" />
+                            <!-- Objeto con brillo neón -->
+                            <circle cx="150" cy="50" r="22" fill="#ff79c6" style="filter: drop-shadow(0 0 10px #ff79c6);" />
+                            <!-- Vector de fuerza más grueso -->
+                            <line x1="150" y1="50" x2="150" y2="140" stroke="#8be9fd" stroke-width="8" marker-end="url(#arrow-blue)" />
+                        </svg>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 23: SATÉLITES -->
+            <section data-audio="assets/audio/audio23.mp3">
+                <div class="icon-text">
+                    <img src="assets/img/rocket.svg" class="icon-small">
+                    <h2>11.1 Satélites en Órbita</h2>
+                </div>
+                <div class="concept-card">
+                    Un satélite está en caída libre lateral infinita.
+                </div>
+                <p>La gravedad actúa como fuerza centrípeta, manteniéndolo en órbita sin caer al suelo.</p>
+            </section>
+
+            <!-- SLIDE 24: POLEAS -->
+            <section data-audio="assets/audio/audio24.mp3">
+                <div class="icon-text">
+                    <img src="assets/img/link.svg" class="icon-small">
+                    <h2>12. Cuerpos Enlazados</h2>
+                </div>
+                <div class="flex-container">
+                    <div class="text-content">
+                        <div class="concept-card">
+                            Usa el truco del tren: Mira todo el sistema como un solo conjunto.
+                        </div>
+                    </div>
+                    <div class="diagram">
+                        <svg width="300" height="250" viewBox="0 0 200 200">
+                            <circle cx="100" cy="40" r="20" fill="#44475a" />
+                            <line x1="80" y1="40" x2="80" y2="150" stroke="white" stroke-width="2" />
+                            <line x1="120" y1="40" x2="120" y2="100" stroke="white" stroke-width="2" />
+                            <rect x="65" y="150" width="30" height="30" fill="#ffb86c" />
+                            <rect x="105" y="100" width="30" height="30" fill="#ff79c6" />
+                        </svg>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 25: LA TENSIÓN -->
+            <section data-audio="assets/audio/audio25.mp3">
+                <div class="icon-text">
+                    <img src="assets/img/idea.svg" class="icon-small">
+                    <h2>12.1 ¿Qué es la Tensión?</h2>
+                </div>
+                <div class="concept-card">Es la fuerza que transmite la cuerda. Es como si los átomos de la cuerda se cogieran fuerte de las manos.</div>
+                <div class="error-box" style="font-size: 0.8em;">
+                    🚨 <span class="highlight">REGLA DE ORO:</span> Si la polea y la cuerda son ideales, la tensión es LA MISMA en todo el cable.
+                </div>
+            </section>
+
+            <!-- SLIDE 26: RESOLVER POLEAS -->
+            <section data-audio="assets/audio/audio26.mp3">
+                <div class="icon-text">
+                    <img src="assets/img/todo.svg" class="icon-small">
+                    <h2>12.2 Cómo resolver poleas</h2>
+                </div>
+                <ol style="font-size: 0.7em;">
+                    <li>Dibuja las fuerzas en cada cuerpo por separado.</li>
+                    <li>Plantea Σ F = m · a para cada cuerpo.</li>
+                    <li>Suma las ecuaciones y... ¡la Tensión desaparecerá!</li>
+                </ol>
+            </section>
+
+            <!-- SLIDE 27: NATURALEZA -->
+            <section data-audio="assets/audio/audio27.mp3">
+                <div class="icon-text">
+                    <img src="assets/img/nature.svg" class="icon-small">
+                    <h2>La Física es Natural 🌿</h2>
+                </div>
+                <div class="concept-card" style="font-size: 0.8em;">¿Sabías que los guepardos usan sus garras para aumentar el coeficiente de rozamiento (μ) y no patinar en las curvas?</div>
+                <p style="font-size: 0.7em;">Su cola actúa como un contrapeso para desplazar su <span class="highlight">centro de masas</span>.</p>
+            </section>
+
+            <!-- SLIDE 28: CHULETA -->
+            <section data-audio="assets/audio/audio28.mp3">
+                <div class="icon-text">
+                    <img src="assets/img/tools.svg" class="icon-small">
+                    <h2>Chuleta de Supervivencia</h2>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 0.7em;">
+                    <div class="concept-card">
+                        <h4 class="highlight">Cálculos Rápidos</h4>
+                        <ul>
+                            <li>P = m · 9.8</li>
+                            <li>Fr = μ · N</li>
+                            <li>Σ F = m · a</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 29: FINAL -->
+            <section data-audio="assets/audio/audio29.mp3">
+                <div class="icon-text">
+                    <img src="assets/img/ok.svg" class="icon-small">
+                    <h2>¡Misión Cumplida!</h2>
+                </div>
+                <div class="concept-card" style="text-align: center; padding: 100px;">
+                    <p>Ahora dominarás las fuerzas del universo.</p>
+                    <p class="highlight" style="font-size: 1.5em; margin-top: 40px;">Entiende las interacciones, domina la Dinámica.</p>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <audio id="narration-audio"></audio>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/math/math.min.js"></script>
+    <script>
+        Reveal.initialize({
+            hash: true, center: true, transition: 'convex',
+            width: 1920, height: 1080, margin: 0.02,
+            minScale: 0.5, maxScale: 2.5,
+            backgroundColor: '#000000',
+            plugins: [ RevealMath.MathJax3 ]
+        });
+
+        const audio = document.getElementById('narration-audio');
+        const startOverlay = document.getElementById('start-narration');
+        const audioControls = document.getElementById('audio-controls');
+        const statusText = document.getElementById('narration-status');
+
+        function playSlideAudio(event) {
+            const currentSlide = event.currentSlide;
+            const audioSrc = currentSlide.getAttribute('data-audio');
+            if (audioSrc) {
+                audio.src = audioSrc;
+                audio.play().catch(e => console.log("Audio block"));
+                audioControls.style.display = 'flex';
+                statusText.innerText = "Reproduciendo audio...";
+            } else { audioControls.style.display = 'none'; }
+        }
+
+        Reveal.on('slidechanged', playSlideAudio);
+        startOverlay.addEventListener('click', () => {
+            startOverlay.style.display = 'none';
+            const currentSlide = Reveal.getCurrentSlide();
+            const audioSrc = currentSlide.getAttribute('data-audio');
+            if (audioSrc) { audio.src = audioSrc; audio.play(); audioControls.style.display = 'flex'; }
+        });
+        audio.onended = () => { statusText.innerText = "Audio finalizado. Pulsa la flecha."; };
+    </script>
+</body>
+</html>
