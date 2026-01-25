@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>Elite Retail Masterclass | 25 Slides de Poder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/black.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --r-main-font: 'Outfit', sans-serif;
+            --r-heading-font: 'Space Grotesk', sans-serif;
+            --r-background-color: #020617;
+            --retail-blue: #3b82f6;
+            --retail-orange: #f59e0b;
+            --retail-purple: #a855f7;
+            --r-main-font-size: 28px; /* Aumentado para máxima legibilidad */
+        }
+        .reveal h1 { font-size: 4.5em; font-weight: 900; letter-spacing: -2px; text-transform: uppercase; }
+        .reveal h2 { font-size: 3.2em; font-weight: 900; color: white; }
+        .reveal h3 { font-size: 2.5em; font-weight: 900; color: var(--retail-blue); }
+        
+        .slide-card { 
+            background: rgba(255,255,255,0.05); 
+            padding: 60px; 
+            border-radius: 48px; 
+            border: 1px solid rgba(255,255,255,0.1); 
+            text-align: left;
+            width: 100%;
+            max-width: 1300px;
+            margin: 0 auto;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.5);
+        }
+        .highlight { color: var(--retail-blue); }
+        .example-box { 
+            background: rgba(16, 185, 129, 0.15); 
+            border-left: 8px solid #10b981; 
+            padding: 35px; 
+            margin-top: 30px; 
+            font-size: 0.9em; 
+            color: #f1f5f9; 
+            border-radius: 0 24px 24px 0;
+        }
+        .pro-tip { 
+            background: rgba(245, 158, 11, 0.15); 
+            border-left: 8px solid #f59e0b; 
+            padding: 35px; 
+            margin-top: 25px; 
+            font-size: 0.85em; 
+            font-weight: bold; 
+            color: #fbbf24; 
+            border-radius: 0 24px 24px 0;
+        }
+        .level-pill {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 25px 40px;
+            border-radius: 24px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- 1. PORTADA -->
+            <section data-background-gradient="linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%)">
+                <div class="w-32 h-32 bg-blue-600 rounded-[2.5rem] flex items-center justify-center mx-auto mb-12 shadow-[0_0_60px_rgba(37,99,235,0.4)]">
+                    <i data-lucide="layout-grid" class="text-white w-16 h-16"></i>
+                </div>
+                <h1 class="mb-6">RETAIL <span class="text-blue-400">ELITE</span></h1>
+                <p class="opacity-50 uppercase tracking-[0.5em] font-light text-3xl mb-12">Implantación y Venta Pro</p>
+                <div class="text-lg font-black bg-white/10 px-12 py-4 rounded-full border border-white/10 inline-block uppercase tracking-widest italic shadow-xl">25 Módulos de Aprendizaje</div>
+            </section>
+
+            <!-- 2. DEFINICIÓN -->
+            <section>
+                <h2 class="mb-12 italic">¿Qué es el <span class="text-blue-400">Lineal</span>?</h2>
+                <div class="slide-card">
+                    <p class="text-5xl italic mb-10 leading-tight font-black text-white">"Es el vendedor silencioso."</p>
+                    <p class="text-3xl opacity-70 leading-relaxed">No es solo una estantería de madera o metal. Es una <strong>máquina de comunicación visual</strong> diseñada para atraer la mirada, generar deseo y cerrar la venta sin que nadie hable.</p>
+                </div>
+            </section>
+
+            <!-- 3. OBJETIVOS ESTRATÉGICOS -->
+            <section>
+                <h2 class="mb-12">Objetivos del Gestor</h2>
+                <div class="grid grid-cols-3 gap-10 mt-10">
+                    <div class="slide-card fragment">
+                        <div class="w-16 h-16 bg-blue-500/20 rounded-2xl flex items-center justify-center mb-8 text-blue-400"><i data-lucide="eye" class="w-10 h-10"></i></div>
+                        <h4 class="text-2xl font-bold mb-6 italic">ATRAER</h4>
+                        <p class="text-lg opacity-60">Llamar la atención del cliente mediante el uso técnico del color, la luz y el orden masivo.</p>
+                    </div>
+                    <div class="slide-card fragment border-orange-500/20">
+                        <div class="w-16 h-16 bg-orange-500/20 rounded-2xl flex items-center justify-center mb-8 text-orange-400"><i data-lucide="navigation" class="w-10 h-10"></i></div>
+                        <h4 class="text-2xl font-bold mb-6 italic">FACILITAR</h4>
+                        <p class="text-lg opacity-60">Reducir el esfuerzo del cliente para que encuentre su producto en menos de 3 segundos.</p>
+                    </div>
+                    <div class="slide-card fragment border-green-500/20">
+                        <div class="w-16 h-16 bg-green-500/20 rounded-2xl flex items-center justify-center mb-8 text-green-400"><i data-lucide="trending-up" class="w-10 h-10"></i></div>
+                        <h4 class="text-2xl font-bold mb-6 italic">VENDER</h4>
+                        <p class="text-lg opacity-60">Maximizar el beneficio por cada milímetro de estante disponible en la tienda.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. LOS 4 NIVELES: PANEL DE CONTROL -->
+            <section>
+                <h2 class="mb-12 text-purple-400">Panel de Niveles</h2>
+                <div class="space-y-6 max-w-5xl mx-auto">
+                    <div class="level-pill opacity-30 text-2xl italic"><span>4. Nivel Cabeza (>170cm)</span> <i data-lucide="chevron-up"></i></div>
+                    <div class="level-pill bg-blue-600 rounded-[2.5rem] shadow-[0_0_50px_rgba(37,99,235,0.3)] text-4xl font-black py-12"><strong>3. NIVEL OJOS (120-170cm)</strong> <i data-lucide="eye" class="w-16 h-16"></i></div>
+                    <div class="level-pill opacity-60 text-3xl font-bold py-10"><span>2. Nivel Manos (80-120cm)</span> <i data-lucide="hand"></i></div>
+                    <div class="level-pill opacity-30 text-2xl italic"><span>1. Nivel Suelo (<80cm)</span> <i data-lucide="anchor"></i></div>
+                </div>
+            </section>
+
+            <!-- 5. NIVEL 1: SUELO -->
+            <section>
+                <h3 class="mb-10 text-slate-400">Nivel 1: Suelo (<80cm)</h3>
+                <div class="slide-card">
+                    <p class="text-4xl mb-8 italic font-bold">"Peso, Volumen y Ahorro."</p>
+                    <p class="text-2xl opacity-70 mb-10 leading-relaxed">Nivel físicamente incómodo. El cliente tiene que agacharse, lo que interrumpe su flujo de paseo.</p>
+                    <div class="example-box">
+                        <strong>CASOS DE USO:</strong> Garrafas de agua de 5L, sacos de arroz, paquetes industriales de papel higiénico o marcas blancas de precio mínimo.
+                    </div>
+                    <div class="pro-tip">LOGICA COMERCIAL: El cliente que busca precio bajo está dispuesto a hacer el esfuerzo físico de agacharse. No malgastes los ojos aquí.</div>
+                </div>
+            </section>
+
+            <!-- 6. NIVEL 2: MANOS -->
+            <section>
+                <h3 class="mb-10 text-indigo-400">Nivel 2: Manos (80-120cm)</h3>
+                <div class="slide-card border-indigo-500/30">
+                    <p class="text-4xl mb-8 italic font-bold">"El nivel de la comodidad total."</p>
+                    <p class="text-2xl opacity-70 mb-10">Situado a la altura de la cintura. El cliente solo tiene que estirar el brazo. Es el nivel de la compra mecánica.</p>
+                    <div class="example-box" style="border-color: #6366f1; background: rgba(99, 102, 241, 0.1);">
+                        <strong>CASOS DE USO:</strong> Pasta, cereales de desayuno, conservas, aceites o productos de uso repetitivo que el cliente ya tiene en mente.
+                    </div>
+                </div>
+            </section>
+
+            <!-- 7. NIVEL 3: OJOS -->
+            <section data-background-color="#1e3a8a">
+                <h2 class="text-white mb-10 uppercase italic font-black">Nivel 3: El Nivel Diamante</h2>
+                <div class="slide-card bg-white/10 border-white/20 p-20 shadow-2xl">
+                    <p class="text-5xl font-black mb-10 italic text-yellow-400 underline decoration-blue-500 decoration-8">Impacto Visual Inmediato.</p>
+                    <p class="text-3xl leading-relaxed mb-10 font-light italic">Representa más del 50% de las ventas de una estantería. El cliente percibe el producto sin buscarlo activamente.</p>
+                    <div class="example-box" style="color: white; border-color: white; background: rgba(255,255,255,0.1);">
+                        <strong>ESTRATEGIA PRO:</strong> Novedades, alta tecnología (móviles), perfumes de lujo y productos con el margen de beneficio más alto.
+                    </div>
+                </div>
+            </section>
+
+            <!-- 8. NIVEL 4: CABEZA -->
+            <section>
+                <h3 class="mb-10 text-slate-500">Nivel 4: Cabeza (>170cm)</h3>
+                <div class="slide-card border-slate-500/30">
+                    <p class="text-4xl mb-8 italic font-bold">"El faro de la tienda."</p>
+                    <p class="text-2xl opacity-70 mb-10 leading-relaxed text-slate-400">Nivel de difícil acceso. Se utiliza principalmente para visibilidad de larga distancia y gestión de almacén visual.</p>
+                    <div class="example-box" style="border-color: #64748b;">
+                        <strong>USO TÉCNICO:</strong> Señalética de pasillo, cajas de reserva (stock), o decoración impactante de marcas que se debe ver desde la entrada.
+                    </div>
+                </div>
+            </section>
+
+            <!-- 9. REGLA DE ORO -->
+            <section data-background-color="#f59e0b">
+                <h2 class="text-black mb-12 uppercase italic font-black">La Regla de Oro del Profit</h2>
+                <div class="slide-card bg-black/95 text-white p-24 rounded-[5rem] shadow-2xl">
+                    <p class="text-5xl mb-12 text-center font-bold italic tracking-tight">¿Quieres subir tus ventas un 35%?</p>
+                    <div class="flex items-center justify-center gap-20">
+                        <div class="text-4xl opacity-30 uppercase font-black">Manos</div>
+                        <div class="text-9xl text-orange-500 animate-pulse">➔</div>
+                        <div class="text-9xl font-black text-white italic underline">OJOS</div>
+                    </div>
+                    <p class="mt-16 text-2xl text-center opacity-50 italic leading-relaxed">"El simple hecho de elevar un producto a la altura de la mirada lo convierte en prioritario para el cerebro."</p>
+                </div>
+            </section>
+
+            <!-- 10. IMPLANTACIÓN VERTICAL -->
+            <section>
+                <h3 class="mb-12 italic">Estrategia Vertical |||</h3>
+                <div class="slide-card bg-blue-500/5 border-blue-500/20 p-24">
+                    <div class="flex gap-20 items-center">
+                        <div class="w-1/4 text-[12rem] text-blue-400 font-black opacity-30 italic">V</div>
+                        <div class="w-3/4">
+                            <p class="text-4xl mb-10 leading-relaxed font-bold">La marca domina <strong>toda la columna</strong>, de arriba a abajo.</p>
+                            <div class="pro-tip" style="color: #60a5fa; border-color: #3b82f6; font-size: 1em;">VENTAJA ELITE: Crea un bloque visual que el ojo detecta al instante. Es la implantación más ordenada y profesional que existe.</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 11. IMPLANTACIÓN HORIZONTAL -->
+            <section>
+                <h3 class="mb-12 italic">Estrategia Horizontal ===</h3>
+                <div class="slide-card bg-orange-500/5 border-orange-500/20 p-24">
+                    <div class="flex gap-20 items-center">
+                        <div class="w-1/4 text-[12rem] text-orange-400 font-black opacity-30 italic">H</div>
+                        <div class="w-3/4">
+                            <p class="text-4xl mb-10 leading-relaxed font-bold">Los productos se alinean en <strong>un solo estante</strong> a lo largo del pasillo.</p>
+                            <div class="pro-tip" style="color: #f87171; border-color: #ef4444; background: rgba(239, 68, 68, 0.15); font-size: 1em;">PELIGRO: Si una marca queda relegada al estante inferior horizontal, sus ventas caerán a cero. Solo se usa en gamas muy pequeñas.</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 12. EL FACING -->
+            <section>
+                <div class="w-32 h-32 bg-orange-500 rounded-[2.5rem] flex items-center justify-center mx-auto mb-12 shadow-2xl"><i data-lucide="package" class="text-white w-16 h-16"></i></div>
+                <h2 class="mb-12 italic uppercase">El Facing Maestro</h2>
+                <div class="slide-card">
+                    <p class="text-5xl mb-10 italic font-black">"Lo que no se ve, no se compra."</p>
+                    <p class="text-3xl opacity-70 leading-relaxed mb-10 font-light">El facing es el número de unidades frontales de un producto. Si solo hay una cara, el cliente piensa que el producto está agotado o que nadie lo quiere.</p>
+                    <div class="pro-tip" style="font-size: 1.1em;">REGLA DE ORO: Mínimo 3 unidades de facing para que el cerebro registre el producto como "disponible y confiable".</div>
+                </div>
+            </section>
+
+            <!-- 13. ZONAS CALIENTES -->
+            <section data-background-color="#b91c1c">
+                <h2 class="text-white mb-12 italic font-black uppercase">Zonas Calientes (Hot Zones)</h2>
+                <div class="slide-card bg-white/10 border-white/20 p-20 shadow-2xl">
+                    <p class="text-4xl mb-12 font-bold text-center italic">Zonas de paso forzado y flujo masivo.</p>
+                    <div class="grid grid-cols-2 gap-10 text-3xl">
+                        <div class="p-10 bg-black/40 rounded-[2rem] border border-white/10 shadow-xl flex items-center gap-6"><span>📍 Entrada</span></div>
+                        <div class="p-10 bg-black/40 rounded-[2rem] border border-white/10 shadow-xl flex items-center gap-6"><span>📍 Cajas</span></div>
+                        <div class="p-10 bg-black/40 rounded-[2rem] border border-white/10 shadow-xl flex items-center gap-6"><span>📍 Cruces</span></div>
+                        <div class="p-10 bg-black/40 rounded-[2rem] border border-white/10 shadow-xl flex items-center gap-6"><span>📍 Cabeceras</span></div>
+                    </div>
+                    <div class="pro-tip" style="background: white; color: black; margin-top: 60px; font-size: 1em;">ESTRATEGIA: Aquí van los productos de IMPULSO (chicles, revistas, pilas, ofertas flash). El cliente compra por instinto.</div>
+                </div>
+            </section>
+
+            <!-- 14. ZONAS FRÍAS -->
+            <section data-background-color="#1e40af">
+                <h2 class="text-white mb-12 italic font-black uppercase">Zonas Frías (Cold Zones)</h2>
+                <div class="slide-card bg-white/10 border-white/20 p-20 shadow-2xl">
+                    <p class="text-4xl mb-10 font-bold italic">Donde el tráfico de clientes muere.</p>
+                    <p class="text-2xl mb-12 italic opacity-80 leading-relaxed font-light">Son rincones ciegos, pasillos sin salida o zonas alejadas del recorrido natural de entrada-salida.</p>
+                    <div class="example-box" style="color: white; border-color: #fbbf24; font-size: 1.2em; background: rgba(245, 158, 11, 0.25);">
+                        <strong>TÉCNICA GANCHO:</strong> Pon aquí el pan, la leche o el papel higiénico. El cliente irá a buscarlos sí o sí, activando así toda la zona por el camino.
+                    </div>
+                </div>
+            </section>
+
+            <!-- 15. COMPORTAMIENTO: EL GIRO -->
+            <section>
+                <h3 class="mb-12 italic uppercase">Psicología del Flujo</h3>
+                <div class="w-32 h-32 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-12 shadow-[0_0_60px_rgba(37,99,235,0.4)]"><i data-lucide="redo" class="text-white w-16 h-16"></i></div>
+                <p class="text-6xl font-black mb-10 italic text-white tracking-tighter">"El giro a la derecha."</p>
+                <p class="text-3xl opacity-60 leading-relaxed max-w-5xl mx-auto italic">El 90% de los clientes gira a la derecha al entrar en una tienda. Aprovecha esa primera zona caliente para situar tus productos con más margen o la nueva temporada.</p>
+            </section>
+
+            <!-- 16. CROSS MERCHANDISING -->
+            <section>
+                <h3 class="mb-12 italic uppercase">Cross Merchandising</h3>
+                <div class="slide-card border-green-500/20 bg-green-500/10 p-24 rounded-[5rem]">
+                    <div class="flex justify-center items-center gap-24 text-9xl font-black">
+                        <div class="text-center italic"><span class="block scale-125 mb-8">🍺</span><p class="text-2xl uppercase tracking-[0.3em] text-orange-400 mt-10">Cerveza</p></div>
+                        <div class="text-blue-400 text-[10rem] animate-pulse">+</div>
+                        <div class="text-center italic"><span class="block scale-125 mb-8">🍿</span><p class="text-2xl uppercase tracking-[0.3em] text-yellow-400 mt-10">Snacks</p></div>
+                    </div>
+                    <p class="text-center text-4xl mt-20 opacity-80 italic font-black tracking-tight">"Asocia necesidades para duplicar la venta."</p>
+                </div>
+            </section>
+
+            <!-- 17. PSICOLOGÍA DEL ESPACIO -->
+            <section>
+                <h2 class="mb-12 italic font-black">Arquitectura del Confort</h2>
+                <div class="slide-card p-24 border-red-500/20 bg-red-500/5">
+                    <p class="text-5xl mb-10 leading-tight font-black italic">Evita la Claustrofobia.</p>
+                    <p class="text-3xl opacity-70 leading-relaxed font-light italic">Las góndolas (estantes centrales) no deben superar la altura de los ojos. Si el cliente puede ver el final de la tienda, se sentirá seguro y comprará con más calma y tiempo.</p>
+                </div>
+            </section>
+
+            <!-- 18. RENTABILIDAD: ALTA ROTACIÓN -->
+            <section>
+                <h3 class="mb-12 italic uppercase">Rentabilidad: Rotación</h3>
+                <div class="slide-card bg-emerald-500/10 border-emerald-500/30 p-24 rounded-[4rem]">
+                    <h4 class="text-6xl text-emerald-400 font-black mb-10 uppercase italic tracking-tighter">PRODUCTOS MOTOR</h4>
+                    <p class="text-3xl opacity-80 leading-relaxed mb-12 font-light italic">Son los que se venden miles de veces al día (Leche, Agua). Dejan muy poco margen por unidad pero son los que <strong>traen a la gente</strong> a tu puerta.</p>
+                    <div class="p-8 bg-emerald-500 text-black text-3xl font-black rounded-3xl inline-block shadow-2xl italic uppercase tracking-widest">OBJETIVO: Generar Tráfico</div>
+                </div>
+            </section>
+
+            <!-- 19. RENTABILIDAD: ALTO MARGEN -->
+            <section>
+                <h3 class="mb-12 italic uppercase">Rentabilidad: Margen</h3>
+                <div class="slide-card bg-purple-500/10 border-purple-500/30 p-24 rounded-[4rem]">
+                    <h4 class="text-6xl text-purple-400 font-black mb-10 uppercase italic tracking-tighter">PRODUCTOS TESORO</h4>
+                    <p class="text-3xl opacity-80 leading-relaxed mb-12 font-light italic">Se venden menos unidades, pero cada venta deja un beneficio inmenso (Perfumes, Tecnología). Son el <strong>corazón económico</strong> del negocio.</p>
+                    <div class="p-8 bg-purple-500 text-white text-3xl font-black rounded-3xl inline-block shadow-2xl italic uppercase tracking-widest">OBJETIVO: Ganar Dinero Real</div>
+                </div>
+            </section>
+
+            <!-- 20. MANTENIMIENTO: FRENTEADO -->
+            <section>
+                <h3 class="mb-12 italic uppercase">El Arte del Frenteado</h3>
+                <div class="slide-card p-24 border-blue-500/30 bg-blue-500/5">
+                    <p class="text-5xl mb-10 leading-tight italic font-black text-white">"Estante vacío = Tienda abandonada."</p>
+                    <p class="text-3xl opacity-70 leading-relaxed mb-12 italic font-light">El **Frenteado (Fronting)** es la tarea de mover los productos de atrás hacia el borde del estante cada vez que se vende una unidad.</p>
+                    <div class="pro-tip" style="color: #60a5fa; border-color: #3b82f6; font-size: 1.1em;">REGLA DE ORO: El facing debe estar siempre alineado al borde frontal de la balda.</div>
+                </div>
+            </section>
+
+            <!-- 21. ILUMINACIÓN ESTRATÉGICA -->
+            <section>
+                <h2 class="mb-16 italic uppercase font-black">La Luz que Convence</h2>
+                <div class="grid grid-cols-2 gap-16 text-3xl font-bold uppercase italic tracking-tighter">
+                    <div class="p-20 bg-yellow-500/20 rounded-[5rem] border border-yellow-500/30 text-yellow-200 shadow-2xl flex flex-col items-center">
+                        <i data-lucide="sun" class="w-24 h-24 mb-10"></i>
+                        LUZ CÁLIDA<br><span class="text-xl font-light lowercase opacity-60 mt-6 tracking-normal">Panadería, frutería y zonas de descanso.</span>
+                    </div>
+                    <div class="p-20 bg-blue-500/20 rounded-[5rem] border border-blue-500/30 text-blue-200 shadow-2xl flex flex-col items-center">
+                        <i data-lucide="zap" class="w-24 h-24 mb-10"></i>
+                        LUZ BLANCA<br><span class="text-xl font-light lowercase opacity-60 mt-6 tracking-normal">Tecnología, limpieza, lujo y modernidad.</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 22. PSICOLOGÍA DEL COLOR -->
+            <section>
+                <h2 class="mb-16 italic uppercase font-black">Colores que Venden</h2>
+                <div class="grid grid-cols-2 gap-16 max-w-6xl mx-auto">
+                    <div class="slide-card border-red-500/30 bg-red-500/10 p-20 rounded-[4rem]">
+                        <h4 class="text-5xl text-red-500 font-black mb-8 italic uppercase tracking-tighter">OFERTA / URGENCIA</h4>
+                        <p class="text-2xl opacity-80 leading-relaxed italic font-light">El **Rojo y Amarillo** activan el instinto de "oportunidad" y bajo precio. Úsalos para liquidaciones.</p>
+                    </div>
+                    <div class="slide-card border-slate-100/20 bg-white/5 p-20 rounded-[4rem]">
+                        <h4 class="text-5xl text-white font-black mb-8 italic uppercase tracking-tighter">CALIDAD / ELITE</h4>
+                        <p class="text-2xl opacity-80 leading-relaxed italic font-light">El **Negro y Dorado** comunican exclusividad, elegancia y precio alto. Úsalos para productos premium.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 23. CABECERAS DE GÓNDOLA -->
+            <section>
+                <h3 class="mb-12 italic uppercase">Cabeceras de Góndola</h3>
+                <div class="w-40 h-40 bg-yellow-500 rounded-[3rem] flex items-center justify-center mx-auto mb-16 shadow-[0_0_80px_rgba(245,158,11,0.4)]"><i data-lucide="star" class="text-black w-20 h-20 fill-current"></i></div>
+                <p class="text-5xl mb-10 leading-tight font-black italic text-yellow-400">"El punto crítico del pasillo."</p>
+                <p class="text-3xl opacity-70 leading-relaxed max-w-5xl mx-auto italic font-light">Son los extremos de los estantes. Al estar en el flujo transversal, tienen un **impacto del 100%** sobre todos los clientes de la tienda. </p>
+            </section>
+
+            <!-- 24. RECAPITULACIÓN ELITE -->
+            <section>
+                <h2 class="mb-16 italic text-center uppercase tracking-[0.3em] font-black opacity-40">Resumen del Gestor Elite</h2>
+                <div class="grid grid-cols-2 gap-12 text-2xl font-black uppercase italic tracking-tighter max-w-6xl mx-auto">
+                    <div class="p-12 glass rounded-[3rem] border-l-[12px] border-blue-500 bg-blue-500/10 shadow-2xl">1. Ojos para vender margen</div>
+                    <div class="p-12 glass rounded-[3rem] border-l-[12px] border-slate-500 bg-slate-500/10 shadow-2xl">2. Suelo para volumen pesado</div>
+                    <div class="p-12 glass rounded-[3rem] border-l-[12px] border-indigo-500 bg-indigo-500/10 shadow-2xl">3. Verticalidad para orden</div>
+                    <div class="p-12 glass rounded-[3rem] border-l-[12px] border-orange-500 bg-orange-500/10 shadow-2xl">4. Calentar zonas frías con básicos</div>
+                </div>
+            </section>
+
+            <!-- 25. FINAL MASTER -->
+            <section data-background-gradient="radial-gradient(circle, #1e293b 0%, #020617 100%)">
+                <div class="w-48 h-48 bg-blue-600 rounded-[4rem] flex items-center justify-center mx-auto mb-16 shadow-[0_0_100px_rgba(37,99,235,0.6)]">
+                    <i data-lucide="award" class="text-white w-24 h-24 animate-pulse"></i>
+                </div>
+                <h2 class="text-white mb-10 italic tracking-tighter text-8xl font-black uppercase italic">¡MASTER FINALIZADO!</h2>
+                <p class="text-slate-400 text-4xl mb-24 font-light italic leading-relaxed">Ahora tienes la visión técnica necesaria <br> para dominar cualquier punto de venta.</p>
+                <a href="index.html" class="px-24 py-10 bg-white text-black font-black uppercase tracking-[0.5em] text-lg rounded-full hover:bg-blue-500 hover:text-white transition-all shadow-[0_20px_80px_rgba(255,255,255,0.2)] active:scale-95">
+                    REGRESAR AL HUB MASTER
+                </a>
+            </section>
+
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            center: true,
+            transition: 'slide',
+            controls: true,
+            progress: true,
+            mouseWheel: true,
+            width: 1400, 
+            height: 900, 
+            margin: 0.04, 
+            minScale: 0.2,
+            maxScale: 2.0,
+            transitionSpeed: 'slow'
+        });
+        lucide.createIcons();
+    </script>
+</body>
+</html>

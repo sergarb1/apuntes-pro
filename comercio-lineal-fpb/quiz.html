@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificación Retail Elite | FPB Comercio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <style>
+        [v-cloak] { display: none; }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #020617;
+            background-image: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #020617 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .answer-btn {
+            @apply w-full text-left px-8 py-5 rounded-full border-2 border-white/10 bg-white/5 transition-all duration-300 hover:bg-blue-600 hover:border-blue-400 hover:scale-[1.02] text-slate-200 font-semibold shadow-lg active:scale-95;
+        }
+        .progress-fill {
+            @apply h-full bg-gradient-to-r from-blue-600 to-purple-500 rounded-full transition-all duration-700;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-12">
+
+    <div id="app" class="max-w-4xl mx-auto" v-cloak>
+        
+        <!-- TOP STATUS -->
+        <header class="flex justify-between items-center mb-10 px-6" v-if="!finished">
+            <div class="flex items-center gap-5">
+                <div class="w-14 h-14 bg-blue-600 rounded-[1.5rem] flex items-center justify-center text-white shadow-2xl shadow-blue-600/30">
+                    <i data-lucide="shield-check" class="w-8 h-8"></i>
+                </div>
+                <div>
+                    <div class="text-[10px] font-black text-blue-400 uppercase tracking-[0.3em] mb-1">Certificación Elite</div>
+                    <div class="text-white font-black text-xl tracking-tight uppercase">Retail Manager</div>
+                </div>
+            </div>
+            <div class="text-right">
+                <div class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Módulo Completado</div>
+                <div class="text-white font-black text-3xl tracking-tighter">{{ Math.round((currentQuestion / questions.length) * 100) }}%</div>
+            </div>
+        </header>
+
+        <!-- PROGRESS BAR -->
+        <div class="w-full bg-white/5 rounded-full h-2 mb-16 overflow-hidden border border-white/10" v-if="!finished">
+            <div class="progress-fill" :style="{ width: ((currentQuestion + 1) / questions.length) * 100 + '%' }"></div>
+        </div>
+
+        <!-- MAIN QUIZ CARD -->
+        <div v-if="!finished" class="glass rounded-[4rem] p-8 md:p-16 relative overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.5)]">
+            
+            <!-- QUESTION VIEW -->
+            <div v-if="!showFeedback" class="animate-in fade-in slide-in-from-bottom duration-500">
+                <div class="flex items-center gap-3 mb-8">
+                    <span class="bg-blue-500/20 text-blue-400 text-[10px] font-black px-4 py-1.5 rounded-full border border-blue-500/30 uppercase tracking-widest">
+                        Pregunta {{ currentQuestion + 1 }}
+                    </span>
+                </div>
+                
+                <h2 class="text-3xl md:text-5xl font-black text-white leading-[1.1] mb-12 font-display tracking-tight italic">
+                    {{ questions[currentQuestion].text }}
+                </h2>
+
+                <div class="grid grid-cols-1 gap-5">
+                    <button v-for="(opt, idx) in questions[currentQuestion].options" 
+                        @click="checkAnswer(idx)"
+                        class="answer-btn">
+                        <div class="flex items-center gap-4">
+                            <span class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-[10px] font-black">{{ String.fromCharCode(65 + idx) }}</span>
+                            {{ opt }}
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- FEEDBACK VIEW -->
+            <div v-else class="animate-in zoom-in duration-300 text-center">
+                <div :class="[isCorrect ? 'bg-green-500 text-black' : 'bg-red-500 text-white', 'w-24 h-24 rounded-[2rem] flex items-center justify-center mb-10 mx-auto shadow-[0_0_50px_rgba(0,0,0,0.3)] animate-bounce']">
+                    <i :data-lucide="isCorrect ? 'check' : 'x'" class="w-12 h-12"></i>
+                </div>
+                
+                <h3 :class="[isCorrect ? 'text-green-400' : 'text-red-400', 'text-5xl font-black uppercase tracking-tighter italic mb-8']">
+                    {{ isCorrect ? '¡IMPECABLE!' : '¡ERROR COMERCIAL!' }}
+                </h3>
+
+                <div class="space-y-8 text-left max-w-2xl mx-auto">
+                    <div class="bg-white/5 p-10 rounded-[3rem] border border-white/10">
+                        <h4 class="text-[10px] font-black text-blue-400 uppercase tracking-[0.4em] mb-4">Análisis Técnico</h4>
+                        <p class="text-slate-300 text-xl leading-relaxed font-light italic">
+                            {{ questions[currentQuestion].explanation }}
+                        </p>
+                    </div>
+
+                    <div class="bg-gradient-to-r from-blue-600 to-indigo-700 p-8 rounded-[3rem] flex gap-6 items-center shadow-2xl">
+                        <div class="w-16 h-16 bg-white/20 rounded-3xl flex items-center justify-center shrink-0">
+                            <i data-lucide="zap" class="text-white w-8 h-8"></i>
+                        </div>
+                        <div>
+                            <h5 class="text-white font-black text-xs uppercase tracking-widest mb-1">Hack de Vendedor Pro</h5>
+                            <p class="text-blue-50 text-sm font-medium">{{ questions[currentQuestion].tip }}</p>
+                        </div>
+                    </div>
+
+                    <button @click="nextQuestion" class="w-full bg-white text-black py-7 rounded-full font-black uppercase tracking-widest text-sm hover:bg-blue-500 hover:text-white transition-all shadow-2xl">
+                        Siguiente Nivel <i data-lucide="arrow-right" class="inline w-4 h-4 ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- FINAL STATE -->
+        <div v-else class="text-center glass rounded-[5rem] p-12 md:p-24 shadow-2xl animate-in zoom-in duration-700 relative overflow-hidden">
+            <div class="absolute -top-20 -left-20 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl"></div>
+            
+            <div class="w-40 h-40 bg-gradient-to-br from-blue-500 to-purple-600 rounded-[3.5rem] flex items-center justify-center mx-auto mb-12 shadow-2xl relative z-10">
+                <i data-lucide="award" class="w-20 h-20 text-white animate-pulse"></i>
+            </div>
+            
+            <h2 class="text-6xl md:text-7xl font-black text-white mb-6 tracking-tighter italic uppercase">Certificación <br><span class="text-blue-500">Completada</span></h2>
+            <p class="text-slate-400 text-2xl font-light mb-16">Has demostrado una capacidad analítica de alto nivel.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
+                <div class="bg-white/5 p-10 rounded-[3.5rem] border border-white/5">
+                    <div class="text-7xl font-black text-white mb-2">{{ score }}</div>
+                    <div class="text-[10px] font-black text-blue-400 uppercase tracking-widest">Aciertos Totales</div>
+                </div>
+                <div class="bg-white/5 p-10 rounded-[3.5rem] border border-white/5">
+                    <div class="text-7xl font-black text-purple-500 mb-2">{{ Math.round((score / questions.length) * 100) }}%</div>
+                    <div class="text-[10px] font-black text-purple-400 uppercase tracking-widest">Efectividad Comercial</div>
+                </div>
+            </div>
+
+            <div class="flex flex-col md:flex-row gap-6 justify-center relative z-10">
+                <button onclick="location.reload()" class="px-16 py-7 bg-white text-black rounded-full font-black uppercase tracking-widest text-xs hover:bg-blue-500 hover:text-white transition-all shadow-xl">
+                    Reiniciar Examen
+                </button>
+                <a href="index.html" class="px-16 py-7 bg-blue-600 text-white rounded-full font-black uppercase tracking-widest text-xs hover:bg-blue-500 transition-all shadow-xl">
+                    Volver al Hub Master
+                </a>
+            </div>
+        </div>
+
+        <footer class="mt-20 text-center text-slate-700">
+            <p class="text-[10px] font-black uppercase tracking-[0.8em]">FPB Comercio & Marketing • Auditoría 2026</p>
+        </footer>
+    </div>
+
+    <script>
+        const { createApp, ref, mounted, nextTick } = Vue;
+
+        createApp({
+            setup() {
+                const currentQuestion = ref(0);
+                const score = ref(0);
+                const finished = ref(false);
+                const showFeedback = ref(false);
+                const isCorrect = ref(false);
+
+                const questions = [
+                    { 
+                        text: "¿Cuál es el nivel del lineal apodado como el 'Nivel Diamante'?", 
+                        options: ["Nivel del Suelo", "Nivel de las Manos", "Nivel de los Ojos", "Nivel de la Cabeza"], 
+                        correct: 2,
+                        explanation: "El nivel de los ojos es el 'diamante' porque genera el impacto visual inmediato sin esfuerzo. Es donde se sitúan los productos con mayor margen de beneficio.",
+                        tip: "Coloca siempre las novedades tecnológicas o perfumes de lujo en este nivel para maximizar el deseo de compra."
+                    },
+                    { 
+                        text: "¿Qué porcentaje de ventas suele representar el Nivel de los Ojos?", 
+                        options: ["Alrededor del 10%", "Alrededor del 25%", "Más del 50%", "El 100%"], 
+                        correct: 2,
+                        explanation: "Las estadísticas retail demuestran que más de la mitad de las compras decididas en el lineal ocurren en este nivel gracias a la percepción directa.",
+                        tip: "Si un producto no se vende, súbelo a los ojos. Las ventas pueden aumentar un 35% de forma instantánea."
+                    },
+                    { 
+                        text: "¿Para qué tipo de productos es ideal el Nivel de las Manos (80-120cm)?", 
+                        options: ["Productos pesados", "Productos de consumo diario y alta rotación", "Productos de máximo lujo", "Cajas vacías"], 
+                        correct: 1,
+                        explanation: "Es el nivel de la 'comodidad física'. El cliente solo tiene que estirar el brazo. Ideal para pan, pasta o leche que el cliente ya sabe que necesita.",
+                        tip: "Pon aquí productos que el cliente busca por hábito para agilizar su recorrido de compra."
+                    },
+                    { 
+                        text: "Si un producto es voluminoso y de bajo precio, ¿dónde va?", 
+                        options: ["Nivel de la Cabeza", "Nivel de los Ojos", "Nivel de las Manos", "Nivel del Suelo"], 
+                        correct: 3,
+                        explanation: "El suelo es para productos que el cliente está dispuesto a buscar y cargar por su bajo precio o necesidad (agua, sacos de pienso).",
+                        tip: "Los productos pesados abajo evitan accidentes y dan sensación de abundancia en la tienda."
+                    },
+                    { 
+                        text: "¿Qué es el 'Facing' mínimo recomendado para ser detectado?", 
+                        options: ["1 unidad", "2 unidades", "3 unidades", "10 unidades"], 
+                        correct: 2,
+                        explanation: "El cerebro humano necesita repetición visual para detectar un estímulo. Menos de 3 caras de un producto suelen pasar desapercibidas.",
+                        tip: "Si tienes poco stock de un producto, júntalo todo en un solo bloque para simular un facing potente."
+                    },
+                    { 
+                        text: "¿Qué es una Zona Caliente en el punto de venta?", 
+                        options: ["La sección de panadería", "Zonas de paso obligado como entrada y cajas", "Zonas oscuras del fondo", "El probador"], 
+                        correct: 1,
+                        explanation: "Son las 'autopistas' de la tienda. El cliente fluye por ellas de forma natural. Son minas de oro para la venta por impulso.",
+                        tip: "Usa la línea de cajas para vender productos pequeños de alto margen como chicles o pilas."
+                    },
+                    { 
+                        text: "La 'Regla de la Derecha' indica que el cliente...", 
+                        options: ["Gira a la izquierda siempre", "Busca siempre el lado derecho al entrar", "Solo compra a la derecha", "Entra por la derecha y sale por la derecha"], 
+                        correct: 1,
+                        explanation: "Por inercia física, la mayoría de los seres humanos tiende a girar hacia la derecha al entrar en un espacio desconocido.",
+                        tip: "Sitúa tu producto con más margen o la nueva colección justo en esa primera zona de giro a la derecha."
+                    },
+                    { 
+                        text: "¿Qué es un producto 'Gancho'?", 
+                        options: ["Un producto que se cuelga", "Un producto básico que atrae al cliente al fondo de la tienda", "Un producto de regalo", "Un descuento falso"], 
+                        correct: 1,
+                        explanation: "Productos como la leche o el pan se ponen en zonas frías (al fondo) para obligar al cliente a cruzar toda la tienda.",
+                        tip: "Al poner el pan al fondo, el cliente verá decenas de ofertas 'calientes' antes de llegar a lo que buscaba."
+                    },
+                    { 
+                        text: "La implantación VERTICAL se caracteriza por...", 
+                        options: ["Poner productos en el techo", "Ocupar todos los niveles del lineal con una sola marca", "Poner productos tumbados", "Usar solo el estante central"], 
+                        correct: 1,
+                        explanation: "Crea un bloque visual de arriba a abajo. Es la más efectiva porque el cliente ve la marca sea cual sea su altura.",
+                        tip: "Usa la implantación vertical para dar imagen de orden y profesionalidad en categorías premium."
+                    },
+                    { 
+                        text: "¿Qué es la 'Venta por Impulso'?", 
+                        options: ["Ventas que se hacen rápido", "Compras no planeadas que se deciden al ver el producto", "Devoluciones rápidas", "Ventas a presión"], 
+                        correct: 1,
+                        explanation: "Ocurre cuando el cliente ve algo que no buscaba pero lo desea en ese momento (caprichos, snacks).",
+                        tip: "Los productos de impulso deben tener un precio bajo para que el cliente no tenga que 'pensar' la compra."
+                    },
+                    { 
+                        text: "¿Para qué sirve un poco de desorden en cubetas de ofertas?", 
+                        options: ["Para dar mala imagen", "Para sugerir que es una 'ganga' o precio de liquidación", "Para que el empleado trabaje menos", "Para nada"], 
+                        correct: 1,
+                        explanation: "Psicología de precios: un contenedor revuelto indica que el producto es muy barato y hay que 'rebuscar' la oportunidad.",
+                        tip: "No ordenes perfectamente las cestas de calcetines o accesorios baratos; venderás menos."
+                    },
+                    { 
+                        text: "¿Qué es el Cross-Merchandising?", 
+                        options: ["Vender productos de otro país", "Poner juntos productos que se complementan", "Cruzar los dedos para vender", "Poner productos en cruz"], 
+                        correct: 1,
+                        explanation: "Es la venta cruzada: poner las patatas fritas junto a las cervezas. Facilita la vida al cliente y dobla la venta.",
+                        tip: "Si vendes pasta, pon el tomate frito y el queso rallado justo al lado. Ticket medio garantizado."
+                    },
+                    { 
+                        text: "¿Cuál es el nivel ideal para productos infantiles?", 
+                        options: ["Nivel Cabeza", "Nivel Ojos (Adultos)", "Nivel Manos / Suelo (a su altura)", "En el almacén"], 
+                        correct: 2,
+                        explanation: "Debemos situar el producto a la altura de los ojos del niño (80-100cm) para que lo pida directamente.",
+                        tip: "Si el niño puede tocar el juguete, las probabilidades de que sus padres lo compren suben un 70%."
+                    },
+                    { 
+                        text: "¿Qué es una 'Cabecera de Góndola'?", 
+                        options: ["El principio de la tienda", "Los extremos de los pasillos", "El techo de la tienda", "Donde se sienta el jefe"], 
+                        correct: 1,
+                        explanation: "Son las zonas de máxima visibilidad de un pasillo. Por ellas pasa todo el tráfico transversal de la tienda.",
+                        tip: "Reserva las cabeceras para promociones temporales muy fuertes o lanzamientos de marca."
+                    },
+                    { 
+                        text: "El margen de beneficio se calcula como...", 
+                        options: ["Precio Venta + Coste", "Precio Venta - Coste", "Precio Venta / 2", "Solo el IVA"], 
+                        correct: 1,
+                        explanation: "Es el beneficio bruto por unidad. Si vendo por 10 y me costó 6, mi margen son 4 euros.",
+                        tip: "Un producto con poco margen debe compensarse con una rotación altísima (vender miles)."
+                    },
+                    { 
+                        text: "¿Qué es la 'Alta Rotación'?", 
+                        options: ["Productos que giran", "Productos que se venden y reponen muy rápido", "Cambio de personal", "Productos que caducan"], 
+                        correct: 1,
+                        explanation: "Productos básicos que 'vuelan' de los estantes (leche, agua). Son el motor de flujo de la tienda.",
+                        tip: "La alta rotación genera tráfico, pero el alto margen genera la riqueza real."
+                    },
+                    { 
+                        text: "La implantación HORIZONTAL tiene el riesgo de...", 
+                        options: ["Que se caigan los productos", "Que los estantes bajos sean invisibles", "Que sea muy cara", "Que no quepan cosas"], 
+                        correct: 1,
+                        explanation: "Si pones una marca en el estante de los pies a lo largo de 3 metros, nadie la verá. Solo el estante central venderá algo.",
+                        tip: "Solo usa horizontal si tienes una gama de productos muy corta y estantes anchos."
+                    },
+                    { 
+                        text: "¿Qué es una 'Zona Fría'?", 
+                        options: ["Donde están los helados", "Rincones de poco paso natural", "La entrada", "La zona de oficinas"], 
+                        correct: 1,
+                        explanation: "Zonas muertas donde el cliente no llega si no le obligas. Esquinas, pasillos sin salida, fondos oscuros.",
+                        tip: "Calienta una zona fría poniendo una oferta 'bomba' o un producto de primera necesidad allí."
+                    },
+                    { 
+                        text: "La iluminación blanca y potente es típica de...", 
+                        options: ["Zonas de relax", "Secciones de tecnología y electrónica", "Panaderías", "Bodegas de vino"], 
+                        correct: 1,
+                        explanation: "La luz blanca resalta los metales y el cristal, dando imagen de limpieza, modernidad y alta precisión.",
+                        tip: "Usa luz cálida (amarilla) para frutas, verduras y carnes para que parezcan más apetitosas."
+                    },
+                    { 
+                        text: "¿Qué es el 'Ticket Medio'?", 
+                        options: ["El tamaño del papel", "El gasto medio de cada cliente por compra", "El precio del producto central", "Lo que cuesta el parking"], 
+                        correct: 1,
+                        explanation: "Es la facturación total dividida por el número de clientes. El objetivo es que cada cliente gaste más cada vez.",
+                        tip: "Las ofertas 'Compra 3 y paga 2' son la mejor forma de subir el ticket medio de forma masiva."
+                    },
+                    { 
+                        text: "Si hay rotura de stock en el lineal, debemos...", 
+                        options: ["Dejar el hueco vacío", "Ocultar el hueco con otros productos (frentear)", "Cerrar la tienda", "Poner un cartel de 'lo siento'"], 
+                        correct: 1,
+                        explanation: "Un hueco vacío da imagen de abandono y mala gestión. Debemos mover productos laterales para tapar el espacio.",
+                        tip: "El 'frenteado' constante es la tarea número 1 de un dependiente profesional."
+                    },
+                    { 
+                        text: "¿Qué es el Merchandising de Seducción?", 
+                        options: ["Vender perfumes", "Crear una experiencia agradable (olor, música, luces)", "Regalar flores", "Engañar al cliente"], 
+                        correct: 1,
+                        explanation: "Busca que el cliente se sienta tan bien que se quede más tiempo en la tienda. A más tiempo, más gasto.",
+                        tip: "Poner música lenta en horas de poco tráfico hace que la gente camine más despacio y vea más productos."
+                    },
+                    { 
+                        text: "¿Dónde se colocan los productos de 'Compra Racional'?", 
+                        options: ["En la caja", "En los estantes bajos o zonas alejadas", "A la entrada", "En los ojos siempre"], 
+                        correct: 1,
+                        explanation: "El cliente sabe que tiene que comprar detergente o aceite. No necesita verlo a los ojos; lo buscará donde haga falta.",
+                        tip: "No desperdicies los niveles de los ojos con productos aburridos que el cliente ya tiene en su lista de la compra."
+                    },
+                    { 
+                        text: "¿Qué es una 'Góndola'?", 
+                        options: ["Un barco de Venecia", "Una estantería de doble cara que forma pasillos", "Un mostrador", "Un camión de reparto"], 
+                        correct: 1,
+                        explanation: "Es el mueble principal de los supermercados. Permite presentar productos por ambos lados y crear recorridos.",
+                        tip: "Mantén las góndolas a una altura que permita ver el resto de la tienda para no agobiar al cliente."
+                    },
+                    { 
+                        text: "¿Qué color se asocia con el 'Low Cost' o descuento?", 
+                        options: ["Dorado", "Rojo o Amarillo", "Negro", "Azul marino"], 
+                        correct: 1,
+                        explanation: "Los colores primarios brillantes como el rojo y el amarillo gritan 'oferta' y 'ahorro' al cerebro.",
+                        tip: "Usa cartelería roja para liquidaciones y negra/dorada para productos premium o de lujo."
+                    },
+                    { 
+                        text: "¿Qué es el 'Flujo de Clientes'?", 
+                        options: ["El número de empleados", "El camino que recorren los clientes en la tienda", "El dinero que entra", "El aire acondicionado"], 
+                        correct: 1,
+                        explanation: "Es el movimiento de personas. Estudiar el flujo permite saber dónde están las zonas calientes y frías.",
+                        tip: "Dibuja un mapa de calor de tu tienda para saber qué pasillos están infrautilizados."
+                    },
+                    { 
+                        text: "La 'Altura de Percepción' es otro nombre para...", 
+                        options: ["Nivel Suelo", "Nivel Ojos", "Nivel Manos", "Nivel Cabeza"], 
+                        correct: 1,
+                        explanation: "Se llama así porque es el primer punto que el ojo percibe sin necesidad de escanear activamente el estante.",
+                        tip: "Es el nivel donde las marcas pagan cánones de entrada altísimos por estar presentes."
+                    },
+                    { 
+                        text: "¿Qué es el 'Cross-Selling' digital o físico?", 
+                        options: ["Vender cruzado", "Vender productos relacionados (ej: pilas con el juguete)", "Vender a la competencia", "No existe"], 
+                        correct: 1,
+                        explanation: "Asegura que el cliente se lleve el kit completo. Si compra un taladro, véndele las brocas justo al lado.",
+                        tip: "El cross-selling puede aumentar el beneficio neto por cliente hasta en un 25%."
+                    },
+                    { 
+                        text: "¿Para qué sirven las bandas de precios en el lineal?", 
+                        options: ["Para decorar", "Para que el cliente compare y elija la opción que más nos interesa", "Para que no se caigan los productos", "Son obligatorias"], 
+                        correct: 1,
+                        explanation: "Situar un producto caro al lado de uno medio hace que el medio parezca barato y se venda más.",
+                        tip: "Usa el efecto 'anclaje': pon un producto de lujo al principio para que el resto de la tienda parezca económica."
+                    },
+                    { 
+                        text: "¿Cuál es el fin último del Merchandising?", 
+                        options: ["Que la tienda esté bonita", "Maximizar la rentabilidad del punto de venta", "Tener muchos empleados", "Gastar luz"], 
+                        correct: 1,
+                        explanation: "Todo lo que hacemos (luces, niveles, zonas) tiene un solo objetivo: ganar el máximo dinero posible por cada metro cuadrado.",
+                        tip: "Mide siempre las ventas por metro lineal para saber qué secciones son las más rentables."
+                    }
+                ];
+
+                const checkAnswer = (idx) => {
+                    isCorrect.value = (idx === questions[currentQuestion.value].correct);
+                    if (isCorrect.value) score.value++;
+                    showFeedback.value = true;
+                    nextTick(() => lucide.createIcons());
+                };
+
+                const nextQuestion = () => {
+                    if (currentQuestion.value < questions.length - 1) {
+                        currentQuestion.value++;
+                        showFeedback.value = false;
+                        nextTick(() => lucide.createIcons());
+                    } else {
+                        finished.value = true;
+                        nextTick(() => lucide.createIcons());
+                    }
+                };
+
+                return { currentQuestion, score, finished, questions, checkAnswer, showFeedback, isCorrect, nextQuestion };
+            },
+            mounted() {
+                lucide.createIcons();
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>

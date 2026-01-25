@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Shelf Challenge Pro | Elite Mobile</title>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        [v-cloak] { display: none; }
+        body { margin: 0; background: #020617; font-family: 'Outfit', sans-serif; overflow: hidden; touch-action: none; position: fixed; width: 100%; height: 100%; }
+        #game-container { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background: #020617; }
+        .modal-blur { background: rgba(2, 6, 23, 0.95); backdrop-filter: blur(16px); display: none; z-index: 200; position: fixed; inset: 0; }
+        .text-gradient { background: linear-gradient(135deg, #60a5fa, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        canvas { touch-action: none; user-select: none; -webkit-tap-highlight-color: rgba(0,0,0,0); }
+        
+        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <!-- PANTALLA DE INICIO -->
+    <div id="intro-screen" class="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-[#020617]">
+        <div class="max-w-2xl w-full bg-slate-900/80 border border-white/10 rounded-[3rem] p-8 md:p-12 backdrop-blur-3xl shadow-2xl text-center">
+            <div class="w-20 h-20 bg-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl">
+                <i data-lucide="shopping-cart" class="text-white w-10 h-10"></i>
+            </div>
+            <h1 class="text-4xl md:text-6xl font-black text-white tracking-tighter mb-4 font-display italic text-center">
+                Shelf <span class="text-blue-400">Master</span>
+            </h1>
+            <p class="text-slate-400 text-sm md:text-base font-light mb-8 text-center">Simulador profesional de implantación en el lineal.</p>
+            
+            <div class="bg-white/5 rounded-2xl p-6 mb-8 border border-white/5 text-left">
+                <h3 class="text-blue-400 font-black uppercase text-[10px] tracking-widest mb-4 italic">Objetivo de la misión</h3>
+                <p class="text-slate-300 text-xs leading-relaxed">Analiza el <strong>Peso y Margen</strong> del producto que aparece a la izquierda y arrástralo a su nivel ideal en la estantería.</p>
+            </div>
+
+            <button onclick="startGame()" class="w-full py-5 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-black uppercase tracking-[0.3em] text-xs transition-all shadow-xl flex items-center justify-center gap-4 group">
+                INICIAR GESTIÓN <i data-lucide="play" class="w-4 h-4 fill-current group-hover:translate-x-1 transition-transform"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- UI DEL JUEGO -->
+    <div id="game-ui" class="hidden pointer-events-none">
+        <div class="fixed top-4 left-4 right-4 flex justify-between z-10">
+            <div class="bg-slate-900/90 border border-white/10 p-3 rounded-2xl backdrop-blur-md shadow-2xl pointer-events-auto">
+                <div class="text-[8px] font-black text-blue-500 uppercase tracking-widest mb-1">PROFIT</div>
+                <div id="score-ui" class="text-xl font-black text-white tabular-nums text-center">0€</div>
+            </div>
+            <div class="bg-slate-900/90 border border-white/10 p-3 rounded-2xl backdrop-blur-md shadow-2xl pointer-events-auto">
+                <div class="text-[8px] font-black text-orange-500 uppercase tracking-widest mb-1">RELOJ</div>
+                <div id="timer-ui" class="text-xl font-black text-white tabular-nums text-center">90</div>
+            </div>
+        </div>
+
+        <a href="index.html" class="fixed bottom-4 left-4 bg-white/5 text-white/50 px-4 py-2 rounded-xl text-[8px] font-black uppercase tracking-widest border border-white/5 pointer-events-auto">
+            TERMINAR
+        </a>
+    </div>
+
+    <!-- MODAL DE FEEDBACK / GAME OVER -->
+    <div id="feedback-modal" class="modal-blur items-center justify-center p-4">
+        <div class="bg-slate-900 border border-white/10 rounded-[2.5rem] max-w-lg w-full max-h-[85vh] flex flex-col overflow-hidden shadow-2xl">
+            <div id="modal-header" class="p-6 md:p-8 text-white flex justify-between items-center bg-blue-600 shrink-0">
+                <div>
+                    <span id="modal-status" class="text-[8px] font-black uppercase tracking-[0.4em] opacity-70 block mb-1">ANÁLISIS DE LINEAL</span>
+                    <h3 id="modal-title" class="text-xl md:text-2xl font-black uppercase italic leading-none">¡MOVIMIENTO PRO!</h3>
+                </div>
+                <i id="modal-icon" data-lucide="check-circle" class="w-8 h-8"></i>
+            </div>
+            
+            <div id="modal-content" class="p-6 md:p-8 space-y-6 overflow-y-auto custom-scroll">
+                <div id="feedback-body">
+                    <div>
+                        <h4 class="text-[9px] font-black text-blue-400 uppercase tracking-[0.2em] mb-3">Lógica del Experto</h4>
+                        <p id="modal-desc" class="text-slate-300 text-sm leading-relaxed">...</p>
+                    </div>
+                    
+                    <div class="bg-white/5 p-5 rounded-2xl border border-white/5 mt-6">
+                        <h4 class="text-[9px] font-black text-orange-400 uppercase tracking-[0.2em] mb-2">Impacto Comercial</h4>
+                        <p id="modal-impact" class="text-slate-400 text-xs italic">...</p>
+                    </div>
+
+                    <div class="bg-indigo-600/20 p-5 rounded-2xl border border-indigo-500/30 flex gap-4 items-center mt-6">
+                        <div class="w-10 h-10 bg-indigo-600 text-white rounded-xl flex items-center justify-center shrink-0">
+                            <i data-lucide="zap" class="w-5 h-5"></i>
+                        </div>
+                        <p id="modal-tip" class="text-white text-[11px] font-medium leading-snug">...</p>
+                    </div>
+                </div>
+
+                <!-- Botones -->
+                <div class="pt-4">
+                    <button id="next-btn" onclick="closeModal()" class="w-full bg-white text-black py-4 rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-blue-500 hover:text-white transition-all">
+                        Siguiente Producto
+                    </button>
+                    <div id="gameover-btns" class="hidden space-y-3">
+                        <button onclick="location.reload()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-blue-500 transition-all">
+                            Reiniciar Turno
+                        </button>
+                        <a href="index.html" class="block w-full bg-white/5 text-white py-4 rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-white/10 text-center border border-white/5">
+                            Volver al Hub
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="game-container"></div>
+
+    <script>
+        const products = [
+            { name: 'iPhone 15 Pro', color: 0x3b82f6, ideal: 3, weight: 'Ligero', margin: 'Muy Alto',
+              logic: 'El nivel de los ojos es el "Diamante" del retail. Los productos caros necesitan impacto visual inmediato.',
+              correct: '¡Perfecto! Has maximizado la visibilidad del producto más rentable de la sección.',
+              wrong: 'Nadie se agacha para ver un iPhone. Lo has escondido y eso supone pérdidas masivas.',
+              tip: 'El 52% de las ventas ocurren en el nivel de los ojos.' },
+            { name: 'Leche (Caja 12L)', color: 0xffffff, ideal: 1, weight: 'Pesado', margin: 'Bajo',
+              logic: 'La leche es básica y pesada. Va al suelo por seguridad y porque el cliente ya la busca.',
+              correct: '¡Eficiente! Liberas espacio de visibilidad para productos que dejan más dinero.',
+              wrong: '¡Peligro! 12kg a la altura de la cara es un riesgo. Además malgastas el estante premium.',
+              tip: 'Los productos pesados siempre abajo para mantener el centro de gravedad.' },
+            { name: 'Perfume Dior', color: 0xf472b6, ideal: 3, weight: 'Ligero', margin: 'Ultra',
+              logic: 'El lujo se vende por los ojos. Necesita estar a 1.50m para brillar ante el cliente.',
+              correct: '¡Impecable! Cada segundo que el cliente mira el perfume es dinero potencial.',
+              wrong: 'El lujo en el suelo parece saldo. Pierdes la imagen premium y el margen de beneficio.',
+              tip: 'Ilumina este nivel con focos directos para resaltar el cristal.' },
+            { name: 'Cereales Niños', color: 0xfacc15, ideal: 2, weight: 'Ligero', margin: 'Normal',
+              logic: 'Deben estar a la altura de los ojos del niño (nivel manos del adulto) para que lo pida.',
+              correct: '¡Estrategia infantil! Justo donde el niño puede verlo y meterlo en el carro.',
+              wrong: 'Demasiado alto. Si el niño no lo ve, el impulso de compra desaparece.',
+              tip: 'Si vendes a niños, tu nivel diamante está en el estante 2.' }
+        ];
+
+        const config = {
+            type: Phaser.AUTO,
+            parent: 'game-container',
+            scale: {
+                mode: Phaser.Scale.FIT,
+                autoCenter: Phaser.Scale.CENTER_BOTH,
+                width: 1000,
+                height: 1400
+            },
+            transparent: true,
+            scene: { preload, create, update }
+        };
+
+        let score = 0;
+        let timeLeft = 90;
+        let gameActive = false;
+        let phaserInstance = null;
+
+        function preload() {}
+
+        function create() {
+            const shelfX = 650; 
+            const shelfWidth = 600;
+            
+            this.levels = [
+                { y: 300, name: 'CABEZA (>170cm)', color: 0x475569, id: 4, label: 'STOCK' },
+                { y: 550, name: 'OJOS (120-170cm)', color: 0x2563eb, id: 3, label: 'VENTA TOP' },
+                { y: 800, name: 'MANOS (80-120cm)', color: 0x6366f1, id: 2, label: 'COMODIDAD' },
+                { y: 1050, name: 'SUELO (<80cm)', color: 0x1e293b, id: 1, label: 'PESADOS' }
+            ];
+
+            this.levels.forEach(lvl => {
+                const rect = this.add.rectangle(shelfX, lvl.y, shelfWidth, 200, lvl.color, 0.1);
+                rect.setStrokeStyle(4, lvl.color, 0.3);
+                this.add.text(shelfX - 280, lvl.y - 80, lvl.name, { fontSize: '20px', fontWeight: '900', color: '#64748b' });
+                this.add.text(shelfX + 150, lvl.y - 80, lvl.label, { fontSize: '18px', fontWeight: 'black', color: lvl.color });
+            });
+
+            spawnProduct.call(this);
+
+            this.time.addEvent({
+                delay: 1000,
+                callback: () => {
+                    if (gameActive && timeLeft > 0) {
+                        timeLeft--;
+                        document.getElementById('timer-ui').innerText = timeLeft;
+                        if (timeLeft <= 0) gameOver();
+                    }
+                },
+                loop: true
+            });
+        }
+
+        function spawnProduct() {
+            const pData = Phaser.Utils.Array.GetRandom(products);
+            const container = this.add.container(250, 700); 
+            
+            const bg = this.add.graphics();
+            bg.fillStyle(pData.color, 1);
+            bg.fillRoundedRect(-200, -120, 400, 240, 40); 
+            bg.lineStyle(10, 0xffffff, 0.4);
+            bg.strokeRoundedRect(-200, -120, 400, 240, 40);
+            
+            const hitArea = new Phaser.Geom.Rectangle(-200, -120, 400, 240);
+            bg.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+            
+            const nameTxt = this.add.text(0, -40, pData.name, { 
+                fontSize: '48px', 
+                fontWeight: '900', 
+                color: pData.color === 0xffffff ? '#000' : '#fff',
+                fontFamily: 'Outfit'
+            }).setOrigin(0.5);
+            
+            const info = this.add.text(0, 50, `PESO: ${pData.weight}\nMARGEN: ${pData.margin}`, { 
+                fontSize: '24px', 
+                fontWeight: 'bold', 
+                color: pData.color === 0xffffff ? '#333' : '#cbd5e1',
+                align: 'center',
+                lineSpacing: 10
+            }).setOrigin(0.5);
+            
+            container.add([bg, nameTxt, info]);
+            this.input.setDraggable(bg);
+
+            bg.on('drag', (p, dragX, dragY) => { container.x = dragX; container.y = dragY; });
+
+            bg.on('dragend', () => {
+                let placed = false;
+                this.levels.forEach(lvl => {
+                    const dist = Math.abs(container.y - lvl.y);
+                    if (dist < 120 && container.x > 400) {
+                        handlePlacement(lvl.id === pData.ideal, pData);
+                        container.destroy();
+                        placed = true;
+                    }
+                });
+                if (!placed) this.tweens.add({ targets: container, x: 250, y: 700, duration: 500, ease: 'Back.easeOut' });
+            });
+        }
+
+        function handlePlacement(isCorrect, data) {
+            gameActive = false;
+            score += isCorrect ? 100 : 25;
+            document.getElementById('score-ui').innerText = score + '€';
+
+            const modal = document.getElementById('feedback-modal');
+            const title = document.getElementById('modal-title');
+            const header = document.getElementById('modal-header');
+            const status = document.getElementById('modal-status');
+            const icon = document.getElementById('modal-icon');
+
+            modal.style.display = 'flex';
+            status.innerText = 'ANÁLISIS DE LINEAL';
+            title.innerText = isCorrect ? '¡MOVIMIENTO PRO!' : 'FALLO TÉCNICO';
+            header.className = isCorrect ? 'p-6 md:p-8 text-white flex justify-between items-center bg-emerald-600 shrink-0' : 'p-6 md:p-8 text-white flex justify-between items-center bg-orange-500 shrink-0';
+            
+            document.getElementById('modal-desc').innerHTML = isCorrect ? data.correct : data.wrong;
+            document.getElementById('modal-impact').innerHTML = '<strong>Lógica:</strong> ' + data.logic;
+            document.getElementById('modal-tip').innerText = data.tip;
+            
+            icon.setAttribute('data-lucide', isCorrect ? 'check-circle' : 'alert-triangle');
+            
+            document.getElementById('feedback-body').classList.remove('hidden');
+            document.getElementById('next-btn').classList.remove('hidden');
+            document.getElementById('gameover-btns').classList.add('hidden');
+            
+            lucide.createIcons();
+        }
+
+        window.closeModal = function() {
+            document.getElementById('feedback-modal').style.display = 'none';
+            gameActive = true;
+            spawnProduct.call(phaserInstance.scene.scenes[0]);
+        }
+
+        function gameOver() {
+            gameActive = false;
+            const modal = document.getElementById('feedback-modal');
+            const title = document.getElementById('modal-title');
+            const header = document.getElementById('modal-header');
+            const status = document.getElementById('modal-status');
+            const icon = document.getElementById('modal-icon');
+
+            modal.style.display = 'flex';
+            status.innerText = 'GESTIÓN FINALIZADA';
+            title.innerText = 'TIEMPO AGOTADO';
+            header.className = 'p-6 md:p-8 text-white flex justify-between items-center bg-slate-800 shrink-0';
+            
+            document.getElementById('feedback-body').classList.add('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
+            document.getElementById('gameover-btns').classList.remove('hidden');
+            
+            const body = document.getElementById('modal-content');
+            const summary = document.createElement('div');
+            summary.id = 'final-summary';
+            summary.className = 'text-center py-10';
+            summary.innerHTML = '
+                <div class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">Beneficio Total Generado</div>
+                <div class="text-6xl font-black text-white mb-4 italic">' + score + '€</div>
+                <p class="text-slate-400 text-sm italic">Has completado tu turno en el lineal.</p>
+            ';
+            
+            const oldSummary = document.getElementById('final-summary');
+            if(oldSummary) oldSummary.remove();
+            body.prepend(summary);
+
+            icon.setAttribute('data-lucide', 'award');
+            lucide.createIcons();
+        }
+
+        window.startGame = function() {
+            document.getElementById('intro-screen').style.display = 'none';
+            document.getElementById('game-ui').classList.remove('hidden');
+            phaserInstance = new Phaser.Game(config);
+            gameActive = true;
+        }
+
+        lucide.createIcons();
+    </script>
+</body>
+</html>
