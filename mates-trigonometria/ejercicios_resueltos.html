@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrigoMaster: Entrenamiento Táctico de Examen</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\(', '\)']],
+                displayMath: [['$$', '$$'], ['\[', '\]']],
+                processEscapes: true
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap');
+        body { font-family: 'Outfit', sans-serif; background-color: #f0f4f8; color: #1e293b; scroll-behavior: smooth; }
+        .exam-card { background: white; border-radius: 2.5rem; border: 1px solid #e2e8f0; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .exam-card:hover { transform: translateY(-8px); box-shadow: 0 25px 50px -12px rgba(99, 102, 241, 0.2); border-color: #6366f1; }
+        .sme-insight { background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%); border-left: 4px solid #6366f1; padding: 1.5rem; border-radius: 0 1.5rem 1.5rem 0; margin: 1.5rem 0; }
+        .math-box { background: #0f172a; color: #f8fafc; font-family: 'Fira Code', monospace; padding: 2rem; border-radius: 1.5rem; box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.5); overflow-x: auto; }
+        .button-map { background: #fef3c7; border: 1px solid #fcd34d; padding: 0.5rem 1rem; border-radius: 0.75rem; font-size: 0.75rem; color: #92400e; font-weight: bold; }
+        .step-pill { @apply px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 inline-block shadow-sm; }
+    </style>
+</head>
+<body class="p-4 md:p-12 lg:p-20">
+    <div id="app" class="max-w-6xl mx-auto">
+        
+        <!-- HEADER MAESTRO -->
+        <header class="text-center mb-20 relative">
+            <div class="absolute -top-10 left-1/2 -translate-x-1/2 w-64 h-64 bg-indigo-200/30 blur-[100px] rounded-full -z-10"></div>
+            <div class="inline-block bg-indigo-600 p-4 rounded-3xl text-white mb-8 shadow-2xl shadow-indigo-200 animate-bounce">
+                <i data-lucide="graduation-cap" class="w-12 h-12"></i>
+            </div>
+            <h1 class="text-6xl font-black tracking-tighter mb-6">Master <span class="text-indigo-600 italic">Trigo</span> Exercises</h1>
+            <p class="text-slate-500 text-xl max-w-3xl mx-auto font-medium leading-relaxed">
+                9 Misiones de entrenamiento táctico. Sin pasos omitidos. Sin errores de expresión.
+            </p>
+        </header>
+
+        <div class="space-y-24">
+
+            <!-- PROBLEMA 1: SOMBRA Y ALTURA (TANGENTE) -->
+            <article class="exam-card p-10 md:p-16 relative overflow-hidden">
+                <span class="step-pill bg-indigo-600 text-white font-black">Misión 01: El Sniper de Alturas</span>
+                <h2 class="text-3xl font-black mb-6 leading-tight">Calcula la altura de una torre si su sombra mide $25\text{ m}$ y el sol incide con un ángulo de $37^\circ$.</h2>
+                <div class="grid lg:grid-cols-2 gap-12">
+                    <div class="space-y-8 text-sm">
+                        <!-- ANÁLISIS MEJORADO -->
+                        <div class="sme-insight">
+                            <h4 class="font-bold text-indigo-900 mb-2 flex items-center gap-2">
+                                <i data-lucide="search" class="w-4 h-4"></i> Análisis de Supervivencia:
+                            </h4>
+                            <p class="text-indigo-800 italic leading-relaxed">
+                                <strong>El Truco del Monigote:</strong> Imagina un monigote en el ángulo de $37^\circ$. 
+                                Mira al frente: ve la torre (Cateto <strong>Opuesto</strong>). 
+                                Pisa el suelo: es la sombra (Cateto <strong>Contiguo</strong>). 
+                                Usamos <strong>TOA</strong> (Tangente = Opuesto / Contiguo).
+                            </p>
+                        </div>
+
+                        <!-- CÁLCULO DETALLADO -->
+                        <div class="math-box">
+                            <div class="text-[10px] text-indigo-300 font-bold uppercase tracking-widest mb-4 opacity-50">// Despliegue Táctico de Ecuación</div>
+                            $\tan(37^\circ) = \frac{x}{25}$ <br><br>
+                            <span class="text-slate-500 italic text-xs">// El 25 que divide pasa al otro lado multiplicando:</span><br>
+                            $x = 25 \cdot \tan(37^\circ)$ <br><br>
+                            $x = 25 \cdot 0.7535$ <br><br>
+                            <div class="bg-indigo-500/20 p-4 rounded-xl mt-4 border border-indigo-500/30">
+                                <p class="text-indigo-400 font-black text-3xl">$x \approx 18.84\text{ m}$</p>
+                            </div>
+                        </div>
+
+                        <!-- TRUCOS Y CALCULADORA -->
+                        <div class="space-y-4">
+                            <div class="button-map flex items-center gap-3">
+                                <i data-lucide="mouse-pointer-2" class="w-4 h-4"></i>
+                                CALCULADORA: [2][5] [X] [tan] [3][7] [=]
+                            </div>
+                            <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-800 shadow-inner">
+                                <strong class="flex items-center gap-2 mb-1"><i data-lucide="zap" class="w-4 h-4"></i> TIP DE EXAMEN:</strong>
+                                Comprueba coherencia: Si el ángulo es $< 45^\circ$, la altura debe ser <strong>menor</strong> que la sombra. ¡Si te sale $33\text{m}$, revisa si estás en modo RAD!
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DIAGRAMA Y VARIACIÓN -->
+                    <div class="space-y-8">
+                        <div class="bg-slate-50 rounded-3xl p-8 border border-slate-200 flex flex-col items-center justify-center relative">
+                            <span class="absolute top-4 right-6 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Esquema 01</span>
+                            <svg viewBox="0 0 200 150" class="w-full h-auto mb-4">
+                                <rect x="150" y="20" width="15" height="110" fill="#6366f1" rx="2"/>
+                                <line x1="20" y1="130" x2="150" y2="130" stroke="#1e293b" stroke-width="2"/>
+                                <line x1="20" y1="130" x2="150" y2="20" stroke="#fbbf24" stroke-width="2" stroke-dasharray="4"/>
+                                <text x="70" y="145" font-size="10" fill="#64748b" font-weight="black">25m (Contiguo)</text>
+                                <text x="35" y="125" font-size="10" fill="#fbbf24" font-weight="black">37º</text>
+                                <text x="170" y="75" font-size="12" fill="#6366f1" font-weight="black">x? (Opuesto)</text>
+                            </svg>
+                        </div>
+
+                        <!-- NUEVA VARIACIÓN -->
+                        <div class="bg-slate-900 rounded-[2rem] p-8 text-white shadow-2xl">
+                            <h4 class="text-indigo-400 font-bold mb-3 flex items-center gap-2">
+                                <i data-lucide="refresh-cw" class="w-4 h-4"></i> Variación Boss:
+                            </h4>
+                            <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                                ¿Y si conociéramos la altura ($18.84\text{m}$) y la sombra ($25\text{m}$), pero no el ángulo?
+                            </p>
+                            <div class="bg-white/5 p-4 rounded-xl font-mono text-[11px] border border-white/10">
+                                $\tan(\alpha) = 18.84 / 25 = 0.7536$ <br>
+                                $\alpha = \arctan(0.7536) \approx 37^\circ$
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- PROBLEMA 2: ÁNGULO DE RAMPA (INVERSA) -->
+            <article class="exam-card p-10 md:p-16 border-l-8 border-emerald-500">
+                <span class="step-pill bg-emerald-500 text-white font-black">Misión 02: El Ingeniero de Accesibilidad</span>
+                <h2 class="text-3xl font-black mb-6">Una rampa de carga de $12\text{ m}$ de longitud alcanza una altura de $1.5\text{ m}$. ¿Qué ángulo forma?</h2>
+                <div class="grid lg:grid-cols-2 gap-12">
+                    <div class="space-y-8 text-sm">
+                        <!-- ANÁLISIS MEJORADO -->
+                        <div class="sme-insight border-emerald-500 bg-emerald-50">
+                            <h4 class="font-bold text-emerald-900 mb-2 flex items-center gap-2">
+                                <i data-lucide="compass" class="w-4 h-4"></i> Análisis de Supervivencia:
+                            </h4>
+                            <p class="text-emerald-800 italic leading-relaxed">
+                                <strong>El Truco del Escalador:</strong> Imagina que escalas la rampa. El camino recorrido ($12\text{m}$) es la <strong>Hipotenusa</strong> (siempre el lado más largo). La altura ganada ($1.5\text{m}$) es el cateto <strong>Opuesto</strong>. 
+                                ¿Qué fórmula usa O e H? <strong>SOH</strong> (Seno = Opuesto / Hipotenusa).
+                            </p>
+                        </div>
+
+                        <!-- CÁLCULO DETALLADO -->
+                        <div class="math-box border-emerald-500">
+                            <div class="text-[10px] text-emerald-300 font-bold uppercase tracking-widest mb-4 opacity-50">// Procedimiento de Desbloqueo de Ángulo</div>
+                            $\sin(\alpha) = \frac{1.5}{12}$ <br><br>
+                            $\sin(\alpha) = 0.125$ <br><br>
+                            <span class="text-slate-500 italic text-xs">// Aplicamos la función inversa (arcsen) para despejar el ángulo:</span><br>
+                            $\alpha = \sin^{-1}(0.125)$ <br><br>
+                            <div class="bg-emerald-500/20 p-4 rounded-xl mt-4 border border-emerald-500/30">
+                                <p class="text-emerald-400 font-black text-3xl">$\alpha \approx 7.18^\circ$</p>
+                            </div>
+                        </div>
+
+                        <!-- TRUCOS Y CALCULADORA -->
+                        <div class="space-y-4">
+                            <div class="button-map flex items-center gap-3">
+                                <i data-lucide="help-circle" class="w-4 h-4"></i>
+                                CALCULADORA: [SHIFT] [sin] [0][.][1][2][5] [=]
+                            </div>
+                            <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 text-xs text-blue-800 shadow-sm">
+                                <strong>💡 REGLA DE ORO:</strong>
+                                Si el resultado de la división es mayor que 1, la calculadora dirá <em>Error</em>. Eso significa que has puesto la Hipotenusa arriba por error. ¡La Hipotenusa siempre va debajo en Seno y Coseno!
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DIAGRAMA Y VARIACIÓN -->
+                    <div class="space-y-8">
+                        <div class="bg-emerald-50/50 rounded-3xl p-8 border border-emerald-100 flex flex-col items-center justify-center relative">
+                            <span class="absolute top-4 right-6 text-[10px] font-bold text-emerald-400 uppercase tracking-widest">Esquema Táctico</span>
+                            <i data-lucide="accessibility" class="w-32 h-32 text-emerald-600 opacity-20 mb-4"></i>
+                            <div class="text-center">
+                                <p class="text-[10px] font-bold text-emerald-700 uppercase">Cumplimiento Normativo</p>
+                                <p class="text-xs text-emerald-600 italic">Un ángulo de $7.18^\circ$ es perfecto para una silla de ruedas.</p>
+                            </div>
+                        </div>
+
+                        <!-- NUEVA VARIACIÓN -->
+                        <div class="bg-slate-900 rounded-[2rem] p-8 text-white shadow-2xl">
+                            <h4 class="text-emerald-400 font-bold mb-3 flex items-center gap-2">
+                                <i data-lucide="trending-up" class="w-4 h-4"></i> Variación Boss:
+                            </h4>
+                            <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                                Si el ángulo fuera de $10^\circ$ y la altura de $2\text{m}$, ¿cuánto debería medir la rampa?
+                            </p>
+                            <div class="bg-white/5 p-4 rounded-xl font-mono text-[11px] border border-white/10">
+                                $\sin(10^\circ) = 2 / H$ <br>
+                                $H = 2 / \sin(10^\circ) \approx 11.52\text{ m}$
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- PROBLEMA 3: IDENTIDAD (EL CAMALEÓN) -->
+            <article class="exam-card p-10 md:p-16 border-l-8 border-purple-500">
+                <span class="step-pill bg-purple-500 text-white font-black">Misión 03: Transformación Sin Lados</span>
+                <h2 class="text-3xl font-black mb-6">Sabiendo que $\sin \alpha = 0.8$, halla el Coseno y la Tangente ($\alpha$ agudo).</h2>
+                <div class="grid lg:grid-cols-2 gap-12">
+                    <div class="space-y-6 text-sm">
+                        <div class="sme-insight border-purple-500 bg-purple-50">
+                            <h4 class="font-bold text-purple-900 mb-2 flex items-center gap-2">
+                                <i data-lucide="info" class="w-4 h-4"></i> Lógica del Camaleón:
+                            </h4>
+                            <p class="text-purple-800 italic">
+                                No necesitamos saber cuánto miden los lados. La <strong>Identidad Pitagórica</strong> es una ley universal: la suma de los cuadrados siempre es 1. Es el "puente" que permite al Seno transformarse en Coseno.
+                            </p>
+                        </div>
+                        <div class="math-box border-purple-500">
+                            <div class="text-[10px] text-purple-300 font-bold uppercase tracking-widest mb-4 opacity-50">// Aplicando Ley de Pitágoras Trigonométrica</div>
+                            $\sin^2 \alpha + \cos^2 \alpha = 1$ <br><br>
+                            $(0.8)^2 + \cos^2 \alpha = 1$ <br>
+                            $0.64 + \cos^2 \alpha = 1$ <br>
+                            $\cos^2 \alpha = 1 - 0.64$ <br>
+                            $\cos^2 \alpha = 0.36$ <br>
+                            $\cos \alpha = \sqrt{0.36} = \mathbf{0.6}$ <br><br>
+                            <span class="text-slate-500 italic text-xs">// Ahora la Tangente por definición:</span><br>
+                            $\tan \alpha = \frac{0.8}{0.6} = \mathbf{1.3333}$
+                        </div>
+                    </div>
+                    <div class="space-y-6">
+                        <div class="bg-purple-900 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden">
+                            <i data-lucide="zap" class="absolute -bottom-4 -right-4 w-32 h-32 text-purple-500 opacity-10"></i>
+                            <h4 class="font-bold text-purple-300 mb-4 uppercase tracking-tighter">Truco Pro: La terna 3-4-5</h4>
+                            <p class="text-xs text-purple-100 leading-relaxed">
+                                Si ves un $0.6$ o un $0.8$, ¡estás ante el triángulo sagrado! <br><br>
+                                Si $\sin = 0.8$, entonces $\cos = 0.6$. <br>
+                                Si $\sin = 0.6$, entonces $\cos = 0.8$. <br><br>
+                                <strong>Ahorra tiempo:</strong> En muchos exámenes se usan estos valores para que los resultados sean exactos.
+                            </p>
+                        </div>
+                        <div class="button-map">CALCULADORA: [0][.][8] [x²] [+/-] [+] [1] [=] [√]</div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- PROBLEMA 4: DOBLE OBSERVACIÓN (EL BOSS) -->
+            <article class="exam-card p-10 md:p-16 border-t-8 border-red-500 bg-slate-900 text-white">
+                <span class="step-pill bg-red-500 text-white font-black">Misión 04: El Maestro de Montañas</span>
+                <h2 class="text-3xl font-black mb-6 italic">Desde A ves la cima a $30^\circ$. Avanzas $100\text{ m}$ hasta B y ves la cima a $45^\circ$. ¿Altura?</h2>
+                <div class="grid lg:grid-cols-2 gap-12 text-sm">
+                    <div class="space-y-6">
+                        <div class="math-box border-red-500 bg-black/50">
+                            <p class="text-red-400 font-bold mb-4 uppercase tracking-widest">// Método del Sistema (El Método Rey)</p>
+                            1) Triángulo B (Cerca): <br>
+                            $\tan(45^\circ) = \frac{h}{x} \implies 1 = \frac{h}{x} \implies \mathbf{h = x}$ <br><br>
+                            2) Triángulo A (Lejos): <br>
+                            $\tan(30^\circ) = \frac{h}{x+100}$ <br><br>
+                            3) Sustitución Estratégica: <br>
+                            $0.577 = \frac{h}{h+100}$ <br><br>
+                            4) Despeje Táctico: <br>
+                            $0.577(h+100) = h$ <br>
+                            $0.577h + 57.7 = h$ <br>
+                            $57.7 = h - 0.577h \implies 57.7 = 0.423h$ <br><br>
+                            <div class="bg-red-500/20 p-4 rounded-xl border border-red-500/30">
+                                <p class="text-3xl font-black text-red-500">$\mathbf{h \approx 136.4\text{ m}}$</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-8">
+                        <div class="sme-insight border-red-500 bg-white/5 text-slate-300">
+                            <h4 class="font-bold text-red-400 mb-2">Análisis Crítico:</h4>
+                            <p class="italic leading-relaxed">
+                                Este es el ejercicio más difícil de 4º ESO. La clave es que la altura ($h$) es la misma para ambos triángulos. Usamos la <strong>Tangente</strong> dos veces porque no conocemos la distancia inclinada (hipotenusa).
+                            </p>
+                        </div>
+                        <div class="bg-red-950/30 border border-red-500/30 rounded-3xl p-6 text-xs text-red-200">
+                            <strong class="text-red-400 uppercase block mb-2">⚡ TRUCO DE SUPERVIVENCIA:</strong>
+                            Si un ángulo es de $45^\circ$, ¡felicidades! El triángulo es isósceles, por lo que la altura es igual a la base ($h=x$). Esto simplifica el sistema enormemente.
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- PROBLEMA 5: OCTÓGONO (PIZZA) -->
+            <article class="exam-card p-10 md:p-16 border-l-8 border-cyan-500">
+                <span class="step-pill bg-cyan-500 text-white font-black">Misión 05: El Octógono Perfecto</span>
+                <h2 class="text-3xl font-black mb-6 text-cyan-900">Calcula la apotema de un octógono regular de lado $6\text{ cm}$.</h2>
+                <div class="grid lg:grid-cols-2 gap-12 text-sm">
+                    <div class="space-y-6">
+                        <div class="bg-cyan-50 p-6 rounded-2xl border border-cyan-100 italic text-cyan-800 leading-relaxed">
+                            <h4 class="font-bold mb-2 uppercase text-[10px] tracking-widest">Estrategia de la Pizza:</h4>
+                            "Divide el octógono en 8 triángulos isósceles (trozos de pizza). Cada trozo tiene un ángulo central de $360^\circ / 8 = 45^\circ$. Al trazar la <strong>apotema</strong>, cortamos el trozo por la mitad, creando el triángulo rectángulo de trabajo."
+                        </div>
+                        <div class="math-box border-cyan-500">
+                            <div class="text-[10px] text-cyan-300 font-bold uppercase tracking-widest mb-4 opacity-50">// Configuración del Triángulo Rectángulo</div>
+                            Ángulo de trabajo $= 45^\circ / 2 = \mathbf{22.5^\circ}$ <br>
+                            Base de trabajo (medio lado) $= 6 / 2 = \mathbf{3\text{ cm}}$ <br><br>
+                            $\tan(22.5^\circ) = \frac{3}{a}$ <br><br>
+                            <span class="text-slate-500 italic text-xs">// Despejamos la apotema (a):</span><br>
+                            $a = \frac{3}{\tan(22.5^\circ)}$ <br>
+                            $a = \frac{3}{0.4142}$ <br><br>
+                            <div class="bg-cyan-500/20 p-4 rounded-xl border border-cyan-500/30 text-cyan-400 font-black text-2xl">
+                                $a \approx 7.24\text{ cm}$
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-8">
+                        <div class="flex items-center justify-center p-12 bg-cyan-900 rounded-[3rem] shadow-inner text-white relative group">
+                            <i data-lucide="hexagon" class="w-32 h-32 group-hover:scale-110 transition-transform"></i>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="w-px h-16 bg-red-400 rotate-0 translate-y-4"></div>
+                                <span class="absolute bottom-16 text-[10px] text-red-400 font-bold">apotema</span>
+                            </div>
+                        </div>
+                        <div class="button-map flex items-center gap-3">
+                            <i data-lucide="help-circle" class="w-4 h-4"></i>
+                            DATO EXTRA: El área sería $P \cdot a / 2 = 48 \cdot 7.24 / 2 \approx 173.76\text{ cm}^2$
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- PROBLEMA 6: ÁREA DEL TRIÁNGULO -->
+            <article class="exam-card p-10 md:p-16 border-l-8 border-orange-500">
+                <span class="step-pill bg-orange-500 text-white font-black">Misión 06: El Topógrafo Moderno</span>
+                <h2 class="text-3xl font-black mb-6">Halla el área de un terreno triangular con lados $8\text{ m}, 10\text{ m}$ y ángulo comprendido de $65^\circ$.</h2>
+                <div class="grid lg:grid-cols-2 gap-12 text-sm">
+                    <div class="space-y-8">
+                        <div class="sme-insight border-orange-500 bg-orange-50">
+                            <h4 class="font-bold text-orange-900 mb-2">El Secreto del Topógrafo:</h4>
+                            <p class="text-orange-800 italic leading-relaxed">
+                                Tradicionalmente, Área $= (\text{Base} \cdot \text{Altura}) / 2$. Pero aquí la altura es invisible. La trigonometría nos permite "fabricar" esa altura usando el Seno.
+                            </p>
+                        </div>
+                        <div class="math-box border-orange-500">
+                            <div class="text-[10px] text-orange-300 font-bold uppercase tracking-widest mb-4 opacity-50">// Cálculo de Altura y Superficie</div>
+                            $\text{Altura (h)} = 8 \cdot \sin(65^\circ)$ <br>
+                            $h = 8 \cdot 0.9063 = \mathbf{7.25\text{ m}}$ <br><br>
+                            $\text{Área} = \frac{10 \cdot 7.25}{2}$ <br>
+                            <div class="bg-orange-500/20 p-4 rounded-xl border border-orange-500/30 text-orange-400 font-black text-2xl mt-4">
+                                $A \approx 36.25\text{ m}^2$
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-6">
+                        <div class="bg-slate-900 rounded-3xl p-8 text-white shadow-xl border border-orange-500/30">
+                            <h4 class="text-orange-400 font-bold mb-4 flex items-center gap-2">
+                                <i data-lucide="zap" class="w-4 h-4"></i> TRUCO PRO: Fórmula Directa
+                            </h4>
+                            <p class="text-xs text-slate-300 leading-relaxed">
+                                Puedes calcular el área de CUALQUIER triángulo sin trazar la altura usando:
+                                <br><br>
+                                <span class="block bg-white/10 p-3 rounded-lg text-center font-bold text-lg text-orange-300">
+                                    $A = \frac{1}{2} \cdot a \cdot b \cdot \sin(C)$
+                                </span>
+                                <br>
+                                Donde $a$ y $b$ son los lados y $C$ el ángulo entre ellos. ¡Funciona siempre!
+                            </p>
+                        </div>
+                        <div class="button-map flex items-center gap-3">
+                            <i data-lucide="map" class="w-4 h-4"></i>
+                            IDEAL PARA: Fincas, velas de barco y piezas mecánicas.
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- PROBLEMA 7: DISTANCIA ENTRE FAROS -->
+            <article class="exam-card p-10 md:p-16 border-l-8 border-sky-500">
+                <span class="step-pill bg-sky-500 text-white font-black">Misión 07: Radar de Navegación</span>
+                <h2 class="text-3xl font-black mb-6">Desde un barco ves el Faro A ($40^\circ$ con la horizontal) y el Faro B ($50^\circ$). Si la distancia horizontal a Faro A es $15\text{ km}$, ¿cuál es la distancia directa (visual)?</h2>
+                <div class="grid lg:grid-cols-2 gap-12 text-sm">
+                    <div class="space-y-6">
+                        <div class="sme-insight border-sky-500 bg-sky-50">
+                            <h4 class="font-bold text-sky-900 mb-2">Lógica de Radar:</h4>
+                            <p class="text-sky-800 italic leading-relaxed">
+                                En navegación, la "visual" es la línea directa desde tu ojo al objetivo. Eso siempre es la <strong>Hipotenusa</strong> del triángulo. El dato de $15\text{km}$ es horizontal, es decir, el cateto <strong>Contiguo</strong>.
+                            </p>
+                        </div>
+                        <div class="math-box border-sky-500">
+                            <div class="text-[10px] text-sky-300 font-bold uppercase tracking-widest mb-4 opacity-50">// Procedimiento de Navegación</div>
+                            $\cos(40^\circ) = \frac{15}{H}$ <br><br>
+                            <span class="text-slate-500 italic text-xs">// Cuando la incógnita está abajo, se intercambia con la razón:</span><br>
+                            $H = \frac{15}{\cos(40^\circ)}$ <br>
+                            $H = \frac{15}{0.7660}$ <br><br>
+                            <div class="bg-sky-500/20 p-4 rounded-xl border border-sky-500/30 text-sky-400 font-black text-2xl mt-4">
+                                $H \approx 19.58\text{ km}$
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-8">
+                        <div class="bg-slate-50 rounded-3xl p-8 border border-slate-200 flex flex-col items-center justify-center relative shadow-inner">
+                            <i data-lucide="waves" class="w-32 h-32 text-sky-600 opacity-10 absolute"></i>
+                            <svg viewBox="0 0 200 150" class="w-full h-auto relative z-10">
+                                <path d="M 20 130 L 180 130" stroke="#0ea5e9" stroke-width="2" stroke-dasharray="2"/>
+                                <path d="M 20 130 L 160 30" stroke="#0ea5e9" stroke-width="3"/>
+                                <path d="M 160 130 L 160 30" stroke="#64748b" stroke-width="1" stroke-dasharray="2"/>
+                                <text x="80" y="145" font-size="10" fill="#64748b" font-weight="black">15km (Base)</text>
+                                <text x="35" y="125" font-size="10" fill="#0ea5e9" font-weight="black">40º</text>
+                                <text x="70" y="70" font-size="12" fill="#0ea5e9" font-weight="black" transform="rotate(-35, 70, 70)">H? (Visual)</text>
+                            </svg>
+                        </div>
+                        <div class="button-map flex items-center gap-3">
+                            <i data-lucide="anchor" class="w-4 h-4"></i>
+                            CALCULADORA: [1][5] [÷] [cos] [4][0] [=]
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- PROBLEMA 8: EL RESCATE DEL DRONE -->
+            <article class="exam-card p-10 md:p-16 border-l-8 border-rose-500">
+                <span class="step-pill bg-rose-500 text-white font-black">Misión 08: Operaciones Especiales</span>
+                <h2 class="text-3xl font-black mb-6">Un drone ha quedado atrapado a $12\text{ m}$ de altura. Si dispones de una escalera de $15\text{ m}$, ¿con qué ángulo debes apoyarla en el suelo para llegar exacto?</h2>
+                <div class="grid lg:grid-cols-2 gap-12 text-sm">
+                    <div class="space-y-8">
+                        <div class="sme-insight border-rose-500 bg-rose-50">
+                            <h4 class="font-bold text-rose-900 mb-2">Protocolo de Rescate:</h4>
+                            <p class="text-rose-800 italic leading-relaxed">
+                                Aquí buscamos la <strong>inclinación</strong>. Tenemos el objeto a rescatar (Opuesto) y el largo de la escalera (Hipotenusa). Usamos el <strong>Seno</strong> para "extraer" el ángulo.
+                            </p>
+                        </div>
+                        <div class="math-box border-rose-500">
+                            <div class="text-[10px] text-rose-300 font-bold uppercase tracking-widest mb-4 opacity-50">// Extracción Trigonométrica del Ángulo</div>
+                            $\sin(\alpha) = \frac{12}{15}$ <br><br>
+                            $\sin(\alpha) = 0.8$ <br><br>
+                            <span class="text-slate-500 italic text-xs">// Usamos la tecla SHIFT (función inversa):</span><br>
+                            $\alpha = \sin^{-1}(0.8)$ <br><br>
+                            <div class="bg-rose-500/20 p-4 rounded-xl border border-rose-500/30 text-rose-400 font-black text-2xl mt-4">
+                                $\alpha \approx 53.13^\circ$
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-6">
+                        <div class="bg-slate-900 rounded-[2rem] p-8 text-white shadow-xl relative overflow-hidden flex flex-col items-center">
+                            <i data-lucide="drone" class="w-32 h-32 text-rose-500 animate-pulse mb-6 opacity-20 absolute top-4"></i>
+                            <div class="relative z-10 text-center">
+                                <h4 class="text-rose-400 font-bold mb-2 uppercase text-xs tracking-widest">Alerta de Seguridad:</h4>
+                                <p class="text-[10px] text-slate-400 leading-relaxed mb-4">Un ángulo superior a $75^\circ$ es inestable (la escalera puede volcar). <br>Un ángulo inferior a $60^\circ$ es el estándar de seguridad. <br>¡Nuestro rescate es seguro!</p>
+                                <div class="button-map inline-flex items-center gap-2 bg-rose-100 border-rose-200 text-rose-800">
+                                    <i data-lucide="shield-check" class="w-4 h-4"></i> SEGURO
+                                </div>
+                            </div>
+                        </div>
+                        <div class="button-map flex items-center gap-3">
+                            <i data-lucide="calculator" class="w-4 h-4"></i>
+                            CALCULADORA: [SHIFT] [sin] [(] [1][2] [÷] [1][5] [)] [=]
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- PROBLEMA 9: EL MÓDULO GPS (MASTER) -->
+            <article class="exam-card p-10 md:p-16 border-t-8 border-indigo-600 bg-slate-950 text-white shadow-2xl">
+                <span class="step-pill bg-indigo-600 text-white font-black shadow-lg">Misión Final: Localización Satelital</span>
+                <h2 class="text-3xl font-black mb-6">Un satélite GPS a $20,200\text{ km}$ de altitud recibe tu señal con un ángulo de elevación de $75^\circ$. ¿Cuál es la distancia diagonal (hipotenusa) exacta de la señal?</h2>
+                <div class="grid lg:grid-cols-2 gap-16 text-sm">
+                    <div class="space-y-8 leading-relaxed">
+                        <div class="sme-insight bg-white/5 border-indigo-500 text-indigo-100">
+                            <h4 class="font-bold mb-2 flex items-center gap-2 text-indigo-400">
+                                <i data-lucide="satellite"></i> Lógica de Precisión Espacial:
+                            </h4>
+                            <p class="italic">
+                                Tu móvil no mide ángulos, mide <strong>tiempos</strong>. Pero para el procesador, ese tiempo es una <strong>distancia diagonal ($d$)</strong>. La altura del satélite es el cateto <strong>Opuesto</strong>. Sin trigonometría de alta precisión, Google Maps te situaría en el océano.
+                            </p>
+                        </div>
+                        <div class="math-box border-indigo-500 bg-black/50">
+                            <div class="text-[10px] text-indigo-300 font-bold uppercase tracking-widest mb-4 opacity-50">// Cálculo de Distancia Orbital</div>
+                            $\sin(75^\circ) = \frac{20,200}{d}$ <br><br>
+                            <span class="text-slate-500 italic text-xs">// Despejamos la distancia ($d$):</span><br>
+                            $d = \frac{20,200}{\sin(75^\circ)}$ <br>
+                            $d = \frac{20,200}{0.965925}$ <br><br>
+                            <div class="bg-indigo-500/30 p-6 rounded-2xl border border-indigo-500/50">
+                                <p class="text-4xl font-black text-indigo-400">$d \approx 20,913.5\text{ km}$</p>
+                                <p class="text-[10px] text-indigo-300 mt-2 uppercase font-bold tracking-[0.2em]">Señal bloqueada con éxito</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-10">
+                        <div class="flex items-center justify-center p-8 bg-slate-800/50 rounded-[3rem] border border-white/5 relative group">
+                            <div class="absolute inset-0 bg-indigo-500/10 blur-3xl rounded-full group-hover:bg-indigo-500/20 transition-all"></div>
+                            <svg viewBox="0 0 200 200" class="w-full h-auto relative z-10">
+                                <circle cx="100" cy="180" r="150" fill="none" stroke="#475569" stroke-width="1" stroke-dasharray="4"/>
+                                <path d="M 100 40 L 40 160 L 160 160 Z" fill="none" stroke="#6366f1" stroke-width="3" stroke-linejoin="round"/>
+                                <circle cx="100" cy="40" r="10" fill="#fbbf24" class="animate-pulse"/>
+                                <circle cx="40" cy="160" r="5" fill="#ef4444"/>
+                                <text x="115" y="45" font-size="12" fill="#fbbf24" font-weight="black">SAT</text>
+                                <text x="30" y="175" font-size="12" fill="#ef4444" font-weight="black">TÚ</text>
+                                <text x="110" y="100" font-size="8" fill="#94a3b8" transform="rotate(60, 110, 100)" class="font-bold">Diagonal (d)</text>
+                            </svg>
+                        </div>
+                        <div class="bg-indigo-900/40 p-6 rounded-2xl border border-indigo-500/20">
+                            <h5 class="font-bold text-indigo-300 mb-2 flex items-center gap-2">
+                                <i data-lucide="info" class="w-4 h-4"></i> ¿Sabías que?
+                            </h5>
+                            <p class="text-[11px] text-indigo-100/70 leading-relaxed">
+                                Debido a la relatividad, el reloj del satélite va más rápido que el de la Tierra. Si no se corrigiera ese tiempo (y por tanto la hipotenusa), el error de posición aumentaría <strong>10 km cada día</strong>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+
+        <!-- FOOTER TÁCTICO -->
+        <footer class="mt-32 text-center pb-20 border-t border-slate-200 pt-20">
+            <div class="flex flex-col md:flex-row justify-center gap-6">
+                <button onclick="window.location.href='trigonometria_completa.html'" class="group bg-indigo-600 text-white font-black px-12 py-5 rounded-[2rem] shadow-2xl hover:scale-105 transition-all flex items-center justify-center gap-3">
+                    <i data-lucide="book-open" class="w-6 h-6"></i> REPASAR APUNTES
+                </button>
+                <button onclick="window.location.href='trigo_game.html'" class="group bg-white text-indigo-600 border-2 border-indigo-600 font-black px-12 py-5 rounded-[2rem] shadow-xl hover:bg-indigo-50 transition-all flex items-center justify-center gap-3 text-sm">
+                    <i data-lucide="play-circle" class="w-6 h-6"></i> DESAFÍO FINAL
+                </button>
+            </div>
+            <p class="text-slate-400 text-[10px] mt-12 font-black uppercase tracking-[0.5em]">© 2026 TrigoMaster System · Excellence Guaranteed · No Content Deleted</p>
+        </footer>
+
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

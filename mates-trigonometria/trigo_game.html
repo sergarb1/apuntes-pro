@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrigoQuest: El Desafío de los 9 Niveles</title>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap');
+        body { font-family: 'Outfit', sans-serif; background-color: #0f172a; margin: 0; overflow: hidden; height: 100dvh; }
+        .glass { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        canvas { display: block; margin: 0 auto; max-width: 100%; height: auto !important; }
+        .scroll-custom::-webkit-scrollbar { width: 4px; }
+        .scroll-custom::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+    </style>
+</head>
+<body>
+    <div id="game-container" class="relative w-full h-full flex items-center justify-center bg-slate-950">
+        <!-- UI OVERLAY -->
+        <div id="ui-layer" class="absolute inset-0 z-10 pointer-events-none flex flex-col p-3 md:p-6">
+            <!-- Compact Header HUD -->
+            <div class="flex justify-between items-center w-full gap-2">
+                <div class="glass px-3 py-1.5 rounded-xl flex items-center gap-2">
+                    <div class="bg-indigo-600 p-1 rounded-lg text-white"><i data-lucide="triangle" class="w-3 h-3"></i></div>
+                    <span class="text-white font-black text-[10px] uppercase tracking-tighter">TrigoQuest</span>
+                </div>
+                <div class="flex gap-2">
+                    <div class="glass px-3 py-1.5 rounded-xl flex items-center gap-2 text-white">
+                        <i data-lucide="award" class="text-amber-400 w-3 h-3"></i>
+                        <span id="score-text" class="font-black text-sm">0</span>
+                    </div>
+                    <div class="glass px-3 py-1.5 rounded-xl flex items-center gap-2 text-white">
+                        <i data-lucide="timer" class="text-cyan-400 w-3 h-3"></i>
+                        <span id="timer-text" class="font-mono text-sm">00:00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="mt-2 w-full h-1 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                <div id="progress-bar" class="h-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-500" style="width: 0%"></div>
+            </div>
+
+            <!-- Main Interactive UI -->
+            <div id="center-ui" class="flex-grow flex items-center justify-center py-2 relative">
+                
+                <!-- Main Quiz Modal -->
+                <div id="quiz-modal" class="hidden glass p-5 rounded-[2rem] max-w-xl w-full pointer-events-auto shadow-2xl border-t-2 border-indigo-500 flex flex-col max-h-[90vh]">
+                    <div class="flex justify-between items-center mb-3">
+                        <span id="question-count" class="bg-indigo-500/20 text-indigo-300 text-[9px] font-bold px-2 py-0.5 rounded-full border border-indigo-500/30 tracking-widest uppercase">P 1/10</span>
+                        <button id="hint-btn" class="text-amber-400 hover:text-amber-300 flex items-center gap-1.5 text-[9px] font-bold transition-all bg-white/5 px-2 py-1 rounded-lg">
+                            <i data-lucide="sparkles" class="w-3 h-3"></i> PISTA
+                        </button>
+                    </div>
+                    
+                    <div class="scroll-custom overflow-y-auto flex-grow pr-1">
+                        <h2 id="question-text" class="text-white text-base md:text-xl font-bold leading-tight mb-4"></h2>
+                        <div id="options-grid" class="grid grid-cols-1 gap-2">
+                            <!-- Options -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Floating Feedback/Hint Modal (Top Layer) -->
+                <div id="info-modal" class="hidden absolute inset-0 z-20 flex items-center justify-center p-4">
+                    <div class="glass p-6 rounded-[2.5rem] max-w-md w-full pointer-events-auto shadow-[0_0_50px_rgba(0,0,0,0.5)] border-t-4 border-indigo-500 animate-in zoom-in duration-300">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div id="info-icon" class="p-2 rounded-xl text-white"></div>
+                            <h4 id="info-title" class="font-black text-base uppercase tracking-tight"></h4>
+                        </div>
+                        <div id="info-text" class="text-xs md:text-sm text-slate-200 leading-relaxed mb-6"></div>
+                        <button id="info-close-btn" class="w-full bg-white text-slate-900 font-black py-3 rounded-xl shadow-xl active:scale-95 transition-all text-xs uppercase tracking-widest italic">CONTINUAR</button>
+                    </div>
+                </div>
+
+                <!-- Start Screen -->
+                <div id="start-screen" class="pointer-events-auto text-center space-y-5 animate-in zoom-in duration-500 px-4">
+                    <div class="relative">
+                        <div class="absolute -inset-10 bg-indigo-500/20 blur-[100px] rounded-full"></div>
+                        <h2 class="relative text-white text-6xl md:text-8xl font-black italic tracking-tighter uppercase drop-shadow-2xl">Trigo<span class="text-indigo-500">Quest</span></h2>
+                        <p class="relative text-indigo-300 font-medium tracking-[0.3em] text-[10px] uppercase">Maestría Trigonométrica</p>
+                    </div>
+                    <div class="max-w-xs mx-auto space-y-4">
+                        <button id="play-quiz-btn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-black py-4 rounded-2xl shadow-xl shadow-indigo-500/20 transition-all active:scale-95 flex items-center justify-center gap-3 text-sm">
+                            <i data-lucide="play" class="w-5 h-5 fill-white"></i> INICIAR MISIÓN
+                        </button>
+                        <p class="text-slate-500 text-[9px] uppercase font-bold tracking-widest italic">Optimizado para 4º ESO · ADHD Friendly</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ... (QUESTION_BANK igual) ...
+        const QUESTION_BANK = [
+            // ... (Contenido previo de QUESTION_BANK)
+
+            { 
+                q: "¿Qué significa etimológicamente 'Trigonometría'?", 
+                o: ["Medida de formas", "Medida de triángulos", "Círculo mágico", "Estudio del ángulo"], 
+                c: 1, 
+                h: "💡 TRUCO: Trígonos significa triángulo y Metron significa medida. ¿Qué estamos midiendo?", 
+                f: "✅ El nombre define su esencia: es la ciencia de medir los elementos de un triángulo. Si aciertas, ¡vas por buen camino! Si fallas, recuerda que 'Trígono' siempre se refiere a tres ángulos/lados." 
+            },
+            { 
+                q: "¿Qué dos 'idiomas' traduce la trigonometría?", 
+                o: ["Inglés y Griego", "Ángulos y Lados", "Sumas y Restas", "Física y Química"], 
+                c: 1, 
+                h: "💡 CONSEJO: Piensa en ella como un puente. Un puente que une grados (amplitud) con metros (longitud).", 
+                f: "✅ ¡Exacto! Es un 'Traductor Universal'. Nos permite saber cuánto mide un lado si solo conocemos el ángulo, conectando el mundo de la geometría con el del cálculo." 
+            },
+            { 
+                q: "¿En qué modo debe estar la calculadora para trabajar con grados?", 
+                o: ["RAD (Radianes)", "GRA (Gradianes)", "DEG (Degrees)", "FIX (Fijo)"], 
+                c: 2, 
+                h: "⚠️ AVISO: Degrees significa 'grados' en inglés. El modo RAD es el asesino silencioso de exámenes.", 
+                f: "✅ ¡Vital! El modo DEG (o la letra D en pantalla) es obligatorio en 4º ESO. Si te da resultados negativos o extraños como sen(30) = -0.98, revisa este ajuste inmediatamente." 
+            },
+            { 
+                q: "¿Qué es la hipotenusa en un triángulo rectángulo?", 
+                o: ["El lado que toca al suelo", "El lado opuesto al ángulo de 90º", "El lado más corto", "Cualquier lado vertical"], 
+                c: 1, 
+                h: "📌 TRUCO: Imagina que el ángulo recto es una flecha ➔ señala siempre a la hipotenusa.", 
+                f: "✅ ¡Correcto! La hipotenusa es el lado más largo y siempre está 'enfrente' de la esquina de 90º. Es el 'jefe' del triángulo." 
+            },
+            { 
+                q: "Si conoces el ángulo agudo α, ¿cuál es el cateto contiguo?", 
+                o: ["El que está enfrente", "El que no toco", "El que forma parte del ángulo α", "La hipotenusa"], 
+                c: 2, 
+                h: "💡 PISTA: Contiguo significa 'adyacente' o 'al lado de'. Es el lado que pisas si estás en la esquina α.", 
+                f: "✅ ¡Bien visto! El contiguo es el 'vecino de al lado'. Ojo: la hipotenusa también toca el ángulo, pero ella tiene su propio nombre de jefe." 
+            },
+            { 
+                q: "¿Qué razón trigonométrica es Opuesto / Hipotenusa?", 
+                o: ["Seno", "Coseno", "Tangente", "Secante"], 
+                c: 0, 
+                h: "🎸 NEMOTECNIA: Recuerda la primera parte de SOH-CAH-TOA.", 
+                f: "✅ ¡SOH! El Seno mide la proporción de 'altura' respecto a la pendiente. Nunca puede ser mayor que 1 porque el opuesto nunca supera a la hipotenusa." 
+            },
+            { 
+                q: "¿Qué razón relaciona la 'base' (contiguo) con la hipotenusa?", 
+                o: ["Seno", "Coseno", "Tangente", "Arcoseno"], 
+                c: 1, 
+                h: "🎸 NEMOTECNIA: Es la parte central de SOH-CAH-TOA.", 
+                f: "✅ ¡CAH! El Coseno mide la 'anchura' o avance horizontal. Si el ángulo es 0º, el coseno es 1 (toda la base); si es 90º, vale 0 (no hay base)." 
+            },
+            { 
+                q: "¿Qué razón NO utiliza la hipotenusa?", 
+                o: ["Seno", "Coseno", "Tangente", "Todas la usan"], 
+                c: 2, 
+                h: "💡 TRUCO: Es la 'Reina de las Pendientes'. Solo mira a los dos catetos.", 
+                f: "✅ ¡TOA! La Tangente (Opuesto/Contiguo) es ideal para medir alturas desde el suelo cuando no puedes medir la diagonal (hipotenusa)." 
+            },
+            { 
+                q: "¿Qué dice la Identidad Pitagórica Fundamental?", 
+                o: ["sen + cos = 1", "sen²α + cos²α = 1", "tan = sen/cos", "a² + b² = c"], 
+                c: 1, 
+                h: "📐 CONSEJO: Es el Teorema de Pitágoras ($a^2+b^2=c^2$) pero adaptado a un mundo donde la hipotenusa vale 1.", 
+                f: "✅ ¡Imprescindible! Si conoces el seno, puedes hallar el coseno despejando aquí. Recuerda que el cuadrado afecta a la razón, no al ángulo." 
+            },
+            { 
+                q: "Si intentas calcular sen⁻¹(1.5) en la calculadora...", 
+                o: ["Te da 90º", "Te da 0", "Da 'Math Error'", "Te da 1"], 
+                c: 2, 
+                h: "⚠️ LÓGICA: El seno es Opuesto/Hipotenusa. ¿Puede el opuesto ser un 50% más grande que la hipotenusa?", 
+                f: "✅ ¡Exacto! Como el cateto nunca es mayor que la hipotenusa, el seno jamás supera el 1. Si te sale 1.5, es un error de planteamiento." 
+            },
+            { 
+                q: "¿Para qué sirve la función 'SHIFT + TAN' (tan⁻¹)?", 
+                o: ["Para calcular la altura", "Para hallar el valor de la razón", "Para hallar el valor del ÁNGULO", "Para borrar la memoria"], 
+                c: 2, 
+                h: "💡 PISTA: Es la 'Ingeniería Inversa'. Tienes el número y buscas la inclinación.", 
+                f: "✅ ¡Correcto! Usamos las funciones arco ($sin^{-1}, cos^{-1}, tan^{-1}$) cuando el dato es la división y la incógnita es el grado." 
+            },
+            { 
+                q: "Si el ángulo es de 45º, ¿cómo son el seno y el coseno?", 
+                o: ["Iguales", "Diferentes", "El seno es el doble", "Uno vale cero"], 
+                c: 0, 
+                h: "📐 GEOMETRÍA: A 45º, el triángulo es la mitad de un cuadrado perfecto.", 
+                f: "✅ ¡Perfecto! En 45º, el cateto opuesto y el contiguo miden lo mismo, por lo que sus divisiones entre la hipotenusa dan el mismo resultado ($0.707$)." 
+            },
+            { 
+                q: "La tangente de un ángulo es igual a...", 
+                o: ["sen / cos", "cos / sen", "sen + cos", "1 / sen"], 
+                c: 0, 
+                h: "💡 TRUCO: Altura dividida por Base. Piensa en las otras dos razones.", 
+                f: "✅ ¡Sí! La relación $tan = sen/cos$ es una de las más útiles para simplificar problemas complicados." 
+            },
+            { 
+                q: "¿Qué es un ángulo de elevación?", 
+                o: ["Mirar hacia abajo", "Mirar hacia el frente", "Ángulo entre la horizontal y la visual hacia arriba", "El ángulo de 90º"], 
+                c: 2, 
+                h: "👀 VISUALIZA: Estás en el suelo mirando a la punta de un campanario. El ángulo nace en tu ojo.", 
+                f: "✅ ¡Correcto! Siempre se mide respecto a la línea horizontal. Nunca lo midas respecto a la vertical, ¡o fallarás el problema!" 
+            },
+            { 
+                q: "En una rampa, la tangente representa...", 
+                o: ["La longitud de la rampa", "La pendiente o inclinación", "El grosor del cemento", "La velocidad máxima"], 
+                c: 1, 
+                h: "📌 CONCEPTO: ¿Cuántos metros subo por cada metro que avanzo?", 
+                f: "✅ ¡Exacto! Una pendiente del 10% significa que la tangente vale 0.1. Es pura trigonometría aplicada a la arquitectura." 
+            },
+            { 
+                q: "Si cos α = 0, ¿cuánto vale el ángulo?", 
+                o: ["0º", "45º", "90º", "180º"], 
+                c: 2, 
+                h: "💡 LÓGICA: Si el coseno (base) vale 0, el triángulo no tiene anchura, es solo una línea vertical.", 
+                f: "✅ ¡Correcto! A 90º el triángulo se colapsa en una vertical. No hay avance horizontal, por eso el coseno es cero." 
+            },
+            { 
+                q: "¿Qué pecado capital cometemos al confundir catetos?", 
+                o: ["Usar el Teorema de Pitágoras", "Creer que el vertical es SIEMPRE el opuesto", "Usar calculadora", "Dibujar el triángulo"], 
+                c: 1, 
+                h: "⚠️ ADVERTENCIA: El 'opuesto' depende de dónde estés mirando. Si cambias de ángulo, los catetos se intercambian los nombres.", 
+                f: "✅ ¡Eso es! Es el error nº1. Antes de escribir nada, sitúate en el ángulo y mira de frente para marcar tu opuesto." 
+            },
+            { 
+                q: "¿Cómo se llama la distancia del centro de un hexágono a su lado?", 
+                o: ["Radio", "Hipotenusa", "Apotema", "Cuerda"], 
+                c: 2, 
+                h: "📐 GEOMETRÍA: Es la 'altura' del triángulo isósceles que forma una porción del polígono.", 
+                f: "✅ ¡Apotema! Hallarla es un ejercicio clásico donde usamos la tangente del ángulo central dividido por dos." 
+            },
+            { 
+                q: "Si la X está abajo (denominador) en tu ecuación, ¿cómo despejas?", 
+                o: ["Multiplicas la razón por el lado", "Pasas la razón abajo y la X arriba", "No se puede despejar", "Restas el ángulo"], 
+                c: 1, 
+                h: "🧮 ÁLGEBRA: Si $\text{sen}(30) = 5/x$, ¿quién sube y quién baja?", 
+                f: "✅ ¡Truco maestro! La X y la razón trigonométrica 'se intercambian el sitio'. Es el despeje más rápido y seguro." 
+            },
+            { 
+                q: "¿Cuál es el valor del seno de 0º?", 
+                o: ["0", "1", "0.5", "Infinito"], 
+                c: 0, 
+                h: "💡 LÓGICA: Si el ángulo es 0, no hay altura. ¿Cuánto mide el opuesto?", 
+                f: "✅ ¡Correcto! Sin ángulo no hay elevación, y sin elevación el opuesto vale cero. Por tanto, el seno es 0." 
+            },
+            { 
+                q: "Si un cateto mide 3 y la hipotenusa 5, ¿cuánto mide el otro cateto?", 
+                o: ["2", "4", "8", "1"], 
+                c: 1, 
+                h: "📐 TRÍO PITAGÓRICO: Es el triángulo más famoso de la historia. $3^2 + x^2 = 5^2$.", 
+                f: "✅ ¡El clásico 3-4-5! Siempre es bueno recordarlo para comprobar si tus cálculos trigonométricos tienen sentido." 
+            },
+            { 
+                q: "El ángulo de depresión se mide desde...", 
+                o: ["El suelo hacia arriba", "La vertical hacia la derecha", "La horizontal hacia abajo", "El centro de la tierra"], 
+                c: 2, 
+                h: "👀 VISUALIZA: Un piloto en un avión mira hacia una pista de aterrizaje. Su vista baja desde la línea del horizonte.", 
+                f: "✅ ¡Exacto! Depresión = bajar. Pero recuerda: siempre se mide desde la horizontal imaginaria que sale de tus ojos." 
+            },
+            { 
+                q: "¿Por qué redondeamos a 3 o 4 decimales?", 
+                o: ["Por capricho del profesor", "Para ser más precisos con los ángulos", "Para gastar tinta", "No hace falta redondear"], 
+                c: 1, 
+                h: "📐 PRECISIÓN: Un pequeño cambio en el decimal puede suponer varios grados de diferencia en el resultado final.", 
+                f: "✅ ¡Correcto! En trigonometría los decimales son sagrados. $0.86$ no es lo mismo que $0.8660$ cuando buscas un ángulo." 
+            },
+            { 
+                q: "¿Quién usaba la trigonometría para medir tierras tras las crecidas del Nilo?", 
+                o: ["Los Romanos", "Los Egipcios", "Los Piratas", "Los Griegos"], 
+                c: 1, 
+                h: "🏺 HISTORIA: Necesitaban marcar fronteras que el agua borraba cada año.", 
+                f: "✅ ¡Los Egipcios! Fueron los pioneros en usar cuerdas con nudos para crear ángulos rectos y medir campos." 
+            },
+            { 
+                q: "¿Qué sucede con la tangente de 90º?", 
+                o: ["Vale 1", "Vale 0", "No existe (es infinita)", "Vale 90"], 
+                c: 2, 
+                h: "⚠️ LÓGICA: Tan = Opuesto / Contiguo. A 90º, el contiguo vale cero. ¿Se puede dividir por cero?", 
+                f: "✅ ¡Exacto! No puedes dividir por cero. Geométricamente, una pared vertical tiene una pendiente infinita." 
+            },
+            { 
+                q: "Si sen α = 0.8, ¿cuánto vale sen²α?", 
+                o: ["0.16", "0.64", "1.6", "0.8"], 
+                c: 1, 
+                h: "🧮 CÁLCULO: Solo tienes que multiplicar $0.8 \cdot 0.8$.", 
+                f: "✅ ¡Correcto! $0.64$. Este es el primer paso para usar la Identidad Pitagórica Fundamental." 
+            },
+            { 
+                q: "En 4º ESO, los ángulos se miden habitualmente en...", 
+                o: ["Metros", "Segundos", "Grados sexagesimales", "Litros"], 
+                c: 2, 
+                h: "💡 PISTA: El círculo completo tiene 360 de estas unidades.", 
+                f: "✅ ¡Sí! Grados sexagesimales (º). ¡No olvides poner el simbolito siempre en tus soluciones!" 
+            },
+            { 
+                q: "La hipotenusa de un triángulo rectángulo de catetos 1 y 1 es...", 
+                o: ["2", "1", "Raíz de 2", "0.5"], 
+                c: 2, 
+                h: "📐 PITÁGORAS: $1^2 + 1^2 = h^2$. ¿Cuánto vale h?", 
+                f: "✅ ¡Exacto! $\sqrt{2} \approx 1.414$. Es la diagonal de un cuadrado de lado 1." 
+            },
+            { 
+                q: "Si un ángulo crece, su seno...", 
+                o: ["Crece", "Decrece", "Se queda igual", "Se vuelve negativo"], 
+                c: 0, 
+                h: "💡 VISUALIZA: A más ángulo, más altura (opuesto). Si subes la escalera, estás más alto.", 
+                f: "✅ ¡Correcto! Entre 0º y 90º, el seno y el ángulo van de la mano: si uno sube, el otro también." 
+            },
+            { 
+                q: "Si un ángulo crece, su coseno...", 
+                o: ["Crece", "Decrece", "Se queda igual", "Vale 1 siempre"], 
+                c: 1, 
+                h: "💡 VISUALIZA: A más ángulo, el triángulo es más estrecho (menos base).", 
+                f: "✅ ¡Bien pensado! Al subir el ángulo, sacrificas base para ganar altura. Por eso el coseno baja mientras el seno sube." 
+            },
+            { 
+                q: "¿Qué tecla de la calculadora es la 'inversa'?", 
+                o: ["DEL", "SHIFT o 2nd", "AC", "MODE"], 
+                c: 1, 
+                h: "📌 CONSEJO: Es la tecla que suele estar arriba a la izquierda, en otro color.", 
+                f: "✅ ¡Shift es la clave! Activa las funciones amarillas o naranjas escritas sobre las teclas principales." 
+            },
+            { 
+                q: "¿Qué herramienta usarías para medir la altura de una montaña?", 
+                o: ["Seno", "Coseno", "Tangente", "Regla de 30cm"], 
+                c: 2, 
+                h: "🏔️ ESCENARIO: Conoces la distancia a la base (contiguo) y el ángulo a la cima. Buscas la altura (opuesto).", 
+                f: "✅ ¡Tangente! Es la herramienta reina de la topografía para medir lo inalcanzable desde el suelo." 
+            },
+            { 
+                q: "Un triángulo con lados 3, 4 y 6, ¿es rectángulo?", 
+                o: ["Sí", "No", "Solo si es azul", "A veces"], 
+                c: 1, 
+                h: "⚠️ COMPROBACIÓN: ¿Se cumple que $3^2 + 4^2 = 6^2$?", 
+                f: "✅ ¡No! $9 + 16 = 25$, que no es igual a $36$. Si no cumple Pitágoras, no puedes usar $sen, cos, tan$ directamente." 
+            },
+            { 
+                q: "Si conoces los dos catetos, ¿qué razón es la más directa para el ángulo?", 
+                o: ["Seno", "Coseno", "Tangente", "Ninguna"], 
+                c: 2, 
+                h: "💡 TRUCO: ¿Cuál de las tres razones solo usa los dos catetos?", 
+                f: "✅ ¡La Tangente! Al usar Opuesto/Contiguo, te ahorras tener que calcular la hipotenusa primero." 
+            },
+            { 
+                q: "¿Qué significa el símbolo α?", 
+                o: ["Un tipo de coche", "Una letra griega para ángulos", "El nombre de un cateto", "Infinito"], 
+                c: 1, 
+                h: "📌 CULTURA: Es la primera letra del alfabeto griego. Usamos letras griegas (α, β, γ) para los ángulos.", 
+                f: "✅ ¡Correcto! Es la tradición matemática para diferenciar los ángulos (letras griegas) de los lados (letras latinas)." 
+            },
+            { 
+                q: "¿Puede un triángulo rectángulo tener dos ángulos de 90º?", 
+                o: ["Sí", "No", "Solo si es muy grande", "En geometría curva sí"], 
+                c: 1, 
+                h: "⚠️ LÓGICA: La suma de los tres ángulos debe ser 180º. Si pones dos de 90... ¿cuánto queda para el tercero?", 
+                f: "✅ ¡Imposible! Si hubiera dos de 90, el tercer ángulo sería 0 y no tendrías un triángulo, sino dos líneas paralelas." 
+            },
+            { 
+                q: "El seno de 30º es exactamente...", 
+                o: ["0.5", "0.866", "1", "0.707"], 
+                c: 0, 
+                h: "💡 DATO FAMOSO: Es el valor más fácil de recordar de toda la trigonometría.", 
+                f: "✅ ¡Correcto! 0.5. Significa que en un ángulo de 30º, el cateto opuesto mide exactamente la mitad que la hipotenusa." 
+            },
+            { 
+                q: "¿Cómo se llama el sistema de navegación que usa satélites y trigonometría?", 
+                o: ["Internet", "GPS", "Bluetooth", "WhatsApp"], 
+                c: 1, 
+                h: "🛰️ TECNOLOGÍA: Tu posición se halla midiendo distancias y ángulos a al menos 3 puntos en el espacio.", 
+                f: "✅ ¡GPS! Sin la trigonometría de alta precisión, Google Maps no sabría en qué calle estás." 
+            },
+            { 
+                q: "Si te dan el coseno y quieres el seno, ¿qué usas?", 
+                o: ["La calculadora sin más", "La Identidad Fundamental", "El Teorema de Tales", "Nada, es imposible"], 
+                c: 1, 
+                h: "📐 RELACIÓN: Busca la fórmula que tiene el 'seno al cuadrado' y el 'coseno al cuadrado' juntos.", 
+                f: "✅ ¡La Identidad Pitagórica! Es el puente que conecta el mundo horizontal (cos) con el vertical (sen)." 
+            },
+            { 
+                q: "¿Cuál es el valor máximo que puede tomar el coseno?", 
+                o: ["90", "Infinito", "1", "0"], 
+                c: 2, 
+                h: "⚠️ LÓGICA: El coseno es Contiguo/Hipotenusa. La base nunca puede ser más larga que la hipotenusa.", 
+                f: "✅ ¡Exacto! 1. Ocurre a los 0º, cuando el triángulo es totalmente plano y la base coincide con la hipotenusa." 
+            },
+            { 
+                q: "Si el seno de un ángulo es 1, el ángulo es...", 
+                o: ["0º", "45º", "90º", "No existe"], 
+                c: 2, 
+                h: "💡 VISUALIZA: Máxima altura posible. El opuesto mide lo mismo que la hipotenusa.", 
+                f: "✅ ¡90º! En ese punto la vertical es total. Es el límite superior para el seno en un triángulo rectángulo." 
+            },
+            { 
+                q: "¿Qué razón trigonométrica mide la 'anchura' relativa?", 
+                o: ["Seno", "Coseno", "Tangente", "Grados"], 
+                c: 1, 
+                h: "💡 PISTA: El cateto contiguo es la base. ¿Qué razón usa el contiguo?", 
+                f: "✅ ¡Coseno! Es la medida de cuánto avanzamos horizontalmente por cada unidad de hipotenusa." 
+            },
+            { 
+                q: "En un triángulo rectángulo, los ángulos agudos son...", 
+                o: ["Iguales", "Suplementarios (180º)", "Complementarios (90º)", "Negativos"], 
+                c: 2, 
+                h: "📐 SUMA: Si el ángulo recto ya gasta 90º de los 180º totales... ¿cuánto suman los otros dos?", 
+                f: "✅ ¡Complementarios! Esto es útil porque si sabes que uno mide 20º, el otro mide 70º sin necesidad de calcular nada más." 
+            },
+            { 
+                q: "Para calcular una altura con la sombra, ¿qué ángulo es mejor usar?", 
+                o: ["El de arriba", "El de elevación desde el suelo", "El de 90º", "Ninguno"], 
+                c: 1, 
+                h: "☀️ ESCENARIO: Pones la calculadora en el suelo y miras hacia la punta del objeto.", 
+                f: "✅ El ángulo de elevación. Con él y la longitud de la sombra (contiguo), la tangente te da la altura (opuesto)." 
+            },
+            { 
+                q: "¿Se puede usar trigonometría en la arquitectura?", 
+                o: ["No, eso es para científicos", "Sí, es fundamental", "Solo en edificios circulares", "Solo en pirámides"], 
+                c: 1, 
+                h: "🏗️ CONSTRUCCIÓN: ¿Cómo crees que calculan la inclinación de un tejado o una escalera?", 
+                f: "✅ ¡Indispensable! La arquitectura es trigonometría aplicada para que todo sea estable, seguro y estético." 
+            },
+            { 
+                q: "Si sen α = 0.6 y cos α = 0.8, ¿cuánto vale tan α?", 
+                o: ["1.4", "0.48", "0.75", "0.2"], 
+                c: 2, 
+                h: "🧮 CÁLCULO: Divide $0.6$ entre $0.8$.", 
+                f: "✅ ¡Muy bien! $0.6 / 0.8 = 0.75$. Has aplicado la relación $tan = sen / cos$ perfectamente." 
+            },
+            { 
+                q: "¿Por qué el triángulo es la figura protagonista?", 
+                o: ["Porque es bonito", "Porque cualquier polígono se divide en triángulos", "Porque tiene 3 lados", "Porque lo dijo Pitágoras"], 
+                c: 1, 
+                h: "📐 GEOMETRÍA: Imagina un cuadrado o un pentágono... ¿puedes trazar líneas dentro para formar triángulos?", 
+                f: "✅ ¡Esa es la clave! El triángulo es la pieza básica de construcción de toda la geometría plana." 
+            },
+            { 
+                q: "La palabra 'seno' proviene de una mala traducción de...", 
+                o: ["Cuerda / Bahía", "Montaña", "Círculo", "Espada"], 
+                c: 0, 
+                h: "🏺 CURIOSIDAD: Proviene del sánscrito 'jiva' (cuerda de arco), que pasó al árabe y luego al latín como 'sinus'.", 
+                f: "✅ ¡Exacto! Significa cavidad o bahía. La historia de las matemáticas está llena de estas curiosidades idiomáticas." 
+            },
+            { 
+                q: "Si la hipotenusa vale 10 y el seno 0.3, ¿cuánto mide el opuesto?", 
+                o: ["3", "30", "0.03", "10.3"], 
+                c: 0, 
+                h: "🧮 DESPEJE: $0.3 = x / 10$. ¿Cuánto vale x?", 
+                f: "✅ ¡Correcto! 3. Solo has tenido que multiplicar la hipotenusa por el valor del seno." 
+            },
+            { 
+                q: "¿Qué has aprendido hoy en TrigoQuest?", 
+                o: ["Que las mates son solo números", "Que la trigonometría domina el mundo físico", "Nada nuevo", "Que la calculadora es mágica"], 
+                c: 1, 
+                h: "🌟 REFLEXIÓN: Mira a tu alrededor... ángulos, distancias, alturas...", 
+                f: "✅ ¡Exacto! La trigonometría es la herramienta para entender y medir el espacio que nos rodea. ¡Eres un maestro!" 
+            },
+            { 
+                q: "¿Cuándo es obligatorio usar el Teorema del SENO?", 
+                o: ["Solo en triángulos rectángulos", "Cuando tienes una pareja 'Lado-Ángulo opuesto'", "Cuando solo tienes los 3 lados", "Nunca, es opcional"], 
+                c: 1, 
+                h: "🎎 CONSEJO: Piensa en 'parejas felices'. Si tienes un lado y sabes su ángulo de enfrente, este teorema es tu mejor amigo.", 
+                f: "✅ ¡Correcto! El Teorema del Seno relaciona cada lado con el seno de su ángulo opuesto. Es la herramienta clave cuando el triángulo no tiene un ángulo de 90º." 
+            },
+            { 
+                q: "¿Cuál es la 'condición sándwich' para usar el Teorema del COSENO?", 
+                o: ["Tener 3 ángulos", "Tener 2 lados y el ángulo que forman entre ellos", "Tener 2 ángulos y 1 lado", "Tener hambre"], 
+                c: 1, 
+                h: "🥪 VISUALIZA: Un lado, un ángulo en medio, y otro lado. Como un sándwich donde el ángulo es el relleno.", 
+                f: "✅ ¡Exacto! El Teorema del Coseno es ideal para el caso Lado-Ángulo-Lado. También sirve si conoces los 3 lados y buscas un ángulo. Es como un Pitágoras 'mejorado'." 
+            },
+            { 
+                q: "En el GPS, ¿qué sucede si la señal rebota en un edificio?", 
+                o: ["Llega más rápido", "Se pierde para siempre", "Se alarga el tiempo y la hipotenusa de cálculo", "El móvil se apaga"], 
+                c: 2, 
+                h: "🛰️ FÍSICA: Si la señal rebota, recorre más camino. ¿Cómo interpreta eso el móvil?", 
+                f: "✅ ¡Muy bien! Es el error de multipath. El móvil cree que estás más lejos del satélite de lo que realmente estás, moviendo tu posición en el mapa varios metros." 
+            },
+            { 
+                q: "¿Qué ángulo de apoyo se considera el 'límite de vuelco' para una escalera?", 
+                o: ["45º", "60º", "Más de 75º", "90º"], 
+                c: 2, 
+                h: "⚠️ SEGURIDAD: Si la escalera está muy vertical, es fácil que se caiga hacia atrás cuando subas.", 
+                f: "✅ ¡Correcto! Por encima de 75º, la estabilidad peligra. El ángulo ideal de seguridad suele estar entre 60º y 70º." 
+            },
+            { 
+                q: "Si un triángulo tiene ángulos de 100º, 40º y 40º, ¿qué teorema usarías?", 
+                o: ["Pitágoras", "Seno", "Coseno", "Ninguno, es imposible"], 
+                c: 1, 
+                h: "📐 ESTRATEGIA: No es rectángulo (no hay 90º). Tienes ángulos y podrías tener un lado opuesto.", 
+                f: "✅ ¡Teorema del Seno! Además, al ser isósceles (dos ángulos iguales), sabemos que tiene dos lados iguales, lo que facilita mucho los cálculos." 
+            },
+            { 
+                q: "¿Qué valor tiene el Coseno de 60º?", 
+                o: ["0.5", "0.866", "1", "0.707"], 
+                c: 0, 
+                h: "🖐️ HAND HACK: Es el 'compañero' del Seno de 30º.", 
+                f: "✅ ¡Exacto! 0.5. Recuerda que el sen(30º) y el cos(60º) valen lo mismo porque son ángulos complementarios." 
+            },
+            { 
+                q: "Para calcular el área de un triángulo cualquiera con lados 'a', 'b' y ángulo 'C'...", 
+                o: ["A = a · b / 2", "A = 1/2 · a · b · sen(C)", "A = a + b + c", "A = base · altura"], 
+                c: 1, 
+                h: "🪄 MAGIA: Esta fórmula te permite hallar el área sin conocer la altura del triángulo.", 
+                f: "✅ ¡Fórmula Maestra! Es extremadamente útil en topografía y exámenes para ahorrar tiempo de trazado de alturas." 
+            },
+            { 
+                q: "Si el seno de un ángulo es positivo y el coseno negativo, ¿dónde está?", 
+                o: ["1er Cuadrante", "2º Cuadrante", "3er Cuadrante", "Fuera del círculo"], 
+                c: 1, 
+                h: "🎡 CÍRCULO DE PODER: Seno es Y (arriba) y Coseno es X (izquierda).", 
+                f: "✅ ¡2º Cuadrante! Entre 90º y 180º. El ángulo es obtuso. Aunque en 4º ESO nos centramos en agudos, esto te da nivel experto." 
+            },
+            { 
+                q: "¿Cuántos satélites GPS necesitas para una posición 3D exacta?", 
+                o: ["1", "2", "3", "4"], 
+                c: 3, 
+                h: "🛰️ ESPACIO: Tres para la posición (latitud, longitud, altura) y uno más para sincronizar el tiempo perfectamente.", 
+                f: "✅ ¡Correcto! Con 4 satélites se elimina el error de reloj y se obtiene una precisión milimétrica en las tres dimensiones." 
+            },
+            { 
+                q: "¿Qué mnemotecnia usamos para no olvidar las razones?", 
+                o: ["Pitagorín", "SOH-CAH-TOA", "ABC-123", "Tri-Go-No"], 
+                c: 1, 
+                h: "🎸 RITMO: Suena a grito de guerra maorí.", 
+                f: "✅ ¡SOH-CAH-TOA para siempre! Si te grabas esto en fuego, nunca dudarás cuál es el cateto que va con cada razón." 
+            },
+            { 
+                q: "En navegación náutica, la 'distancia visual' al faro es...", 
+                o: ["El cateto contiguo", "La hipotenusa", "El cateto opuesto", "La profundidad"], 
+                c: 1, 
+                h: "⚓ NÁUTICA: Es la línea recta desde tu ojo hasta la luz del faro. ¿Qué parte del triángulo es?", 
+                f: "✅ ¡Exacto! La visual es la hipotenusa. La distancia horizontal es el cateto contiguo. ¡No las confundas en el radar!" 
+            },
+            { 
+                q: "Si el ángulo α es de 20º, ¿cuánto mide su complementario?", 
+                o: ["70º", "160º", "90º", "40º"], 
+                c: 0, 
+                h: "📐 SUMA: Los ángulos agudos de un triángulo rectángulo deben sumar 90º. Haz la resta.", 
+                f: "✅ ¡Correcto! 70º. Saber esto te ahorra muchos cálculos, ya que el seno de 20º es igual al coseno de 70º." 
+            },
+            { 
+                q: "El Teorema del Coseno es básicamente...", 
+                o: ["Una suma de ángulos", "Pitágoras con esteroides", "Un invento moderno", "Solo para círculos"], 
+                c: 1, 
+                h: "💪 MÚSCULO: Empieza igual ($a^2 = b^2 + c^2$), pero añade un término para corregir si el ángulo no es de 90º.", 
+                f: "✅ ¡Esa es la definición perfecta! Es la generalización del Teorema de Pitágoras para cualquier tipo de triángulo." 
+            },
+            { 
+                q: "¿Qué corrección 'mágica' necesitan los satélites GPS?", 
+                o: ["Limpiar las placas solares", "Corrección relativista del tiempo", "Cambiar las pilas", "Pintarlos de azul"], 
+                c: 1, 
+                h: "🕰️ EINSTEIN: La gravedad y la velocidad hacen que el tiempo en el espacio no pase igual que en la Tierra.", 
+                f: "✅ ¡Impresionante! Debido a la relatividad, los relojes de los satélites se desvían. Sin corregir esto trigonométricamente, el GPS fallaría por kilómetros." 
+            },
+            { 
+                q: "Para el 'Hand Hack', ¿qué valor tiene el dedo corazón (45º)?", 
+                o: ["Raíz de 1 / 2", "Raíz de 2 / 2", "Raíz de 3 / 2", "0.5"], 
+                c: 1, 
+                h: "🖐️ DEDOS: Cuenta desde el meñique (0, 30, 45...). ¿Cuántos dedos quedan por debajo?", 
+                f: "✅ ¡Raíz de 2 entre 2! A 45º, el seno y el coseno valen exactamente lo mismo. ¡Triángulo isósceles al poder!" 
+            },
+            { 
+                q: "Si sen(α) = cos(α), ¿cuánto mide el ángulo?", 
+                o: ["0º", "30º", "45º", "90º"], 
+                c: 2, 
+                h: "⚖️ EQUILIBRIO: Altura y base son iguales. ¿Qué inclinación da esa pendiente?", 
+                f: "✅ ¡45º! Es el ángulo de la diagonal de un cuadrado. La tangente en este punto vale exactamente 1." 
+            },
+            { 
+                q: "¿Qué ocurre con el coseno si el ángulo se acerca a 90º?", 
+                o: ["Se hace infinito", "Se acerca a 1", "Se acerca a 0", "No cambia"], 
+                c: 2, 
+                h: "🏃‍♂️ AVANCE: Imagina que el triángulo se vuelve muy, muy alto y estrecho. ¿Qué pasa con la base?", 
+                f: "✅ ¡Correcto! El coseno desaparece. A 90º no hay base, por eso el coseno de 90º es cero." 
+            },
+            { 
+                q: "¿Cuál es el área de un triángulo con lados 10 y 10 y ángulo de 30º?", 
+                o: ["50", "25", "100", "15"], 
+                c: 1, 
+                h: "🪄 FÓRMULA: $A = 1/2 \cdot 10 \cdot 10 \cdot \text{sen}(30^\circ)$. Recuerda que sen(30) es 0.5.", 
+                f: "✅ ¡Calculado con precisión! $0.5 \cdot 100 \cdot 0.5 = 25$. La trigonometría es mucho más rápida que medir alturas a mano." 
+            },
+            { 
+                q: "Si la señal GPS 'rebota', el error se llama...", 
+                o: ["Lag", "Multipath", "Eco-distorsión", "Salto cuántico"], 
+                c: 1, 
+                h: "🏢 CIUDAD: Ocurre mucho entre edificios altos. La señal sigue 'múltiples caminos'.", 
+                f: "✅ ¡Multipath! Es el enemigo de la precisión. Alarga la hipotenusa de cálculo y tu móvil 'salta' a la calle de al lado." 
+            },
+            { 
+                q: "Has llegado al final de TrigoQuest. ¿Cuál es tu rango?", 
+                o: ["Recluta", "Detective", "Francotirador", "Maestro de los Ángulos"], 
+                c: 3, 
+                h: "🏆 RANGO: Has respondido a todo con lógica y precisión.", 
+                f: "✅ ¡MAESTRO! Has demostrado un dominio total de la materia. ¡Estás listo para el examen y para la vida real!" 
+            },
+            { 
+                q: "¿Cómo medirías el ancho de un río sin cruzarlo?", 
+                o: ["Con una regla muy larga", "Trazando un ángulo desde la orilla y usando la Tangente", "Nadando con un metro", "Esperando a que se seque"], 
+                c: 1, 
+                h: "🌊 RÍO: Fija un punto en la otra orilla, avanza unos metros por la tuya y mide el ángulo.", 
+                f: "✅ ¡Estrategia Topográfica! Con la distancia recorrida (contiguo) y el ángulo, la Tangente te da el ancho del río (opuesto). ¡Ingeniería pura!" 
+            },
+            { 
+                q: "Si la pendiente de un tejado es del 100%, ¿qué ángulo forma?", 
+                o: ["0º", "45º", "90º", "100º"], 
+                c: 1, 
+                h: "🏗️ CONSTRUCCIÓN: Pendiente del 100% significa que subes 1 metro por cada metro que avanzas. ¿Qué ángulo tiene esa diagonal?", 
+                f: "✅ ¡Exacto! 45º. En este punto, Opuesto = Contiguo, por lo que la Tangente es 1. ¡Un tejado muy empinado!" 
+            },
+            { 
+                q: "¿Qué sucede con la sombra de un árbol si el sol sube de 30º a 60º?", 
+                o: ["Se alarga", "Se acorta", "Se queda igual", "Desaparece"], 
+                c: 1, 
+                h: "☀️ SOL: Cuanto más alto está el sol, más 'encima' del árbol está. Imagina la sombra.", 
+                f: "✅ ¡Lógica Solar! A mayor ángulo de elevación, menor es la sombra. La Tangente es inversamente proporcional a la longitud de la sombra si la altura es fija." 
+            },
+            { 
+                q: "El 'Teorema del Coseno' es el único que puede hallar un ángulo si solo tienes...", 
+                o: ["Los 3 lados", "Los 3 ángulos", "1 lado y 1 ángulo", "Mucha suerte"], 
+                c: 0, 
+                h: "📐 GEOMETRÍA: Si conoces a, b y c, puedes despejar el coseno de cualquier ángulo. Ninguna otra fórmula hace esto.", 
+                f: "✅ ¡Correcto! Es la única forma de 'desbloquear' un triángulo si no tienes ningún ángulo inicial. ¡Imprescindible para topógrafos!" 
+            },
+            { 
+                q: "¿Qué gran matemático griego midió el radio de la Tierra usando ángulos?", 
+                o: ["Pitágoras", "Eratóstenes", "Sócrates", "Arquímedes"], 
+                c: 1, 
+                h: "🏺 HISTORIA: Usó la sombra de un palo en dos ciudades diferentes al mismo tiempo.", 
+                f: "✅ ¡Eratóstenes! Con una simple regla de tres y ángulos de sombras, calculó la circunferencia de la Tierra con un error de menos del 1%. ¡Trigonometría histórica!" 
+            },
+            { 
+                q: "Si un satélite está justo encima de ti (cenit), ¿su ángulo de elevación es?", 
+                o: ["0º", "45º", "90º", "180º"], 
+                c: 2, 
+                h: "🛰️ ESPACIO: Mira totalmente hacia arriba. La vertical perfecta respecto al suelo.", 
+                f: "✅ ¡90º! En ese momento, la distancia al satélite es mínima (es igual a su altitud). No hay componente horizontal." 
+            },
+            { 
+                q: "Para el 'Hand Hack', ¿cuál es el dedo de los 60º?", 
+                o: ["Meñique", "Anular", "Corazón", "Índice"], 
+                c: 3, 
+                h: "🖐️ DEDOS: Cuenta 0º(meñique), 30º(anular), 45º(corazón)... ¿quién sigue?", 
+                f: "✅ ¡El Índice! Para el seno de 60º, quedan 3 dedos por debajo ($\sqrt{3}/2$). ¡Truco de examen dominado!" 
+            },
+            { 
+                q: "¿Qué forma tiene la gráfica del Seno si la dibujas?", 
+                o: ["Una línea recta", "Un círculo", "Una onda (sinusoide)", "Un cuadrado"], 
+                c: 2, 
+                h: "🌊 SONIDO: Piensa en las ondas del mar o en la música. Suben, bajan y se repiten.", 
+                f: "✅ ¡Una onda! La función seno oscila eternamente entre 1 y -1. Por eso se usa para entender la música, la radio y la electricidad." 
+            },
+            { 
+                q: "Si duplicas los lados de un triángulo, ¿qué pasa con sus senos y cosenos?", 
+                o: ["Se duplican", "Se dividen por dos", "Se quedan IGUAL", "Se vuelven negativos"], 
+                c: 2, 
+                h: "📐 SEMEJANZA: Las razones trigonométricas solo dependen del ÁNGULO, no del tamaño del triángulo.", 
+                f: "✅ ¡Fundamental! La trigonometría mide PROPORCIONES. Un triángulo gigante y uno diminuto con el mismo ángulo tienen el mismo seno." 
+            },
+            { 
+                q: "¡Última pregunta! ¿La trigonometría te da miedo ahora?", 
+                o: ["Sí, socorro", "Un poco menos", "No, ahora es mi superpoder", "Prefiero no responder"], 
+                c: 2, 
+                h: "✨ ACTITUD: Has completado 80 misiones. Eres imparable.", 
+                f: "✅ ¡Esa es la actitud! Has transformado un tema difícil en una herramienta de precisión. ¡Felicidades, Master de la Trigo!" 
+            }
+        ];
+
+        // --- PHASER ENGINE ---
+        const config = {
+            type: Phaser.AUTO,
+            parent: 'game-container',
+            width: 800,
+            height: 600,
+            transparent: true,
+            scale: {
+                mode: Phaser.Scale.FIT,
+                autoCenter: Phaser.Scale.CENTER_BOTH
+            },
+            physics: { default: 'arcade', arcade: { gravity: { y: 0 } } },
+            scene: { preload, create, update }
+        };
+
+        const game = new Phaser.Game(config);
+        let gameState = {
+            score: 0,
+            questionsDone: 0,
+            timer: 0,
+            active: false,
+            mode: 'MENU', 
+            currentQuestions: []
+        };
+
+        function preload() {}
+
+        function create() {
+            lucide.createIcons();
+            document.getElementById('play-quiz-btn').onclick = () => startQuiz();
+            document.getElementById('hint-btn').onclick = () => showHint();
+            document.getElementById('info-close-btn').onclick = () => closeInfoModal();
+
+            setInterval(() => {
+                if (gameState.active) {
+                    gameState.timer++;
+                    updateHUD();
+                }
+            }, 1000);
+        }
+
+        function update(time, delta) {
+            // No se requiere lógica de física en tiempo real para el quiz, 
+            // pero Phaser necesita que la función esté definida si se incluye en la config.
+        }
+
+        function updateHUD() {
+            document.getElementById('score-text').innerText = gameState.score;
+            const m = Math.floor(gameState.timer / 60);
+            const s = gameState.timer % 60;
+            document.getElementById('timer-text').innerText = `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+        }
+
+        function startQuiz() {
+            gameState.mode = 'QUIZ';
+            gameState.active = true;
+            gameState.score = 0;
+            gameState.questionsDone = 0;
+            gameState.timer = 0;
+            gameState.currentQuestions = [...QUESTION_BANK].sort(() => 0.5 - Math.random()).slice(0, 10);
+            
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('quiz-modal').classList.remove('hidden');
+            
+            showQuestion();
+            updateHUD();
+        }
+
+        function showQuestion() {
+            const q = gameState.currentQuestions[gameState.questionsDone];
+            document.getElementById('question-count').innerText = `P ${gameState.questionsDone + 1}/10`;
+            document.getElementById('question-text').innerHTML = q.q;
+            
+            const grid = document.getElementById('options-grid');
+            grid.innerHTML = '';
+            grid.classList.remove('pointer-events-none');
+
+            q.o.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = "text-left p-4 rounded-xl border border-white/10 bg-white/5 text-white text-xs md:text-sm font-medium hover:border-indigo-500 hover:bg-indigo-500/10 transition-all pointer-events-auto";
+                btn.innerHTML = `<span class="text-indigo-400 font-black mr-2">${String.fromCharCode(65+i)}</span> ${opt}`;
+                btn.onclick = () => checkAnswer(i);
+                grid.appendChild(btn);
+            });
+
+            document.getElementById('progress-bar').style.width = (gameState.questionsDone / 10 * 100) + '%';
+            if (window.MathJax && window.MathJax.typesetPromise) window.MathJax.typesetPromise();
+        }
+
+        function checkAnswer(index) {
+            const q = gameState.currentQuestions[gameState.questionsDone];
+            const isCorrect = index === q.c;
+            if (isCorrect) gameState.score += 100;
+            
+            document.getElementById('options-grid').classList.add('pointer-events-none');
+            showInfoModal(
+                isCorrect ? '¡EXCELENTE!' : 'CASI... PERO NO',
+                q.f,
+                isCorrect ? 'check-circle' : 'x-circle',
+                isCorrect ? 'bg-emerald-500' : 'bg-red-500',
+                isCorrect ? 'text-emerald-400' : 'text-red-400',
+                true // Is end of question
+            );
+        }
+
+        function showHint() {
+            const q = gameState.currentQuestions[gameState.questionsDone];
+            showInfoModal(
+                'PISTA DE RAZONAMIENTO',
+                q.h,
+                'sparkles',
+                'bg-amber-500',
+                'text-amber-400',
+                false // Just a hint, don't advance
+            );
+        }
+
+        let isEndOfQuestion = false;
+
+        function showInfoModal(title, text, icon, iconBg, titleColor, endOfQ) {
+            isEndOfQuestion = endOfQ;
+            const modal = document.getElementById('info-modal');
+            const iTitle = document.getElementById('info-title');
+            const iIcon = document.getElementById('info-icon');
+            const iText = document.getElementById('info-text');
+
+            iTitle.innerText = title;
+            iTitle.className = `font-black text-base uppercase tracking-tight ${titleColor}`;
+            iText.innerHTML = text;
+            iIcon.innerHTML = `<i data-lucide="${icon}" class="w-5 h-5"></i>`;
+            iIcon.className = `p-2 rounded-xl text-white ${iconBg}`;
+            
+            modal.classList.remove('hidden');
+            lucide.createIcons();
+            if (window.MathJax && window.MathJax.typesetPromise) window.MathJax.typesetPromise();
+        }
+
+        function closeInfoModal() {
+            document.getElementById('info-modal').classList.add('hidden');
+            if (isEndOfQuestion) {
+                gameState.questionsDone++;
+                if (gameState.questionsDone < 10) showQuestion();
+                else showResult();
+            }
+        }
+
+        function showResult() {
+            gameState.active = false;
+            document.getElementById('quiz-modal').innerHTML = `
+                <div class="text-center py-6 space-y-4">
+                    <div class="text-5xl">🏆</div>
+                    <h2 class="text-white text-2xl font-black italic">¡DESAFÍO COMPLETADO!</h2>
+                    <p class="text-indigo-200 text-lg font-medium">Puntuación Final: <span class="text-white font-black">${gameState.score}</span></p>
+                    <div class="flex flex-col gap-2 mt-6">
+                        <button onclick="location.reload()" class="bg-indigo-600 text-white font-black py-4 rounded-xl shadow-lg hover:scale-105 transition-all text-xs uppercase tracking-widest italic">REINTENTAR</button>
+                        <button onclick="window.location.href='trigonometria_completa.html'" class="bg-white/10 text-white font-black py-3 rounded-xl hover:bg-white/20 transition-all text-[10px] uppercase tracking-widest italic">VOLVER A APUNTES</button>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

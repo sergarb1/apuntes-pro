@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Trigo Dashboard: Guía de Maestría 4º ESO</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$']], processEscapes: true }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap');
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            background: radial-gradient(circle at top right, #1e1b4b, #0f172a); 
+            color: #f8fafc; 
+            min-height: 100vh;
+        }
+        .bento-card {
+            background: rgba(30, 41, 59, 0.5); 
+            backdrop-filter: blur(16px); 
+            border: 1px solid rgba(255,255,255,0.1); 
+            border-radius: 2rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+        .bento-card:hover {
+            transform: scale(1.02); 
+            border-color: rgba(99, 102, 241, 0.4); 
+            box-shadow: 0 20px 40px -15px rgba(0,0,0,0.5);
+            background: rgba(30, 41, 59, 0.7);
+        }
+        .gradient-border {
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, #6366f1, transparent);
+        }
+        .text-glow { text-shadow: 0 0 15px rgba(99, 102, 241, 0.5); }
+        .math-display { font-family: 'serif'; font-style: italic; }
+        @media print { 
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            body { background: white; color: black; }
+            .bento-card { border: 1px solid #ccc; background: white; break-inside: avoid; }
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8 lg:p-12">
+    <div class="max-w-7xl mx-auto">
+        
+        <!-- HEADER MAESTRO -->
+        <header class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6 border-b border-white/10 pb-8">
+            <div>
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="bg-indigo-600 text-white px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase">Protocolo SME v4.0</span>
+                    <span class="text-indigo-400 font-bold text-xs uppercase tracking-tighter">Sistemas de Navegación Visual</span>
+                </div>
+                <h1 class="text-6xl md:text-8xl font-black tracking-tighter uppercase leading-none">Trigo<span class="text-indigo-500 italic">Map</span></h1>
+            </div>
+            <div class="text-right">
+                <p class="text-slate-400 text-xl font-light tracking-widest uppercase">Guía de Supervivencia · 4º ESO</p>
+                <p class="text-indigo-400 font-black text-sm italic">"Medir lo inalcanzable"</p>
+            </div>
+        </header>
+
+        <!-- BENTO GRID -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+            
+            <!-- 1. RAÍCES Y ANATOMÍA (4 cols) -->
+            <div class="md:col-span-4 space-y-6">
+                <!-- Etimología (NUEVO) -->
+                <div class="bento-card p-6 border-l-4 border-indigo-500">
+                    <div class="flex items-center gap-3 mb-4">
+                        <i data-lucide="languages" class="text-indigo-400 w-5 h-5"></i>
+                        <h2 class="font-bold uppercase text-xs tracking-widest">Raíces del Poder</h2>
+                    </div>
+                    <div class="flex justify-around items-center text-center">
+                        <div>
+                            <span class="block text-2xl font-black">Trígonos</span>
+                            <span class="text-[10px] text-indigo-300 uppercase">Triángulo</span>
+                        </div>
+                        <div class="text-slate-600">
+                            +
+                        </div>
+                        <div>
+                            <span class="block text-2xl font-black">Metron</span>
+                            <span class="text-[10px] text-pink-300 uppercase">Medida</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Anatomía de la L -->
+                <div class="bento-card p-8">
+                    <div class="gradient-border"></div>
+                    <h2 class="text-xl font-bold mb-6 flex items-center gap-3">
+                        <i data-lucide="triangle" class="text-indigo-400"></i> Anatomía del Triángulo
+                    </h2>
+                    <div class="relative aspect-square mb-6 flex items-center justify-center bg-slate-900/50 rounded-3xl border border-white/5 shadow-inner">
+                        <svg viewBox="0 0 200 200" class="w-48 h-48 drop-shadow-[0_0_20px_rgba(99,102,241,0.4)]">
+                            <path d="M 40 160 L 160 160 L 40 40 Z" fill="none" stroke="#818cf8" stroke-width="4" stroke-linejoin="round"/>
+                            <path d="M 40 140 L 60 140 L 60 160" fill="none" stroke="#475569" stroke-width="2"/>
+                            <text x="90" y="180" font-size="10" fill="#94a3b8" font-weight="900">CONTIGUO</text>
+                            <text x="20" y="100" font-size="10" fill="#94a3b8" font-weight="900" transform="rotate(-90, 20, 100)">OPUESTO</text>
+                            <text x="110" y="90" font-size="10" fill="#f8fafc" font-weight="900" transform="rotate(-45, 110, 90)">HIPOTENUSA</text>
+                        </svg>
+                    </div>
+                    <ul class="space-y-4 text-sm">
+                        <li class="flex items-center gap-3 text-slate-300">
+                            <span class="w-2 h-2 bg-indigo-500 rounded-full"></span>
+                            <span><strong>Hipotenusa:</strong> El lado "Jefe" (siempre el mayor).</span>
+                        </li>
+                        <li class="flex items-center gap-3 text-slate-300">
+                            <span class="w-2 h-2 bg-pink-500 rounded-full"></span>
+                            <span><strong>Opuesto:</strong> El "objetivo" (está enfrente).</span>
+                        </li>
+                        <li class="flex items-center gap-3 text-slate-300">
+                            <span class="w-2 h-2 bg-emerald-500 rounded-full"></span>
+                            <span><strong>Contiguo:</strong> El "vecino" (el que tocas).</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 2. LAS RAZONES (4 cols) -->
+            <div class="md:col-span-4 space-y-6">
+                <div class="bento-card p-8 bg-indigo-600/10 border-indigo-500/30">
+                    <div class="gradient-border"></div>
+                    <div class="text-center mb-8">
+                        <h2 class="text-4xl font-black italic tracking-tighter uppercase text-glow">SOH CAH TOA</h2>
+                        <p class="text-[10px] text-indigo-400 font-bold tracking-[0.3em]">EL MANTRA SAGRADO</p>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="bg-slate-900/80 p-6 rounded-[1.5rem] border border-white/10 flex justify-between items-center group">
+                            <div>
+                                <p class="text-pink-400 font-black text-[10px] uppercase mb-1">Seno</p>
+                                <p class="text-3xl font-serif">$\sin \alpha = \frac{\text{O}}{\text{H}}$</p>
+                            </div>
+                            <i data-lucide="move-up" class="text-slate-700 group-hover:text-pink-500 transition-colors"></i>
+                        </div>
+                        <div class="bg-slate-900/80 p-6 rounded-[1.5rem] border border-white/10 flex justify-between items-center group">
+                            <div>
+                                <p class="text-blue-400 font-black text-[10px] uppercase mb-1">Coseno</p>
+                                <p class="text-3xl font-serif">$\cos \alpha = \frac{\text{A}}{\text{H}}$</p>
+                            </div>
+                            <i data-lucide="move-right" class="text-slate-700 group-hover:text-blue-500 transition-colors"></i>
+                        </div>
+                        <div class="bg-slate-900/80 p-6 rounded-[1.5rem] border border-white/10 flex justify-between items-center group">
+                            <div>
+                                <p class="text-amber-400 font-black text-[10px] uppercase mb-1">Tangente</p>
+                                <p class="text-3xl font-serif">$\tan \alpha = \frac{\text{O}}{\text{A}}$</p>
+                            </div>
+                            <i data-lucide="trending-up" class="text-slate-700 group-hover:text-amber-500 transition-colors"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Identidades -->
+                <div class="bento-card p-8 bg-purple-600/10 border-purple-500/30">
+                    <h2 class="text-xl font-bold mb-6 flex items-center gap-3">
+                        <i data-lucide="infinity" class="text-purple-400"></i> Identidades Maestras
+                    </h2>
+                    <div class="space-y-4 text-center">
+                        <div class="bg-slate-900/50 p-4 rounded-2xl border border-white/5">
+                            <p class="text-[10px] text-purple-400 font-bold uppercase mb-2">Fundamental</p>
+                            <p class="text-xl font-serif">$\sin^2 \alpha + \cos^2 \alpha = 1$</p>
+                        </div>
+                        <div class="bg-slate-900/50 p-4 rounded-2xl border border-white/5">
+                            <p class="text-[10px] text-purple-400 font-bold uppercase mb-2">Relación Tan</p>
+                            <p class="text-xl font-serif">$\tan \alpha = \frac{\sin \alpha}{\cos \alpha}$</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. PROTOCOLO Y VALORES (4 cols) -->
+            <div class="md:col-span-4 space-y-6">
+                <!-- Check de Vuelo -->
+                <div class="bento-card p-6 border-amber-500/50 bg-amber-500/5">
+                    <h2 class="text-amber-400 font-black text-xs uppercase tracking-widest mb-4 flex items-center gap-2">
+                        <i data-lucide="zap" class="w-4 h-4"></i> Alerta Calculadora
+                    </h2>
+                    <div class="flex items-center justify-between">
+                        <div class="flex gap-2">
+                            <span class="bg-emerald-500 text-white px-3 py-1 rounded-lg font-black text-xl shadow-[0_0_15px_rgba(16,185,129,0.4)]">DEG</span>
+                            <span class="bg-slate-800 text-slate-500 px-3 py-1 rounded-lg font-black text-xl opacity-50 line-through">RAD</span>
+                        </div>
+                        <p class="text-[9px] text-amber-200 uppercase font-bold leading-tight max-w-[80px]">D en pantalla o examen muerto.</p>
+                    </div>
+                </div>
+
+                <!-- Protocolo -->
+                <div class="bento-card p-8">
+                    <h2 class="text-xl font-bold mb-8 flex items-center gap-3">
+                        <i data-lucide="list-checks" class="text-cyan-400"></i> Protocolo de Acción
+                    </h2>
+                    <div class="space-y-6">
+                        <div class="flex gap-4 group">
+                            <span class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center font-black text-sm shadow-lg group-hover:scale-110 transition-transform">1</span>
+                            <div>
+                                <p class="text-sm font-bold">Sitúate</p>
+                                <p class="text-[10px] text-slate-400 uppercase">Pon el ojo en el ángulo.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 group">
+                            <span class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center font-black text-sm shadow-lg group-hover:scale-110 transition-transform">2</span>
+                            <div>
+                                <p class="text-sm font-bold">Etiqueta</p>
+                                <p class="text-[10px] text-slate-400 uppercase">Nombra los lados (O, A, H).</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 group">
+                            <span class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center font-black text-sm shadow-lg group-hover:scale-110 transition-transform">3</span>
+                            <div>
+                                <p class="text-sm font-bold">Elige Arma</p>
+                                <p class="text-[10px] text-slate-400 uppercase">SOH, CAH o TOA.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 group">
+                            <span class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center font-black text-sm shadow-lg group-hover:scale-110 transition-transform">4</span>
+                            <div>
+                                <p class="text-sm font-bold">Despeja</p>
+                                <p class="text-[10px] text-slate-400 uppercase">Resuelve la incógnita.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Valores VIP -->
+                <div class="bento-card p-8 border-emerald-500/30">
+                    <h2 class="text-xl font-bold mb-6 flex items-center gap-3 text-emerald-400">
+                        <i data-lucide="star"></i> Valores V.I.P.
+                    </h2>
+                    <div class="grid grid-cols-3 gap-2 text-center text-[10px] font-black text-slate-500 uppercase mb-4">
+                        <span>Ángulo</span><span>Seno</span><span>Cose</span>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex justify-between bg-slate-900/50 p-3 rounded-xl text-sm border border-white/5">
+                            <span class="font-black text-indigo-400">30º</span><span>1/2</span><span>$\sqrt{3}/2$</span>
+                        </div>
+                        <div class="flex justify-between bg-indigo-500/20 p-3 rounded-xl text-sm border border-indigo-500/30">
+                            <span class="font-black text-white">45º</span><span>$\sqrt{2}/2$</span><span>$\sqrt{2}/2$</span>
+                        </div>
+                        <div class="flex justify-between bg-slate-900/50 p-3 rounded-xl text-sm border border-white/5">
+                            <span class="font-black text-indigo-400">60º</span><span>$\sqrt{3}/2$</span><span>1/2</span>
+                        </div>
+                    </div>
+                    <!-- TRUCO DE LA MANO (NUEVO) -->
+                    <div class="mt-4 p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-center gap-3">
+                        <i data-lucide="hand" class="text-amber-400 w-5 h-5 shrink-0"></i>
+                        <p class="text-[9px] leading-tight text-amber-100/70"><strong>Hand Hack:</strong> Dedos 0, 30, 45, 60, 90. <br>$\sqrt{\text{dedos}} / 2$. ¡Pregunta a tu SME!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NUEVA FILA: HERRAMIENTAS AVANZADAS -->
+            
+            <!-- 4. FUNCIONES INVERSAS (4 cols) -->
+            <div class="md:col-span-4 bento-card p-8 border-pink-500/30 bg-pink-500/5">
+                <h2 class="text-xl font-bold mb-6 flex items-center gap-3 text-pink-400">
+                    <i data-lucide="unlock"></i> Arcos: El Desbloqueador
+                </h2>
+                <p class="text-xs text-slate-400 mb-6 uppercase tracking-widest font-bold">¿Tengo el número? → Quiero el ángulo</p>
+                <div class="space-y-4">
+                    <div class="bg-slate-900/80 p-4 rounded-2xl border border-white/10 text-center">
+                        <p class="text-2xl font-serif">$\alpha = \sin^{-1}(\text{ratio})$</p>
+                        <p class="text-[9px] text-pink-300 mt-2">Usa [SHIFT] + [SIN] en tu calculadora</p>
+                    </div>
+                    <div class="bg-pink-900/20 p-4 rounded-xl border border-pink-500/20 text-[10px] italic text-pink-100/70">
+                        <strong>Truco:</strong> Si la calculadora dice "Math Error", revisa si el número es mayor que 1. ¡El seno no puede ser tan grande!
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. ÁREA UNIVERSAL (4 cols) -->
+            <div class="md:col-span-4 bento-card p-8 border-orange-500/30 bg-orange-500/5">
+                <h2 class="text-xl font-bold mb-6 flex items-center gap-3 text-orange-400">
+                    <i data-lucide="maximize"></i> Área sin Altura
+                </h2>
+                <p class="text-xs text-slate-400 mb-6 uppercase tracking-widest font-bold">Para CUALQUIER triángulo</p>
+                <div class="bg-slate-900/80 p-6 rounded-2xl border border-white/10 text-center mb-4">
+                    <p class="text-3xl font-serif">$A = \frac{1}{2} a b \sin C$</p>
+                </div>
+                <div class="flex items-start gap-3 bg-orange-900/20 p-4 rounded-xl border border-orange-500/20 text-[10px]">
+                    <i data-lucide="info" class="w-4 h-4 shrink-0 text-orange-400"></i>
+                    <p class="text-orange-100/70 leading-relaxed">No pierdas tiempo trazando la altura. Si tienes dos lados y el ángulo que forman, ya lo tienes todo.</p>
+                </div>
+            </div>
+
+            <!-- 6. GPS LOGIC (4 cols) -->
+            <div class="md:col-span-4 bento-card p-8 border-blue-500/30 bg-blue-500/5">
+                <h2 class="text-xl font-bold mb-6 flex items-center gap-3 text-blue-400">
+                    <i data-lucide="satellite"></i> Trigo Satelital
+                </h2>
+                <div class="relative py-4">
+                    <div class="absolute inset-0 bg-blue-500/10 blur-xl rounded-full"></div>
+                    <p class="relative z-10 text-xs text-blue-100/80 leading-relaxed">
+                        El GPS usa la <strong>Trilateración</strong>. Calcula la hipotenusa de 3 triángulos espaciales para fijar tu posición exacta.
+                    </p>
+                </div>
+                <div class="mt-4 p-3 bg-slate-900/50 rounded-xl border border-white/5 text-[9px] font-mono text-blue-300">
+                    Distancia = Tiempo x Luz <br>
+                    Triángulo: Móvil - Centro Tierra - SAT
+                </div>
+            </div>
+
+            <!-- ROW INFERIOR (ANALOGÍAS Y ESCENARIOS) -->
+            <!-- 7. EL OJO DEL OBSERVADOR (8 cols) -->
+            <div class="md:col-span-8 bento-card p-10 bg-slate-900/80">
+                <div class="gradient-border"></div>
+                <div class="flex flex-col md:flex-row gap-12">
+                    <div class="flex-1">
+                        <h2 class="text-2xl font-black mb-6 uppercase flex items-center gap-3">
+                            <i data-lucide="eye" class="text-pink-500"></i> El Ojo del Observador
+                        </h2>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-6 italic">
+                            En el mundo real, no hay triángulos dibujados. Tú los creas con la mirada.
+                        </p>
+                        <div class="space-y-6">
+                            <div class="bg-white/5 p-4 rounded-2xl border-l-4 border-pink-500">
+                                <h4 class="font-bold text-pink-400 text-sm mb-1">Elevación</h4>
+                                <p class="text-xs text-slate-300 leading-tight">Desde la horizontal hacia ARRIBA. (Mirar un drone).</p>
+                            </div>
+                            <div class="bg-white/5 p-4 rounded-2xl border-l-4 border-blue-500">
+                                <h4 class="font-bold text-blue-400 text-sm mb-1">Depresión</h4>
+                                <p class="text-xs text-slate-300 leading-tight">Desde la horizontal hacia ABAJO. (Desde un faro al barco).</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-1 bg-slate-800/50 rounded-3xl p-6 border border-white/5 relative flex items-center justify-center">
+                        <!-- Diagrama visual de observación -->
+                        <svg viewBox="0 0 200 120" class="w-full h-auto">
+                            <line x1="20" y1="60" x2="180" y2="60" stroke="#475569" stroke-width="1" stroke-dasharray="4"/>
+                            <line x1="20" y1="60" x2="160" y2="20" stroke="#ec4899" stroke-width="2"/>
+                            <line x1="20" y1="60" x2="160" y2="100" stroke="#3b82f6" stroke-width="2"/>
+                            <circle cx="20" cy="60" r="5" fill="#6366f1"/>
+                            <text x="165" y="25" font-size="8" fill="#ec4899" font-weight="black">ELEVACIÓN</text>
+                            <text x="165" y="105" font-size="8" fill="#3b82f6" font-weight="black">DEPRESIÓN</text>
+                            <text x="35" y="55" font-size="6" fill="#94a3b8">HORIZONTAL</text>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. REGLAS DE ORO (4 cols) -->
+            <div class="md:col-span-4 bento-card p-8 bg-red-500/5 border-red-500/20">
+                <h2 class="text-red-400 font-black text-sm uppercase tracking-[0.2em] mb-6 flex items-center gap-3">
+                    <i data-lucide="shield-alert"></i> Reglas de Oro
+                </h2>
+                <div class="space-y-4">
+                    <div class="flex gap-3">
+                        <i data-lucide="check-circle-2" class="text-emerald-500 shrink-0"></i>
+                        <p class="text-xs text-slate-300"><strong>Límite 1:</strong> El $\sin$ y $\cos$ jamás pueden ser mayores que 1. Si sale 1.2, has muerto.</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <i data-lucide="check-circle-2" class="text-emerald-500 shrink-0"></i>
+                        <p class="text-xs text-slate-300"><strong>Intercambio:</strong> Si buscas el lado de abajo, la X y la razón se cambian de sitio.</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <i data-lucide="check-circle-2" class="text-emerald-500 shrink-0"></i>
+                        <p class="text-xs text-slate-300"><strong>Decimales:</strong> Usa siempre 4 decimales para que el ángulo sea clavado.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NUEVA FILA FINAL: ARTILLERÍA PESADA -->
+            
+            <!-- 8. TEOREMAS MAESTROS (8 cols) -->
+            <div class="md:col-span-8 bento-card p-10 bg-indigo-900/40 border-indigo-500/40">
+                <div class="gradient-border"></div>
+                <h2 class="text-2xl font-black mb-8 uppercase flex items-center gap-3">
+                    <i data-lucide="swords" class="text-indigo-400"></i> Artillería Pesada: Triángulos Cualquiera
+                </h2>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-slate-900/80 p-6 rounded-3xl border border-white/10 text-center">
+                        <span class="text-[10px] font-black text-indigo-400 uppercase tracking-widest block mb-4">Teorema del Seno</span>
+                        <p class="text-2xl font-serif">$\frac{a}{\sin A} = \frac{b}{\sin B} = \frac{c}{\sin C}$</p>
+                        <p class="text-[9px] text-slate-400 mt-4 italic">Usa cuando tengas una "Pareja Feliz" (Lado + Ángulo Opuesto).</p>
+                    </div>
+                    <div class="bg-slate-900/80 p-6 rounded-3xl border border-white/10 text-center">
+                        <span class="text-[10px] font-black text-pink-400 uppercase tracking-widest block mb-4">Teorema del Coseno</span>
+                        <p class="text-xl font-serif">$a^2 = b^2 + c^2 - 2bc \cos A$</p>
+                        <p class="text-[9px] text-slate-400 mt-4 italic">Usa para el "Sándwich" (Lado-Ángulo-Lado) o 3 Lados.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 9. EL CÍRCULO DE PODER (4 cols) -->
+            <div class="md:col-span-4 bento-card p-8 bg-slate-900/90 flex flex-col items-center justify-center text-center">
+                <h2 class="text-lg font-black mb-4 uppercase text-indigo-400 tracking-widest">Circle of Power</h2>
+                <div class="relative w-24 h-24 mb-4">
+                    <div class="absolute inset-0 border-2 border-slate-700 rounded-full"></div>
+                    <div class="absolute top-1/2 left-0 right-0 h-px bg-slate-700"></div>
+                    <div class="absolute left-1/2 top-0 bottom-0 w-px bg-slate-700"></div>
+                    <div class="absolute top-1/2 left-1/2 w-8 h-px bg-indigo-500 origin-left -rotate-45"></div>
+                    <div class="absolute top-[20%] left-[75%] w-2 h-2 bg-pink-500 rounded-full shadow-[0_0_10px_#ec4899]"></div>
+                </div>
+                <p class="text-[9px] font-bold uppercase tracking-widest">Seno = Altura (Y) <br> Coseno = Ancho (X)</p>
+            </div>
+
+        </div>
+
+        <!-- FOOTER TÁCTICO -->
+        <footer class="mt-16 text-center border-t border-white/5 pt-12 pb-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12 max-w-4xl mx-auto">
+                <div class="flex flex-col items-center gap-2">
+                    <i data-lucide="ship" class="w-8 h-8 text-slate-600"></i>
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500">Navegación</span>
+                </div>
+                <div class="flex flex-col items-center gap-2">
+                    <i data-lucide="building-2" class="w-8 h-8 text-slate-600"></i>
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500">Arquitectura</span>
+                </div>
+                <div class="flex flex-col items-center gap-2">
+                    <i data-lucide="mountain-snow" class="w-8 h-8 text-slate-600"></i>
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500">Topografía</span>
+                </div>
+                <div class="flex flex-col items-center gap-2">
+                    <i data-lucide="satellite" class="w-8 h-8 text-slate-600"></i>
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500">GPS System</span>
+                </div>
+            </div>
+            <p class="text-[10px] text-slate-600 font-black tracking-[0.5em] uppercase">© 2026 TrigoMaster System · Master Ops Architect Approved</p>
+        </footer>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

@@ -43,6 +43,17 @@ const APUNTES_DATA = {
             "iconBg": "bg-blue-50 text-blue-500"
         },
         {
+            "category": "math",
+            "level": "4º ESO",
+            "title": "Trigonometría Master",
+            "description": "Domina la resolución de triángulos, identidades y aplicaciones reales como el GPS. Incluye misiones interactivas y Masterclass.",
+            "path": "mates-trigonometria/index.html",
+            "icon": "fas fa-ruler-combined",
+            "colorClass": "bg-indigo-500",
+            "badgeClass": "bg-indigo-50 text-indigo-600",
+            "iconBg": "bg-indigo-50 text-indigo-500"
+        },
+        {
             "category": "science",
             "level": "4º ESO",
             "title": "Dinámica: Leyes de Newton",

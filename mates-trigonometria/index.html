@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centro de Mando: TrigoMaster 3000</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap');
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            background-color: #f0f4f8; 
+            color: #1e293b;
+            background-image: radial-gradient(#6366f110 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+        .bento-card {
+            background: white;
+            border-radius: 2.5rem;
+            border: 1px solid #e2e8f0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .bento-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px -12px rgba(99, 102, 241, 0.15);
+            border-color: #6366f1;
+        }
+        .status-pill {
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 10px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+    </style>
+</head>
+<body class="p-6 md:p-12 lg:p-20">
+    <div class="max-w-6xl mx-auto">
+        
+        <!-- HEADER DE OPERACIONES -->
+        <header class="flex flex-col md:flex-row justify-between items-center mb-16 gap-8">
+            <div class="text-center md:text-left">
+                <div class="flex items-center gap-3 justify-center md:justify-start mb-4">
+                    <div class="bg-indigo-600 text-white p-2 rounded-xl shadow-lg">
+                        <i data-lucide="layout-dashboard" class="w-6 h-6"></i>
+                    </div>
+                    <span class="text-indigo-600 font-black tracking-widest uppercase text-xs">Operación Triángulo Dorado</span>
+                </div>
+                <h1 class="text-5xl md:text-7xl font-black tracking-tighter">Trigo<span class="text-indigo-600 italic">Master</span> PMO</h1>
+                <p class="text-slate-500 mt-4 text-lg font-medium">Tu ecosistema de aprendizaje de Trigonometría 4º ESO.</p>
+            </div>
+            
+            <!-- PANEL DE CONTROL RÁPIDO (ADHD Friendly) -->
+            <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-200 flex gap-8 items-center">
+                <div class="text-center">
+                    <span class="block text-2xl font-black text-indigo-600">5</span>
+                    <span class="text-[10px] text-slate-400 font-bold uppercase">Módulos</span>
+                </div>
+                <div class="w-px h-10 bg-slate-100"></div>
+                <div class="text-center">
+                    <span class="block text-2xl font-black text-emerald-500">100%</span>
+                    <span class="text-[10px] text-slate-400 font-bold uppercase">Ready</span>
+                </div>
+                <button onclick="alert('¡Vamos allá! El ecosistema está completo.')" class="bg-slate-900 text-white p-4 rounded-2xl hover:bg-indigo-600 transition-colors">
+                    <i data-lucide="play" class="fill-current w-5 h-5"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- BENTO GRID DE OPERACIONES -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            <!-- 1. APUNTES (GRANDE) -->
+            <a href="trigonometria_completa.html" class="md:col-span-2 bento-card p-10 bg-indigo-600 text-white border-none relative overflow-hidden group">
+                <div class="absolute top-0 right-0 p-12 opacity-10 group-hover:rotate-12 transition-transform">
+                    <i data-lucide="book-open" class="w-48 h-48"></i>
+                </div>
+                <div class="relative z-10">
+                    <span class="status-pill bg-white/20 text-white mb-6 inline-block text-glow">La Enciclopedia</span>
+                    <h2 class="text-4xl font-black mb-4 tracking-tight leading-none">Guía Maestra de <br>Referencia</h2>
+                    <p class="text-indigo-100 max-w-md text-sm leading-relaxed mb-8">
+                        Todo el conocimiento, desde Pitágoras hasta el GPS Espacial. Explicado con el método Feynman: sin paja, directo al grano.
+                    </p>
+                    <div class="flex gap-4">
+                        <span class="flex items-center gap-2 text-[10px] font-bold uppercase"><i data-lucide="clock" class="w-3 h-3"></i> 15 min lectura</span>
+                        <span class="flex items-center gap-2 text-[10px] font-bold uppercase"><i data-lucide="zap" class="w-3 h-3"></i> Nivel: Base</span>
+                    </div>
+                </div>
+                <div class="mt-12 flex justify-end">
+                    <div class="bg-white text-indigo-600 px-6 py-3 rounded-2xl font-black text-sm group-hover:scale-105 transition-transform flex items-center gap-2">
+                        ABRIR ARCHIVOS <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </div>
+                </div>
+            </a>
+
+            <!-- 2. INFOGRAFÍA -->
+            <a href="infografia_trigo.html" class="bento-card p-10 bg-slate-900 text-white border-none group">
+                <div>
+                    <span class="status-pill bg-emerald-500/20 text-emerald-400 mb-6 inline-block">Visual Map</span>
+                    <h2 class="text-3xl font-black mb-4 tracking-tight leading-none text-glow">El Dashboard <br>Visual</h2>
+                    <p class="text-slate-400 text-xs leading-relaxed">
+                        ¿Poco tiempo? Aquí tienes el resumen definitivo en una sola cara. Fórmulas, trucos y el mantra sagrado SOH-CAH-TOA.
+                    </p>
+                </div>
+                <div class="mt-12">
+                    <div class="w-full h-1 bg-slate-800 rounded-full overflow-hidden">
+                        <div class="w-full h-full bg-emerald-500"></div>
+                    </div>
+                    <p class="text-[10px] text-slate-500 mt-2 font-bold uppercase">Densidad de datos: Máxima</p>
+                </div>
+            </a>
+
+            <!-- 5. MASTERCLASS -->
+            <a href="trigo_masterclass.html" class="md:col-span-2 bento-card p-10 bg-rose-600 text-white border-none relative overflow-hidden group">
+                <div class="absolute top-0 right-0 p-12 opacity-10 group-hover:scale-110 transition-transform">
+                    <i data-lucide="presentation" class="w-48 h-48"></i>
+                </div>
+                <div class="relative z-10">
+                    <span class="status-pill bg-white/20 text-white mb-6 inline-block">Cine Académico</span>
+                    <h2 class="text-4xl font-black mb-4 tracking-tight leading-none">Masterclass <br>Pro Interactiva</h2>
+                    <p class="text-rose-100 max-w-md text-sm leading-relaxed mb-8">
+                        30 diapositivas de inmersión total. Gráficos dinámicos, centrado perfecto y diseño horizontal optimizado para proyectores.
+                    </p>
+                </div>
+                <div class="mt-4 flex justify-start">
+                    <div class="bg-white text-rose-600 px-6 py-3 rounded-2xl font-black text-sm group-hover:scale-105 transition-transform flex items-center gap-2">
+                        INICIAR PRESENTACIÓN <i data-lucide="play-circle" class="w-4 h-4"></i>
+                    </div>
+                </div>
+            </a>
+
+            <!-- 3. EJERCICIOS -->
+            <a href="ejercicios_resueltos.html" class="bento-card p-10 border-2 border-slate-200 group">
+                <div>
+                    <div class="flex justify-between items-start mb-6">
+                        <span class="status-pill bg-amber-100 text-amber-700">Práctica Real</span>
+                        <i data-lucide="target" class="text-slate-300 group-hover:text-amber-500 transition-colors"></i>
+                    </div>
+                    <h2 class="text-3xl font-black mb-4 tracking-tight leading-none">Misiones de <br>Entrenamiento</h2>
+                    <p class="text-slate-500 text-xs leading-relaxed">
+                        9 Problemas resueltos paso a paso. Desde sombras de torres hasta rescates con drones. El gimnasio para tu cerebro.
+                    </p>
+                </div>
+                <div class="mt-8 flex flex-wrap gap-2">
+                    <span class="px-3 py-1 bg-slate-100 rounded-lg text-[9px] font-bold text-slate-600">SISTEMAS</span>
+                    <span class="px-3 py-1 bg-slate-100 rounded-lg text-[9px] font-bold text-slate-600">PITÁGORAS</span>
+                </div>
+            </a>
+
+            <!-- 4. JUEGO -->
+            <a href="trigo_game.html" class="md:col-span-3 bento-card p-10 border-2 border-indigo-100 bg-indigo-50/30 group relative overflow-hidden">
+                <div class="absolute -right-4 -bottom-4 opacity-5 group-hover:scale-110 transition-transform">
+                    <i data-lucide="gamepad-2" class="w-64 h-48 text-indigo-600"></i>
+                </div>
+                <div class="flex flex-col md:flex-row gap-10 items-center justify-between">
+                    <div class="flex-1">
+                        <span class="status-pill bg-indigo-600 text-white mb-6 inline-block shadow-md">Modo Recreo</span>
+                        <h2 class="text-4xl font-black mb-4 tracking-tight leading-none text-indigo-900">TrigoMaster <span class="italic text-indigo-600 text-3xl">The Game</span></h2>
+                        <p class="text-indigo-800/60 text-sm leading-relaxed mb-6">
+                            Demuestra que eres el amo de los ángulos. Quizes rápidos, temporizadores y un toque de gracia para aprender jugando.
+                        </p>
+                        <div class="flex items-center gap-3">
+                            <div class="flex -space-x-2">
+                                <div class="w-6 h-6 rounded-full bg-indigo-400 border-2 border-white"></div>
+                                <div class="w-6 h-6 rounded-full bg-pink-400 border-2 border-white"></div>
+                                <div class="w-6 h-6 rounded-full bg-amber-400 border-2 border-white"></div>
+                            </div>
+                            <span class="text-[10px] font-bold text-indigo-400 uppercase">+150 alumnos jugando</span>
+                        </div>
+                    </div>
+                    <div class="bg-white p-8 rounded-[2rem] shadow-xl border border-indigo-100 text-center min-w-[200px]">
+                        <p class="text-[10px] text-slate-400 font-bold uppercase mb-2">High Score</p>
+                        <p class="text-4xl font-black text-indigo-600 tracking-widest">9.999</p>
+                        <div class="mt-4 bg-indigo-600 text-white px-6 py-2 rounded-xl text-xs font-black">PLAY NOW</div>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+
+        <!-- FOOTER PMO -->
+        <footer class="mt-20 border-t border-slate-200 pt-12 pb-12 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white">
+                    <i data-lucide="zap" class="w-4 h-4"></i>
+                </div>
+                <p class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">TrigoMaster System v4.0</p>
+            </div>
+            <p class="text-slate-400 text-xs italic font-medium text-center md:text-right">
+                "La trigonometría no es difícil, solo es un juego de sombras y escaleras."
+            </p>
+        </footer>
+
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
