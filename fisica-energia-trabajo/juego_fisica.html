@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENERGY MASTER: Quiz de Maestría v6.0</title>
+    
+    <!-- Frameworks de Producción -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Outfit:wght@300;400;600;800;900&family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --cyan: #00f2ff;
+            --purple: #bf00ff;
+            --bg: #02040a;
+            --panel: rgba(15, 23, 42, 0.98);
+            --success: #50fa7b;
+            --danger: #ff5555;
+            --gold: #ffb86c;
+        }
+        
+        body { 
+            margin: 0; 
+            background-color: var(--bg); 
+            color: #e2e8f0; 
+            font-family: 'Outfit', sans-serif; 
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: radial-gradient(circle at 50% 50%, rgba(191, 0, 255, 0.05) 0%, transparent 70%);
+            padding: 10px;
+        }
+
+        h1, h2, h3 { font-family: 'Bangers', cursive; letter-spacing: 1px; }
+        
+        .glass-panel {
+            background: var(--panel);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.9);
+            max-height: 95vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .scrollable-content {
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        .scrollable-content::-webkit-scrollbar { width: 4px; }
+        .scrollable-content::-webkit-scrollbar-thumb { background: var(--purple); border-radius: 10px; }
+
+        .btn-choice {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1.5px solid rgba(191, 0, 255, 0.2);
+            border-radius: 15px;
+            transition: all 0.2s ease;
+            text-align: left;
+            padding: 12px 20px;
+            font-size: 0.9rem;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .btn-choice:hover {
+            background: rgba(191, 0, 255, 0.08);
+            border-color: var(--purple);
+            transform: translateX(5px);
+        }
+
+        .hint-box {
+            background: rgba(255, 184, 108, 0.03);
+            border-left: 3px solid var(--gold);
+            padding: 10px 15px;
+            font-size: 0.8rem;
+            color: var(--gold);
+            border-radius: 0 10px 10px 0;
+        }
+
+        .feedback-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 15px;
+        }
+
+        [v-cloak] { display: none; }
+    </style>
+</head>
+<body>
+
+    <div id="app" v-cloak class="w-full max-w-2xl">
+        
+        <!-- PANTALLA INICIAL -->
+        <div v-if="gameState === 'start'" class="glass-panel p-8 text-center space-y-6 border-t-4 border-cyan-500">
+            <div>
+                <span class="text-[9px] font-black text-cyan-400 tracking-widest uppercase">Misión: Operación Perito v6.0</span>
+                <h1 class="text-5xl md:text-6xl mt-1 text-white">ENERGY MASTER</h1>
+                <p class="text-sm text-gray-400 font-light mt-2 italic">Examen final del Banco de Misiones (50 temas)</p>
+            </div>
+            
+            <div class="grid grid-cols-3 gap-3">
+                <div class="p-3 bg-white/5 rounded-xl border border-white/5 flex flex-col items-center">
+                    <i class="fas fa-database text-cyan-400 text-sm mb-2"></i>
+                    <p class="text-[8px] text-gray-500 uppercase font-black">50 Misiones</p>
+                </div>
+                <div class="p-3 bg-white/5 rounded-xl border border-white/5 flex flex-col items-center">
+                    <i class="fas fa-brain text-gold text-sm mb-2"></i>
+                    <p class="text-[8px] text-gray-500 uppercase font-black">Bio-Feedback</p>
+                </div>
+                <div class="p-3 bg-white/5 rounded-xl border border-white/5 flex flex-col items-center">
+                    <i class="fas fa-medal text-purple-400 text-sm mb-2"></i>
+                    <p class="text-[8px] text-gray-500 uppercase font-black">Rango Dios</p>
+                </div>
+            </div>
+
+            <button @click="startGame" class="bg-cyan-500 text-black px-10 py-4 rounded-full font-black text-md hover:scale-105 transition shadow-lg uppercase tracking-widest">Iniciar Sistema</button>
+        </div>
+
+        <!-- PANTALLA DE JUEGO -->
+        <div v-if="gameState === 'playing' || gameState === 'feedback'" class="glass-panel p-5 md:p-8 space-y-4">
+            
+            <!-- HUD COMPACTO -->
+            <div class="flex justify-between items-center border-b border-white/5 pb-3">
+                <div class="flex gap-4">
+                    <div class="text-[10px]"><span class="text-gray-500 uppercase font-black mr-1">Progreso:</span> <span class="font-black">[[ currentQIdx + 1 ]]/10</span></div>
+                    <div class="text-[10px]"><span class="text-cyan-400 uppercase font-black mr-1">Intel:</span> <span class="font-black text-cyan-400">[[ score ]]</span></div>
+                </div>
+                <button @click="showHint = !showHint" class="text-[8px] font-black text-gold uppercase tracking-widest border border-gold/30 px-2 py-1 rounded hover:bg-gold/10">
+                    [[ showHint ? 'Cerrar Pista' : 'Pista' ]]
+                </button>
+            </div>
+
+            <!-- CONTENIDO -->
+            <div class="scrollable-content space-y-4">
+                <!-- PREGUNTA -->
+                <div v-if="gameState === 'playing'" class="space-y-4">
+                    <h2 class="text-xl md:text-2xl leading-tight text-white/90">[[ currentQuestion.q ]]</h2>
+                    
+                    <div v-if="showHint" class="hint-box">
+                        <i class="fas fa-lightbulb mr-2"></i> [[ currentQuestion.tip ]]
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-2">
+                        <button v-for="(opt, idx) in currentQuestion.a" @click="handleAnswer(opt.c)" class="btn-choice">
+                            <span class="w-6 h-6 rounded bg-white/5 flex items-center justify-center text-[9px] font-black text-purple-400">[[ String.fromCharCode(65 + idx) ]]</span>
+                            [[ opt.t ]]
+                        </button>
+                    </div>
+                </div>
+
+                <!-- FEEDBACK COMPACTO -->
+                <div v-if="gameState === 'feedback'" class="space-y-4 py-2 text-center">
+                    <div class="flex items-center justify-center gap-4">
+                        <div class="text-4xl animate-pulse">[[ lastResult === 'correct' ? '✅' : '❌' ]]</div>
+                        <h3 class="text-2xl uppercase" :class="lastResult === 'correct' ? 'text-success' : 'text-danger'">
+                            [[ lastResult === 'correct' ? 'Transmisión Éxito' : 'Error de Núcleo' ]]
+                        </h3>
+                    </div>
+                    
+                    <div class="feedback-card text-left space-y-3">
+                        <p class="text-sm text-gray-300 leading-snug">[[ currentQuestion.expl ]]</p>
+                        <div class="bg-purple-500/10 p-3 rounded-xl border-l-4 border-purple-500">
+                            <p class="text-[9px] uppercase text-purple-400 font-black mb-1">Analogía Feynman:</p>
+                            <p class="text-[10px] italic text-gray-400 leading-relaxed">[[ currentQuestion.tip ]]</p>
+                        </div>
+                    </div>
+
+                    <button @click="nextMision" class="bg-white text-black w-full py-3 rounded-full font-black uppercase text-xs hover:bg-cyan-400 transition">
+                        Continuar [[ currentQIdx + 2 ]]/10 <i class="fas fa-chevron-right ml-1"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANTALLA FINAL -->
+        <div v-if="gameState === 'end'" class="glass-panel p-8 text-center space-y-6 border-t-4 border-gold">
+            <i class="fas fa-award text-6xl text-gold"></i>
+            <h2 class="text-4xl text-white">PROTOCOLO FINALIZADO</h2>
+            
+            <div class="flex justify-center gap-4">
+                <div class="p-4 bg-white/5 rounded-2xl border border-white/10 flex-1">
+                    <span class="text-[8px] uppercase text-gray-500 block">Puntos Totales</span>
+                    <span class="text-3xl font-black text-cyan-400">[[ score ]]</span>
+                </div>
+                <div class="p-4 bg-white/5 rounded-2xl border border-white/10 flex-1">
+                    <span class="text-[8px] uppercase text-gray-500 block">Rango</span>
+                    <span class="text-xl font-black text-purple-400 mt-1 block">[[ score >= 800 ? 'DIOS FÍSICO' : 'ASPIRANTE' ]]</span>
+                </div>
+            </div>
+
+            <div class="flex gap-3 justify-center pt-2">
+                <button onclick="location.reload()" class="bg-white text-black px-6 py-3 rounded-full font-black uppercase text-[10px] hover:bg-cyan-400 transition flex-1 shadow-lg shadow-cyan-500/20">Reiniciar</button>
+                <a href="index.html" class="bg-slate-800 text-white px-6 py-3 rounded-full font-black uppercase text-[10px] border border-white/10 flex-1 flex items-center justify-center">Salir al Hub</a>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const { createApp } = Vue;
+        createApp({
+            delimiters: ['[[', ']]'],
+            data() {
+                return {
+                    gameState: 'start', score: 0, currentQIdx: 0, showHint: false, lastResult: '', currentQuestion: null, missions: [],
+                    questionBank: [
+                        // BLOQUE 1: SISTEMAS Y CONCEPTOS BASE (1-10)
+                        { q: "¿Qué es un 'Sistema' en la física de 4º ESO?", a: [{t:"Todo lo que existe en el universo", c:false}, {t:"Cuerpo o grupo de cuerpos objeto de estudio", c:true}, {t:"Solo la parte que se mueve", c:false}], expl: "El sistema es la porción del universo que aislamos mentalmente para analizar sus cambios.", tip: "En un simulador de F1, el coche es el sistema y la pista el entorno." },
+                        { q: "Si el sistema es un balón, el césped y el aire son el...", a: [{t:"Sub-sistema", c:false}, {t:"Entorno", c:true}, {t:"Vacío", c:false}], expl: "Todo lo que queda fuera de las fronteras del sistema pero interactúa con él se llama entorno.", tip: "El entorno puede 'empujar' o 'robar' energía al sistema." },
+                        { q: "La energía se define como la capacidad de un cuerpo para...", a: [{t:"Producir cambios", c:true}, {t:"Brillar siempre", c:false}, {t:"Desaparecer", c:false}], expl: "Todo sistema capaz de producir cambios (moverse, calentarse, sonar) tiene energía.", tip: "Si puedes hacer que algo pase, tienes energía en el bolsillo." },
+                        { q: "¿La energía se puede 'tener' o se transfiere?", a: [{t:"Se tiene como una masa", c:false}, {t:"Se transfiere mediante interacciones", c:true}, {t:"Es un objeto sólido", c:false}], expl: "La energía no es una propiedad estática, se transfiere de un cuerpo a otro mediante interacciones.", tip: "Es como el dinero: lo importante no es tenerlo, sino cómo se mueve." },
+                        { q: "Las dos únicas vías de transferencia de energía son...", a: [{t:"Trabajo y Calor", c:true}, {t:"Electricidad y Masa", c:false}, {t:"Velocidad y Altura", c:false}], expl: "Solo existen dos formas de pasar energía: mediante fuerzas (Trabajo) o temperatura (Calor).", tip: "Trabajo = Empujones. Calor = Diferencia de temperatura." },
+                        { q: "La energía térmica está asociada a...", a: [{t:"La luz solar", c:false}, {t:"La vibración de las partículas", c:true}, {t:"Los enlaces químicos", c:false}], expl: "Cuanto más rápido vibran los átomos de un cuerpo, más energía térmica posee.", tip: "El calor fluye del cuerpo que tiene más vibración al que tiene menos." },
+                        { q: "La energía guardada en una batería es de tipo...", a: [{t:"Radiante", c:false}, {t:"Química", c:true}, {t:"Eléctrica pura", c:false}], expl: "La energía química se almacena en los enlaces moleculares de la materia.", tip: "Es energía potencial esperando a una reacción química." },
+                        { q: "La unidad de energía y trabajo en el S.I. es el...", a: [{t:"Watio (W)", c:false}, {t:"Julio (J)", c:true}, {t:"Newton (N)", c:false}], expl: "El Julio mide el intercambio de energía en cualquier proceso físico.", tip: "1 J = 1 N aplicado durante 1 metro." },
+                        { q: "Una bombilla de 10W gasta 10 Julios por cada...", a: [{t:"Minuto", c:false}, {t:"Segundo", c:true}, {t:"Hora", c:false}], expl: "La potencia (W) indica cuántos Julios se consumen o transfieren por segundo.", tip: "Watios = Julios / Segundo." },
+                        { q: "Si no hay interacción entre sistema y entorno, la energía...", a: [{t:"Desaparece", c:false}, {t:"Se mantiene constante", c:true}, {t:"Aumenta sola", c:false}], expl: "Sin interacción no hay transferencia, por lo que la energía se conserva.", tip: "Sistema aislado = Hucha cerrada." },
+
+                        // BLOQUE 2: EL TRABAJO (W) (11-20)
+                        { q: "¿Cuál es la fórmula maestra del Trabajo?", a: [{t:"W = F · d · cos(α)", c:true}, {t:"W = m · g · h", c:false}, {t:"W = P / t", c:false}], expl: "El trabajo depende de la fuerza, el desplazamiento y el ángulo de aplicación.", tip: "El Coseno es el 'filtro' que mide el éxito de tu empujón." },
+                        { q: "Si empujas un objeto pero no logras moverlo, el Trabajo es...", a: [{t:"Máximo", c:false}, {t:"Cero", c:true}, {t:"Negativo", c:false}], expl: "Sin desplazamiento (d=0), no hay transferencia física de energía mecánica.", tip: "La física es cruel: sudar no es trabajar si no hay movimiento." },
+                        { q: "Si la fuerza va a favor del movimiento (0º), el Trabajo es...", a: [{t:"Motor (Positivo)", c:true}, {t:"Resistente (Negativo)", c:false}, {t:"Nulo", c:false}], expl: "Como cos(0)=1, toda la fuerza ayuda a ganar energía.", tip: "Aportas energía al sistema." },
+                        { q: "Si la fuerza va en contra del movimiento (180º), el Trabajo es...", a: [{t:"Nulo", c:false}, {t:"Resistente (Negativo)", c:true}, {t:"Infinito", c:false}], expl: "Como cos(180)=-1, la fuerza roba energía al sistema.", tip: "Es el caso típico del rozamiento." },
+                        { q: "¿Por qué el Trabajo es Nulo a 90º?", a: [{t:"Porque la fuerza es débil", c:false}, {t:"Porque cos(90) = 0", c:true}, {t:"Porque no hay masa", c:false}], expl: "Si la fuerza es perpendicular al desplazamiento, no aporta ni quita energía cinética.", tip: "Cargar una maleta andando en horizontal: fuerza arriba, movimiento adelante." },
+                        { q: "Un Julio (J) equivale exactamente a...", a: [{t:"1 N · 1 m", c:true}, {t:"1 kg · 1 m", c:false}, {t:"1 W · 1 s", c:true}], expl: "Ambas son correctas: 1J = 1Nm y también 1J = 1Ws.", tip: "Es la moneda oficial de la física." },
+                        { q: "El rozamiento siempre realiza un trabajo...", a: [{t:"Positivo", c:false}, {t:"Nulo", c:false}, {t:"Negativo", c:true}], expl: "La fricción se opone al movimiento, convirtiendo energía mecánica en calor.", tip: "El rozamiento es el 'ladrón' que te calienta pero te frena." },
+                        { q: "Al subir una maleta por una escalera, realizas un Trabajo...", a: [{t:"Positivo", c:true}, {t:"Negativo", c:false}, {t:"Nulo", c:false}], expl: "Haces fuerza hacia arriba y el cuerpo sube. Aportas energía potencial.", tip: "Estás 'llenando' la hucha de altura de la maleta." },
+                        { q: "Si empujas con 10N durante 5m en la misma dirección, el Trabajo es...", a: [{t:"2 J", c:false}, {t:"50 J", c:true}, {t:"15 J", c:false}], expl: "W = 10N · 5m · cos(0º) = 50 Julios.", tip: "Multiplicación directa cuando van de la mano." },
+                        { q: "¿Qué unidad usamos para la distancia en la fórmula del Trabajo?", a: [{t:"Kilómetros", c:false}, {t:"Metros", c:true}, {t:"Centímetros", c:false}], expl: "En el S.I., la distancia siempre debe estar en metros para que el resultado sean Julios.", tip: "Si te dan km, ¡multiplica por 1000!" },
+
+                        // BLOQUE 3: ENERGÍA MECÁNICA (Ec, Ep, Epe) (21-35)
+                        { q: "Fórmula de la Energía Cinética (Ec):", a: [{t:"m · g · h", c:false}, {t:"1/2 · m · v²", c:true}, {t:"F · d", c:false}], expl: "Depende de la masa del cuerpo y del cuadrado de su velocidad.", tip: "Si te mueves, llevas 'efectivo' cinético." },
+                        { q: "Si duplicas la velocidad de un coche, su Ec se...", a: [{t:"Duplica", c:false}, {t:"Cuadruplica (x4)", c:true}, {t:"Triplica", c:false}], expl: "Como v está al cuadrado, 2² = 4. La energía crece exponencialmente.", tip: "Por eso los accidentes a 100km/h son 4 veces más graves que a 50km/h." },
+                        { q: "Fórmula de la Energía Potencial Gravitatoria (Ep):", a: [{t:"m · g · h", c:true}, {t:"1/2 · k · x²", c:false}, {t:"m · v", c:false}], expl: "Depende de la masa, la gravedad (9.8) y la altura.", tip: "Estar alto = Tener ahorros listos para caer." },
+                        { q: "Un cuerpo de 2kg a 10m de altura tiene una Ep de...", a: [{t:"20 J", c:false}, {t:"196 J", c:true}, {t:"98 J", c:false}], expl: "Ep = 2kg · 9.8m/s² · 10m = 196 Julios.", tip: "Recuerda que g es casi 10, pero usa 9.8." },
+                        { q: "La Energía Mecánica Total (Em) es la...", a: [{t:"Suma de Ec + Ep + Epe", c:true}, {t:"Resta de energías", c:false}, {t:"División entre ellas", c:false}], expl: "Es el saldo total de la hucha mecánica de un cuerpo.", tip: "Em = Todo lo que tienes por moverte + lo que tienes por estar alto." },
+                        { q: "La Energía Potencial Elástica (Epe) se guarda en...", a: [{t:"La altura", c:false}, {t:"Cuerpos deformados (muelles)", c:true}, {t:"La velocidad", c:false}], expl: "Se debe a la capacidad de un cuerpo elástico para recuperar su forma.", tip: "Como un arco tensado antes de soltar la flecha." },
+                        { q: "Fórmula de la Energía Elástica:", a: [{t:"1/2 · k · x²", c:true}, {t:"m · g · h", c:false}, {t:"F · k", c:false}], expl: "k es la constante del muelle y x es la deformación en metros.", tip: "Ojo: la deformación x también va al cuadrado." },
+                        { q: "En la caída libre, al llegar al suelo (h=0), la Ep vale...", a: [{t:"Máximo", c:false}, {t:"Cero Julios", c:true}, {t:"Igual a la masa", c:false}], expl: "Al no haber altura, el producto mgh es cero.", tip: "Toda la hucha de ahorros se ha gastado en velocidad." },
+                        { q: "En el punto más alto de un salto (v=0), la Ec vale...", a: [{t:"Máximo", c:false}, {t:"Cero Julios", c:true}, {t:"Medio", c:false}], expl: "Sin velocidad no hay energía cinética.", tip: "Estás parado un instante: solo tienes potencial." },
+                        { q: "¿Qué dice el Principio de Conservación si NO hay rozamiento?", a: [{t:"La energía se pierde", c:false}, {t:"Em es constante en todo el camino", c:true}, {t:"La energía aumenta", c:false}], expl: "La energía mecánica total no varía, solo cambia de cinética a potencial.", tip: "Hucha siempre igual si no hay 'ladrones' (fricción)." },
+                        { q: "Si hay rozamiento, la Energía Mecánica...", a: [{t:"Se mantiene igual", c:false}, {t:"Disminuye (se vuelve calor)", c:true}, {t:"Aumenta", c:false}], expl: "El trabajo del rozamiento extrae energía mecánica y la degrada a energía térmica.", tip: "El rozamiento es el 'ladrón' que calienta el suelo." },
+                        { q: "¿Qué unidad de masa usamos en las fórmulas de energía?", a: [{t:"Gramos", c:false}, {t:"Kilogramos (kg)", c:true}, {t:"Toneladas", c:false}], expl: "En el S.I., la masa siempre debe estar en kg.", tip: "Gramo-phobia: si ves gramos, divide entre 1000." },
+                        { q: "¿A cuántos m/s equivale 36 km/h?", a: [{t:"10 m/s", c:true}, {t:"360 m/s", c:false}, {t:"1 m/s", c:false}], expl: "Se divide entre 3.6 para pasar de km/h a m/s.", tip: "Velocidad Turbo: km/h ÷ 3.6 = m/s." },
+                        { q: "Un muelle con k=100 N/m estirado 0.1m guarda...", a: [{t:"10 J", c:false}, {t:"0.5 J", c:true}, {t:"5 J", c:false}], expl: "Epe = 1/2 · 100 · (0.1)² = 50 · 0.01 = 0.5 Julios.", tip: "No olvides elevar al cuadrado el estiramiento." },
+                        { q: "Al bajar una montaña rusa, la Ep se transforma en...", a: [{t:"Química", c:false}, {t:"Cinética", c:true}, {t:"Nuclear", c:false}], expl: "Pierdes altura pero ganas velocidad.", tip: "Bajada = Vendes altura para comprar velocidad." },
+
+                        // BLOQUE 4: POTENCIA Y RENDIMIENTO (36-50)
+                        { q: "¿Qué mide la Potencia (P)?", a: [{t:"La fuerza máxima", c:false}, {t:"La rapidez del intercambio de energía", c:true}, {t:"La energía total", c:false}], expl: "Indica cuántos Julios se transfieren en cada segundo de tiempo.", tip: "¿Eres un perito rápido o lento?" },
+                        { q: "Un Watio (W) es igual a...", a: [{t:"1 Julio / 1 Seg", c:true}, {t:"1 Newton / 1 Metro", c:false}, {t:"1 kg / 1 Seg", c:false}], expl: "Es la unidad de potencia del S.I.", tip: "Bombilla de 60W = 60 Julios cada segundo." },
+                        { q: "Un Caballo de Vapor (CV) equivale aproximadamente a...", a: [{t:"1000 W", c:false}, {t:"735 W", c:true}, {t:"500 W", c:false}], expl: "Es la unidad industrial clásica usada en motores.", tip: "Marketing de James Watt: comparar máquinas con caballos." },
+                        { q: "¿Por qué James Watt inventó el concepto de CV?", a: [{t:"Para ganar dinero", c:false}, {t:"Para que la gente entendiera la potencia", c:true}, {t:"Por error", c:false}], expl: "Buscaba una unidad que sus clientes (mineros y granjeros) comprendieran fácilmente.", tip: "La física también es saber vender el invento." },
+                        { q: "Si un motor de 1000W tarda 10s en subir una carga, el Trabajo es...", a: [{t:"100 J", c:false}, {t:"10.000 J", c:true}, {t:"1000 J", c:false}], expl: "W = P · t = 1000W · 10s = 10.000 Julios.", tip: "Trabajo = Potencia por Tiempo." },
+                        { q: "El Rendimiento (η) de una máquina indica...", a: [{t:"La energía total", c:false}, {t:"El porcentaje de energía aprovechada", c:true}, {t:"La velocidad", c:false}], expl: "Es el cociente entre el trabajo útil y la energía total aportada.", tip: "Nadie es perfecto: siempre se pierde energía en calor." },
+                        { q: "Si una máquina tiene η = 80%, significa que...", a: [{t:"Pierde el 80%", c:false}, {t:"Aprovecha el 80%", c:true}, {t:"Gana un 20% extra", c:false}], expl: "El 80% se convierte en trabajo útil y el 20% se pierde como calor.", tip: "Energía Útil = 0.8 · Energía Total." },
+                        { q: "¿Qué sucede con la energía 'perdida' en un motor?", a: [{t:"Desaparece", c:false}, {t:"Se convierte en calor degradado", c:true}, {t:"Se vuelve masa", c:false}], expl: "La energía se degrada a una forma menos útil, pero el total se conserva.", tip: "El universo nunca pierde la cuenta." },
+                        { q: "Para subir un objeto de 100kg a 2m en 2s, la Potencia es...", a: [{t:"980 W", c:true}, {t:"200 W", c:false}, {t:"1960 W", c:false}], expl: "W = mgh = 100·9.8·2 = 1960J. P = W/t = 1960/2 = 980W.", tip: "Calcula primero el Trabajo y luego divide por el tiempo." },
+                        { q: "Un motor de 2 CV tiene una potencia de...", a: [{t:"1470 W", c:true}, {t:"2000 W", c:false}, {t:"735 W", c:false}], expl: "2 · 735W = 1470W.", tip: "Multiplica los caballos por 735." },
+                        { q: "La eficiencia de una máquina nunca puede ser del...", a: [{t:"50%", c:false}, {t:"100%", c:true}, {t:"10%", c:false}], expl: "Debido al rozamiento, siempre hay pérdidas. El 100% es imposible en la práctica.", tip: "El rozamiento es el impuesto que siempre cobra el universo." },
+                        { q: "En la factura de la luz pagamos por kWh. El kWh es unidad de...", a: [{t:"Potencia", c:false}, {t:"Energía", c:true}, {t:"Fuerza", c:false}], expl: "Energía = Potencia (kW) · Tiempo (h).", tip: "No confundas kW (potencia) con kWh (energía)." },
+                        { q: "Al frenar un coche, la energía cinética se convierte en...", a: [{t:"Potencial", c:false}, {t:"Calor en los frenos", c:true}, {t:"Energía nuclear", c:false}], expl: "El trabajo del rozamiento extrae la Ec y la disipa como energía térmica.", tip: "Toca la llanta después de frenar... ¡quema!" },
+                        { q: "La potencia de un Fórmula 1 suele superar los...", a: [{t:"100 CV", c:false}, {t:"1000 CV", c:true}, {t:"10 CV", c:false}], expl: "Son motores de altísimo rendimiento y potencia masiva.", tip: "Pura ingeniería para transferir Julios a toda mecha." },
+                        { q: "¿Cuál es el primer paso del Protocolo Perito para problemas?", a: [{t:"Calcular rápido", c:false}, {t:"Dibujar el esquema y puntos A y B", c:true}, {t:"Preguntar al profesor", c:false}], expl: "Identificar los estados inicial y final es clave para no equivocarse.", tip: "Dibuja el drama antes de usar la calculadora." }
+                    ]
+                }
+            },
+            methods: {
+                startGame() {
+                    this.missions = [...this.questionBank].sort(() => Math.random() - 0.5).slice(0, 10);
+                    this.currentQIdx = 0; this.score = 0; this.gameState = 'playing'; this.currentQuestion = this.missions[0];
+                },
+                handleAnswer(correct) {
+                    this.lastResult = correct ? 'correct' : 'wrong';
+                    if(correct) this.score += 100;
+                    this.gameState = 'feedback';
+                    this.$nextTick(() => { if (window.MathJax) MathJax.typeset(); });
+                },
+                nextMision() {
+                    this.currentQIdx++;
+                    if(this.currentQIdx < 10) {
+                        this.currentQuestion = this.missions[this.currentQIdx]; this.showHint = false; this.gameState = 'playing';
+                        this.$nextTick(() => { if (window.MathJax) MathJax.typeset(); });
+                    } else { this.gameState = 'end'; }
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>

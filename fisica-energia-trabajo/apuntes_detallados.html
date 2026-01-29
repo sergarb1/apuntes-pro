@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apuntes ULTRA-PRO: Energía, Trabajo y Potencia (AFI10 + Feynman)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Outfit:wght@300;400;600;800&family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-page: #f8fafc;
+            --text-main: #1e293b;
+            --accent: #0284c7;
+            --danger: #ef4444;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --purple: #7c3aed;
+            --gold: #f59e0b;
+        }
+
+        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-page); color: var(--text-main); line-height: 1.6; }
+        h1 { font-family: 'Bangers', cursive; color: #0f172a; letter-spacing: 2px; }
+        h2 { font-family: 'Bangers', cursive; color: var(--accent); letter-spacing: 1px; border-bottom: 4px solid #bae6fd; padding-bottom: 5px; margin-top: 50px; }
+        h3 { font-weight: 800; color: #0f172a; margin-top: 30px; display: flex; align-items: center; gap: 10px; }
+        
+        .study-chunk {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 30px;
+            padding: 40px;
+            margin-bottom: 50px;
+            box-shadow: 12px 12px 0px #cbd5e1;
+            position: relative;
+        }
+        
+        .chunk-label {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: #e2e8f0;
+            padding: 6px 20px;
+            font-size: 0.75rem;
+            font-weight: 900;
+            border-bottom-left-radius: 20px;
+            text-transform: uppercase;
+        }
+
+        .formula-card {
+            font-family: 'Fira Code', monospace;
+            background: #0f172a;
+            color: #38bdf8;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            font-size: 1.8rem;
+            margin: 30px 0;
+            box-shadow: inset 0 4px 15px rgba(0,0,0,0.5);
+        }
+        
+        .feynman-box {
+            background: #fdf4ff;
+            border: 2px solid #f5d0fe;
+            border-radius: 20px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .pro-tip { background: #f0fdfa; border-left: 8px solid #14b8a6; padding: 20px; border-radius: 0 20px 20px 0; margin: 25px 0; }
+        .unit-badge { background: #f1f5f9; border: 1px solid #cbd5e1; padding: 2px 8px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; }
+
+        .write-here { border: 3px dashed #cbd5e1; border-radius: 20px; padding: 40px; margin: 20px 0; text-align: center; color: #94a3b8; font-style: italic; }
+
+        @media print { .no-print { display: none !important; } }
+    </style>
+</head>
+<body class="p-4 md:p-12 max-w-6xl mx-auto">
+
+    <header class="text-center mb-24">
+        <div class="inline-block px-4 py-1 rounded-full bg-sky-100 text-sky-700 font-black text-xs uppercase tracking-widest mb-6">AFI10 Completo // Método Feynman // 4º ESO</div>
+        <h1 class="text-7xl mb-6 text-slate-900">EL LIBRO MAESTRO DE LA ENERGÍA</h1>
+        <p class="text-2xl text-slate-500 max-w-3xl mx-auto font-light leading-relaxed">
+            La biblia definitiva sobre Trabajo, Energía y Potencia. <br>Explicado para que nunca se te olvide.
+        </p>
+    </header>
+
+    <!-- BLOQUE 1: LOS CIMIENTOS - ESCENARIO Y ACTORES -->
+    <section class="study-chunk border-t-8 border-sky-500" id="block-foundations">
+        <div class="chunk-label">Bloque 1 / 10 min Enfoque + 4 min Relax</div>
+        
+        <!-- CONTROL DE ENFOQUE UNIFICADO -->
+        <div class="flex flex-wrap justify-between items-center gap-4 mb-10 no-print bg-slate-50 p-6 rounded-3xl border border-slate-200">
+            <div>
+                <h4 class="font-black text-slate-900 uppercase text-sm tracking-widest">🚀 Misión Inicial: El Big Bang Teórico</h4>
+                <p class="text-xs text-slate-500">Configura tu cámara y elige a tus guerreros energéticos.</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <div id="timer-foundations-display" class="font-mono font-black text-4xl text-sky-600 bg-white px-6 py-2 rounded-2xl shadow-inner border border-slate-100">10:00</div>
+                <button onclick="runStudyCycle('foundations', 10, 4)" class="bg-sky-600 text-white px-8 py-4 rounded-2xl font-black hover:bg-sky-700 hover:scale-105 active:scale-95 transition-all shadow-lg shadow-sky-200">¡A POR EL 10!</button>
+            </div>
+        </div>
+
+        <h2>1. El Escenario y sus Actores</h2>
+        
+        <p class="text-xl mb-8 leading-relaxed">Antes de calcular nada, la física nos obliga a ser <b>directores de cine</b>: decidimos qué sale en cámara (Sistema), qué se queda fuera (Entorno) y qué tipo de efectos especiales (Energía) usamos.</p>
+
+        <!-- SUBSECCIÓN: SISTEMAS -->
+        <div class="grid md:grid-cols-2 gap-8 my-10">
+            <div class="relative group">
+                <div class="absolute -inset-1 bg-gradient-to-r from-sky-400 to-blue-500 rounded-3xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+                <div class="relative p-8 bg-white border-2 border-sky-100 rounded-3xl">
+                    <div class="text-4xl mb-4">🔍</div>
+                    <h4 class="font-black text-sky-700 uppercase text-sm mb-2 tracking-tighter">EL SISTEMA</h4>
+                    <p class="text-sm text-slate-600 italic mb-4">"El personaje principal"</p>
+                    <div class="p-3 bg-sky-50 rounded-xl border border-sky-100 text-xs">
+                        <p class="font-bold text-sky-800 mb-1">🎮 Ejemplo Gamer</p>
+                        <p class="text-sky-900">Tu personaje en Fortnite. Queremos saber cuánta energía gasta al correr.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="relative group">
+                <div class="absolute -inset-1 bg-gradient-to-r from-purple-400 to-indigo-500 rounded-3xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+                <div class="relative p-8 bg-white border-2 border-purple-100 rounded-3xl">
+                    <div class="text-4xl mb-4">🌍</div>
+                    <h4 class="font-black text-purple-700 uppercase text-sm mb-2 tracking-tighter">EL ENTORNO</h4>
+                    <p class="text-sm text-slate-600 italic mb-4">"Todo lo demás"</p>
+                    <div class="p-3 bg-purple-50 rounded-xl border border-purple-100 text-xs">
+                        <p class="font-bold text-purple-800 mb-1">⚽ Ejemplo Fútbol</p>
+                        <p class="text-purple-900">Si el sistema es el balón, el entorno es el césped, el aire y la bota que lo golpea.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="pro-tip bg-amber-50 border-amber-400 text-amber-900 shadow-xl shadow-amber-100/50 mb-12">
+            <div class="flex items-center gap-3 mb-2">
+                <span class="text-2xl">🏆</span>
+                <b class="uppercase text-xs tracking-widest">Definición de Nivel Experto:</b>
+            </div>
+            <p class="text-lg italic font-semibold leading-relaxed">"La energía es la capacidad de los cuerpos de producir cambios en ellos mismos o en otros. <b>Todo sistema que tenga capacidad de producir cambios, tiene energía.</b>"</p>
+            <div class="mt-4 p-3 bg-white/50 rounded-xl border border-amber-200 text-xs">
+                <p><b>Nota del Maestro:</b> La energía se transfiere de solo dos formas: mediante <b>TRABAJO</b> (fuerzas y movimiento) o mediante <b>CALOR</b> (diferencia de temperatura).</p>
+            </div>
+        </div>
+
+        <!-- SUBSECCIÓN: LOS ROSTROS DE LA ENERGÍA -->
+        <h3 class="mb-6 flex items-center gap-3">🎭 Los Disfraces de la Energía</h3>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-10">
+            <div class="p-4 bg-orange-50 border border-orange-200 rounded-2xl text-center hover:scale-105 transition-transform">
+                <span class="text-2xl">🔥</span><br><b class="text-[10px] uppercase text-orange-700">Térmica</b>
+            </div>
+            <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl text-center hover:scale-105 transition-transform">
+                <span class="text-2xl">🧪</span><br><b class="text-[10px] uppercase text-emerald-700">Química</b>
+            </div>
+            <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-2xl text-center hover:scale-105 transition-transform">
+                <span class="text-2xl">☀️</span><br><b class="text-[10px] uppercase text-yellow-700">Luminosa</b>
+            </div>
+            <div class="p-4 bg-blue-50 border border-blue-200 rounded-2xl text-center hover:scale-105 transition-transform">
+                <span class="text-2xl">🔊</span><br><b class="text-[10px] uppercase text-blue-700">Sonora</b>
+            </div>
+            <div class="p-4 bg-indigo-50 border border-indigo-200 rounded-2xl text-center hover:scale-105 transition-transform">
+                <span class="text-2xl">⚡</span><br><b class="text-[10px] uppercase text-indigo-700">Eléctrica</b>
+            </div>
+            <div class="p-4 bg-rose-50 border border-rose-200 rounded-2xl text-center hover:scale-105 transition-transform">
+                <span class="text-2xl">⚛️</span><br><b class="text-[10px] uppercase text-rose-700">Nuclear</b>
+            </div>
+        </div>
+
+        <div class="feynman-box border-pink-200 bg-pink-50/50">
+            <div class="flex gap-4 items-start">
+                <div class="bg-pink-500 text-white p-3 rounded-2xl text-xl">💡</div>
+                <div>
+                    <p class="font-black text-pink-900 uppercase text-xs mb-1">Feynman y la Calderilla:</p>
+                    <p class="text-sm text-pink-900 leading-relaxed">Imagina que la energía es <b>dinero</b>. Tu sistema es tu hucha. Si quieres que el dinero aumente (cambio), alguien de fuera (entorno) tiene que meter una moneda (interacción). ¡No puedes crear dinero de la nada!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BLOQUE 3: EL TRABAJO (W) - MOTOR DE CAMBIO -->
+    <section class="study-chunk border-t-8 border-sky-600" id="block-2">
+        <div class="chunk-label">Bloque 3 / 10 min Enfoque + 4 min Relax</div>
+
+        <!-- CONTROL DE ENFOQUE -->
+        <div class="flex flex-wrap justify-between items-center gap-4 mb-10 no-print bg-slate-50 p-6 rounded-3xl border border-slate-200">
+            <div>
+                <h4 class="font-black text-slate-900 uppercase text-sm tracking-widest">⚙️ Misión: El Motor del Cambio</h4>
+                <p class="text-xs text-slate-500">Aprende a medir cuánto "jugo" le pasas a un objeto.</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <div id="timer-2-display" class="font-mono font-black text-4xl text-sky-600 bg-white px-6 py-2 rounded-2xl shadow-inner border border-slate-100">10:00</div>
+                <button onclick="runStudyCycle(2, 10, 4)" class="bg-sky-600 text-white px-8 py-4 rounded-2xl font-black hover:bg-sky-700 hover:scale-105 active:scale-95 transition-all shadow-lg shadow-sky-200">INICIAR MISIÓN</button>
+            </div>
+        </div>
+
+        <h2>3. El Trabajo (W): ¿Fuerza o Movimiento?</h2>
+        
+        <div class="feynman-box border-sky-300 bg-sky-50/50 my-8">
+            <h4 class="font-black text-sky-700 uppercase text-xs mb-2">La Gran Idea de Feynman:</h4>
+            <p class="text-sm leading-relaxed">El trabajo NO es algo que un cuerpo tenga (como la masa o el color). El trabajo es <b>algo que sucede</b>. Es el proceso de "pasar monedas" de un cuerpo a otro. </p>
+        </div>
+
+        <!-- ANALOGÍAS DEL PDF -->
+        <div class="grid md:grid-cols-2 gap-6 my-10">
+            <div class="p-6 bg-white border-2 border-slate-100 rounded-3xl shadow-sm">
+                <span class="text-3xl mb-4 block">🧒</span>
+                <h4 class="font-bold text-slate-800 text-sm uppercase mb-2">El Niño en el Columpio</h4>
+                <p class="text-xs text-slate-500">Cuando empujas a un niño, haces una fuerza y él se mueve. Ese esfuerzo que haces se convierte <b>exactamente</b> en la energía que gana el niño para subir más alto.</p>
+            </div>
+            <div class="p-6 bg-white border-2 border-slate-100 rounded-3xl shadow-sm">
+                <span class="text-3xl mb-4 block">🎱</span>
+                <h4 class="font-bold text-slate-800 text-sm uppercase mb-2">Choque de Billar</h4>
+                <p class="text-xs text-slate-500">Una bola en movimiento golpea a otra parada. La primera hace un <b>trabajo</b> sobre la segunda, pasándole su energía para que esta última empiece a correr.</p>
+            </div>
+        </div>
+
+        <div class="formula-card py-10 relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-4 opacity-10 text-6xl font-black">W</div>
+            <div class="text-xs text-sky-400 mb-4 font-mono uppercase tracking-[0.3em]">La Ecuación Maestra</div>
+            \[ W = F \cdot \Delta x \cdot \cos(\alpha) \]
+        </div>
+
+        <h3 class="mt-12 mb-6">🛠️ Kit de Supervivencia: Cómo resolverlo</h3>
+        <div class="space-y-4">
+            <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-2xl border-l-4 border-sky-500">
+                <span class="font-black text-sky-500">01</span>
+                <p class="text-sm"><b>Dibuja el vector:</b> ¿Hacia dónde va la fuerza y hacia dónde el movimiento?</p>
+            </div>
+            <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-2xl border-l-4 border-sky-500">
+                <span class="font-black text-sky-500">02</span>
+                <p class="text-sm"><b>Caza el ángulo (\(\alpha\)):</b> Si van de la mano es \(0^\circ\). Si se oponen es \(180^\circ\). Si son perpendiculares es \(90^\circ\).</p>
+            </div>
+            <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-2xl border-l-4 border-sky-500">
+                <span class="font-black text-sky-500">03</span>
+                <p class="text-sm"><b>Calcula el Coseno:</b> No te líes, usa la calculadora o recuerda: \(\cos(0)=1\), \(\cos(180)=-1\), \(\cos(90)=0\).</p>
+            </div>
+        </div>
+        
+        <h3 class="mt-12 mb-6 text-red-500 italic">🚨 Los 3 Escenarios de Examen</h3>
+        <div class="grid md:grid-cols-3 gap-6 mb-10">
+            <!-- CASO 1 -->
+            <div class="p-6 bg-emerald-50 border-2 border-emerald-200 rounded-3xl border-dashed">
+                <h4 class="font-black text-emerald-700 uppercase text-[10px] mb-2">🔥 TRABAJO POSITIVO</h4>
+                <p class="text-xs text-emerald-900 leading-relaxed mb-4">La fuerza "ayuda". El cuerpo acelera.</p>
+                <div class="p-2 bg-white rounded-lg text-center font-mono text-xs">Aporta Energía</div>
+            </div>
+
+            <!-- CASO 2 -->
+            <div class="p-6 bg-red-50 border-2 border-red-200 rounded-3xl border-dashed">
+                <h4 class="font-black text-red-700 uppercase text-[10px] mb-2">❄️ TRABAJO NEGATIVO</h4>
+                <p class="text-xs text-red-900 leading-relaxed mb-4">La fuerza "frena" (Rozamiento). El cuerpo pierde fuelle.</p>
+                <div class="p-2 bg-white rounded-lg text-center font-mono text-xs">Roba Energía</div>
+            </div>
+
+            <!-- CASO 3 -->
+            <div class="p-6 bg-slate-100 border-2 border-slate-200 rounded-3xl border-dashed">
+                <h4 class="font-black text-slate-700 uppercase text-[10px] mb-2">💨 TRABAJO NULO</h4>
+                <p class="text-xs text-slate-900 leading-relaxed mb-4">Fuerza a 90º (Mochila). Cansancio humano \(\neq\) Trabajo físico.</p>
+                <div class="p-2 bg-white rounded-lg text-center font-mono text-xs">Energía Constante</div>
+            </div>
+        </div>
+
+        <div class="pro-tip bg-slate-900 text-white border-l-8 border-sky-400 mt-8">
+            <h4 class="font-black text-sky-400 uppercase text-[10px] tracking-widest mb-2">📏 ¿Qué es un JULIO (J)?</h4>
+            <p class="text-sm leading-relaxed">Es el trabajo que haces cuando aplicas una fuerza de <b>1 Newton</b> para mover algo exactamente <b>1 metro</b> en esa misma dirección. <br><span class="text-sky-300 font-mono text-xs">1 J = 1 N · 1 m</span></p>
+        </div>
+    </section>
+
+    <!-- BLOQUE 4: LA HUCHA DE LA ENERGÍA -->
+    <section class="study-chunk border-t-8 border-emerald-500" id="block-energy">
+        <div class="chunk-label">Bloque 4 / 10 min Enfoque + 4 min Relax</div>
+
+        <!-- CONTROL DE ENFOQUE (TDAH FRIENDLY) -->
+        <div class="flex flex-wrap justify-between items-center gap-4 mb-10 no-print bg-slate-50 p-6 rounded-3xl border border-slate-200">
+            <div>
+                <h4 class="font-black text-slate-900 uppercase text-sm tracking-widest">💰 Misión: Llenar la Hucha</h4>
+                <p class="text-xs text-slate-500">Aprende a contar tus monedas de poder mecánico.</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <div id="timer-energy-display" class="font-mono font-black text-4xl text-emerald-600 bg-white px-6 py-2 rounded-2xl shadow-inner border border-slate-100">10:00</div>
+                <button onclick="runStudyCycle('energy', 10, 4)" class="bg-emerald-600 text-white px-8 py-4 rounded-2xl font-black hover:bg-emerald-700 hover:scale-105 active:scale-95 transition-all shadow-lg shadow-emerald-200">INICIAR RECUENTO</button>
+            </div>
+        </div>
+
+        <h2>4. La Hucha de la Energía (Mecánica)</h2>
+        <p class="text-xl mb-8 leading-relaxed">La energía mecánica es como tu <b>cuenta bancaria total</b>. Se divide en dos bolsillos: lo que tienes por moverte y lo que tienes por estar en lo alto.</p>
+
+        <div class="grid md:grid-cols-2 gap-8 my-10">
+            <!-- ENERGÍA CINÉTICA -->
+            <div class="relative group">
+                <div class="absolute -inset-1 bg-gradient-to-r from-red-400 to-orange-500 rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-1000"></div>
+                <div class="relative p-8 bg-white border-2 border-red-100 rounded-3xl">
+                    <div class="text-4xl mb-4">🏃‍♂️</div>
+                    <h4 class="font-black text-red-700 uppercase text-xs mb-2 tracking-widest text-center">Cinética (Ec)</h4>
+                    <p class="text-xs text-slate-600 mb-6 text-center">"La energía del movimiento". Si te mueves, la tienes.</p>
+                    
+                    <div class="formula-card text-2xl py-6 mb-4">
+                        \( E_c = \frac{1}{2} m v^2 \)
+                    </div>
+
+                    <div class="space-y-2">
+                        <div class="p-3 bg-red-50 rounded-xl border border-red-100">
+                            <p class="text-[10px] uppercase font-bold text-red-800">⚠️ Peligro: El Cuadrado</p>
+                            <p class="text-[11px] text-red-900 italic">Si duplicas tu velocidad (\( \times 2 \)), ¡tu energía se multiplica por 4! Por eso los choques a 100 km/h son tan brutales.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ENERGÍA POTENCIAL -->
+            <div class="relative group">
+                <div class="absolute -inset-1 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-1000"></div>
+                <div class="relative p-8 bg-white border-2 border-emerald-100 rounded-3xl">
+                    <div class="text-4xl mb-4">⛰️</div>
+                    <h4 class="font-black text-emerald-700 uppercase text-xs mb-2 tracking-widest text-center">Potencial (Ep)</h4>
+                    <p class="text-xs text-slate-600 mb-6 text-center">"La energía de la altura". Energía guardada para luego.</p>
+                    
+                    <div class="formula-card text-2xl py-6 mb-4">
+                        \( E_p = m \cdot g \cdot h \)
+                    </div>
+
+                    <div class="space-y-2">
+                        <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-100">
+                            <p class="text-[10px] uppercase font-bold text-emerald-800">💡 El Truco de la Gravedad</p>
+                            <p class="text-[11px] text-emerald-900 italic">Cuanto más alto subes algo, más energía "ahorras". Al soltarlo, esa energía se gasta de golpe.</p>
+                        </div>
+                        <div class="p-3 bg-teal-50 rounded-xl border border-teal-100">
+                            <p class="text-[10px] uppercase font-bold text-teal-800">🏹 Bonus: Elástica</p>
+                            <p class="text-[11px] text-teal-900">Al tensar un arco, guardas energía en la cuerda. ¡Eso también es energía potencial!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ENERGÍA MECÁNICA TOTAL -->
+        <div class="p-8 bg-slate-900 rounded-[40px] border-4 border-emerald-400/30 text-center my-10 relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-emerald-400 to-transparent"></div>
+            <h4 class="text-emerald-400 font-black uppercase text-xs tracking-[0.5em] mb-4">La Hucha Total</h4>
+            <div class="text-4xl md:text-6xl font-black text-white mb-4">
+                \( E_m = E_c + E_p \)
+            </div>
+            <p class="text-slate-400 text-sm italic">"La suma de tus ahorros (Ep) y tu efectivo (Ec)"</p>
+        </div>
+
+        <div class="feynman-box border-emerald-200 bg-emerald-50/50">
+            <div class="flex gap-4 items-start">
+                <div class="bg-emerald-500 text-white p-3 rounded-2xl text-xl">🧱</div>
+                <div>
+                    <p class="font-black text-emerald-900 uppercase text-xs mb-1">Analogía del Ladrillo de Feynman:</p>
+                    <p class="text-sm text-emerald-900 leading-relaxed">Si tienes un ladrillo en el suelo, su \( E_p \) es 0. Si lo subes a una mesa, has hecho un <b>trabajo</b> para darle \( E_p \). Mientras esté quieto en la mesa, esa energía está "dormida". Pero en el momento en que se cae, esa energía despierta y se convierte en \( E_c \) (velocidad). ¡Pum!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BLOQUE 5: LA MAGIA DE LA CONSERVACIÓN (A-B-C) -->
+    <section class="study-chunk border-t-8 border-amber-500" id="block-conservation">
+        <div class="chunk-label">Bloque 5 / 10 min Enfoque + 4 min Relax</div>
+
+        <!-- CONTROL DE ENFOQUE (TDAH FRIENDLY) -->
+        <div class="flex flex-wrap justify-between items-center gap-4 mb-10 no-print bg-slate-50 p-6 rounded-3xl border border-slate-200">
+            <div>
+                <h4 class="font-black text-slate-900 uppercase text-sm tracking-widest">🎢 Misión: Nada se pierde</h4>
+                <p class="text-xs text-slate-500">Demuestra que el universo es un contable perfecto.</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <div id="timer-conservation-display" class="font-mono font-black text-4xl text-amber-600 bg-white px-6 py-2 rounded-2xl shadow-inner border border-slate-100">10:00</div>
+                <button onclick="runStudyCycle('conservation', 10, 4)" class="bg-amber-600 text-white px-8 py-4 rounded-2xl font-black hover:bg-amber-700 hover:scale-105 active:scale-95 transition-all shadow-lg shadow-amber-200">INICIAR DEMOSTRACIÓN</button>
+            </div>
+        </div>
+
+        <h2>5. El Principio de Conservación (A-B-C)</h2>
+        
+        <div class="pro-tip bg-amber-50 border-amber-400 text-amber-900 shadow-xl shadow-amber-100/50 my-8">
+            <div class="flex items-center gap-3 mb-2">
+                <span class="text-2xl">📜</span>
+                <b class="uppercase text-xs tracking-widest text-amber-800">La Ley Suprema:</b>
+            </div>
+            <p class="text-lg italic font-semibold leading-relaxed">"En ausencia de fuerzas externas (sin rozamiento), la energía mecánica total de un sistema se mantiene constante. Cambia de forma, pero nunca de valor."</p>
+        </div>
+
+        <h3 class="mt-12 mb-6">🎬 La Caída Libre: Un Drama en 3 Actos</h3>
+        <p class="mb-8 italic text-slate-500">Imagina soltar una bola desde 10 metros. Mira cómo sus bolsillos de energía se vacían y llenan:</p>
+
+        <div class="grid md:grid-cols-3 gap-6 my-10">
+            <!-- ACTO A -->
+            <div class="relative group">
+                <div class="p-6 bg-slate-900 text-white rounded-3xl border-t-8 border-red-500 transition-all group-hover:-translate-y-2">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="w-10 h-10 rounded-xl bg-red-500 flex items-center justify-center font-black text-xl shadow-lg shadow-red-900/50">A</span>
+                        <b class="text-xs uppercase tracking-tighter text-red-400">El Techo<br>(Inicio)</b>
+                    </div>
+                    <p class="text-[11px] mb-6 text-slate-400 italic">Velocidad = 0. Estás arriba del todo.</p>
+                    <div class="space-y-3 font-mono text-xs">
+                        <div class="flex justify-between border-b border-slate-800 pb-1"><span>Ec</span><span class="text-red-400">0 J</span></div>
+                        <div class="flex justify-between border-b border-slate-800 pb-1"><span>Ep</span><span class="text-emerald-400">m·g·h</span></div>
+                        <div class="pt-2 text-center text-lg font-black text-white">\( E_m = E_p \)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACTO B -->
+            <div class="relative group">
+                <div class="p-6 bg-slate-900 text-white rounded-3xl border-t-8 border-amber-500 transition-all group-hover:-translate-y-2">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center font-black text-xl shadow-lg shadow-amber-900/50">B</span>
+                        <b class="text-xs uppercase tracking-tighter text-amber-400">El Vuelo<br>(Medio)</b>
+                    </div>
+                    <p class="text-[11px] mb-6 text-slate-400 italic">Ganas velocidad, pierdes altura.</p>
+                    <div class="space-y-3 font-mono text-xs">
+                        <div class="flex justify-between border-b border-slate-800 pb-1"><span>Ec</span><span class="text-red-400">1/2·m·v²</span></div>
+                        <div class="flex justify-between border-b border-slate-800 pb-1"><span>Ep</span><span class="text-emerald-400">m·g·h'</span></div>
+                        <div class="pt-2 text-center text-lg font-black text-white">\( E_m = E_c + E_p \)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACTO C -->
+            <div class="relative group">
+                <div class="p-6 bg-slate-900 text-white rounded-3xl border-t-8 border-emerald-500 transition-all group-hover:-translate-y-2">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center font-black text-xl shadow-lg shadow-emerald-900/50">C</span>
+                        <b class="text-xs uppercase tracking-tighter text-emerald-400">El Suelo<br>(Final)</b>
+                    </div>
+                    <p class="text-[11px] mb-6 text-slate-400 italic">Altura = 0. Velocidad máxima.</p>
+                    <div class="space-y-3 font-mono text-xs">
+                        <div class="flex justify-between border-b border-slate-800 pb-1"><span>Ec</span><span class="text-red-400">1/2·m·v²</span></div>
+                        <div class="flex justify-between border-b border-slate-800 pb-1"><span>Ep</span><span class="text-emerald-400">0 J</span></div>
+                        <div class="pt-2 text-center text-lg font-black text-white">\( E_m = E_c \)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- KIT DE RESOLUCIÓN -->
+        <div class="grid md:grid-cols-2 gap-8 my-10">
+            <div class="p-8 bg-sky-50 rounded-[40px] border-2 border-sky-100">
+                <h4 class="font-black text-sky-800 uppercase text-xs mb-4 flex items-center gap-2">
+                    <span class="bg-sky-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-[10px]">1</span>
+                    Kit de Supervivencia: Pasos
+                </h4>
+                <ul class="space-y-3 text-sm text-sky-900">
+                    <li class="flex gap-2"><span>✅</span> <b>Identifica dos puntos:</b> (Ej: Inicio y Suelo).</li>
+                    <li class="flex gap-2"><span>✅</span> <b>Escribe la igualdad:</b> \( E_{m1} = E_{m2} \).</li>
+                    <li class="flex gap-2"><span>✅</span> <b>Tacha lo que sea 0:</b> ¿Está parado? Ec=0. ¿En el suelo? Ep=0.</li>
+                    <li class="flex gap-2"><span>✅</span> <b>Despeja la incógnita:</b> Normalmente la velocidad o la altura.</li>
+                </ul>
+            </div>
+
+            <div class="p-8 bg-rose-50 rounded-[40px] border-2 border-rose-100">
+                <h4 class="font-black text-rose-800 uppercase text-xs mb-4 flex items-center gap-2">
+                    <span class="bg-rose-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-[10px]">!</span>
+                    Trampas de Examen (Cuidado)
+                </li>
+                <ul class="space-y-3 text-sm text-rose-900">
+                    <li class="flex gap-2"><span>⚠️</span> <b>¿Hay rozamiento?</b> Si lo hay, la energía NO se conserva (se pierde calor).</li>
+                    <li class="flex gap-2"><span>⚠️</span> <b>Unidades:</b> La masa siempre en kg y la altura en metros.</li>
+                    <li class="flex gap-2"><span>⚠️</span> <b>El cuadrado:</b> No te olvides de la raíz cuadrada al despejar la velocidad.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="feynman-box border-purple-200 bg-purple-50/50">
+            <div class="flex gap-4 items-start">
+                <div class="bg-purple-500 text-white p-3 rounded-2xl text-xl">🎡</div>
+                <div>
+                    <p class="font-black text-purple-900 uppercase text-xs mb-1">Feynman y la Montaña Rusa:</p>
+                    <p class="text-sm text-purple-900 leading-relaxed">Imagina que el vagón tiene 1000 monedas de energía. Al subir (despacio), gasta Ec para comprar Ep. Al bajar (rápido), vende su Ep para recuperar Ec. En cualquier curva, si cuentas todas sus monedas, ¡siempre habrá 1000! <b>Eso es la conservación.</b></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BLOQUE 6: LA ZONA DE COMBATE (PROBLEMAS NIVEL DIOS) -->
+    <section class="study-chunk border-t-8 border-purple-600" id="block-combat">
+        <div class="chunk-label">Bloque 6 / 10 min Acción + 4 min Relax</div>
+
+        <!-- CONTROL DE ENFOQUE (TDAH FRIENDLY) -->
+        <div class="flex flex-wrap justify-between items-center gap-4 mb-10 no-print bg-slate-50 p-6 rounded-3xl border border-slate-200">
+            <div>
+                <h4 class="font-black text-slate-900 uppercase text-sm tracking-widest">🥊 Arena de Problemas</h4>
+                <p class="text-xs text-slate-500">No leas la solución... ¡intenta derrotar al problema primero!</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <div id="timer-combat-display" class="font-mono font-black text-4xl text-purple-600 bg-white px-6 py-2 rounded-2xl shadow-inner border border-slate-100">10:00</div>
+                <button onclick="runStudyCycle('combat', 10, 4)" class="bg-purple-600 text-white px-8 py-4 rounded-2xl font-black hover:bg-purple-700 hover:scale-105 active:scale-95 transition-all shadow-lg shadow-purple-200">ENTRAR EN COMBATE</button>
+            </div>
+        </div>
+
+        <h2>6. El Laboratorio de Problemas Maestros</h2>
+        <p class="text-xl mb-8 leading-relaxed">Aquí es donde se ganan los exámenes. Cada problema resuelto es un nivel más de XP en tu ficha de físico.</p>
+
+        <div class="space-y-12">
+            <!-- MISIÓN 1: TRABAJO -->
+            <div class="bg-slate-900 text-white rounded-[40px] p-8 border-l-8 border-sky-500 relative overflow-hidden shadow-2xl">
+                <div class="absolute top-4 right-8 text-4xl opacity-20">🛷</div>
+                <h4 class="text-sky-400 font-black uppercase text-xs tracking-widest mb-4">Misión 1: El Trineo Ártico</h4>
+                <p class="text-sm text-slate-300 mb-6 italic">"Empujas un trineo con una fuerza de 80N a través de 20m de nieve. La cuerda forma un ángulo de 60º con el suelo. ¿Cuánto trabajo has hecho?"</p>
+                
+                <div class="grid md:grid-cols-3 gap-4 text-[11px] font-mono">
+                    <div class="bg-slate-800/50 p-4 rounded-2xl border border-slate-700">
+                        <b class="text-sky-400 block mb-2 underline">DATOS</b>
+                        F = 80N <br> Δx = 20m <br> α = 60º
+                    </div>
+                    <div class="bg-slate-800/50 p-4 rounded-2xl border border-slate-700">
+                        <b class="text-sky-400 block mb-2 underline">PLAN</b>
+                        Usar la fórmula: <br> W = F · Δx · cos(α)
+                    </div>
+                    <div class="bg-slate-800/50 p-4 rounded-2xl border border-slate-700">
+                        <b class="text-sky-400 block mb-2 underline">ACCIÓN</b>
+                        W = 80 · 20 · 0.5 <br> <span class="text-white font-bold text-lg">W = 800 J</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MISIÓN 2: CONSERVACIÓN -->
+            <div class="bg-slate-900 text-white rounded-[40px] p-8 border-l-8 border-emerald-500 relative overflow-hidden shadow-2xl">
+                <div class="absolute top-4 right-8 text-4xl opacity-20">🍏</div>
+                <h4 class="text-emerald-400 font-black uppercase text-xs tracking-widest mb-4">Misión 2: El Reto de Newton</h4>
+                <p class="text-sm text-slate-300 mb-6 italic">"Una manzana de 200g cae desde una rama a 5m de altura. ¿A qué velocidad estallará contra el suelo?"</p>
+                
+                <div class="grid md:grid-cols-3 gap-4 text-[11px] font-mono">
+                    <div class="bg-slate-800/50 p-4 rounded-2xl border border-slate-700">
+                        <b class="text-emerald-400 block mb-2 underline">DATOS</b>
+                        m = 0.2kg <br> h = 5m <br> g = 9.8m/s²
+                    </div>
+                    <div class="bg-slate-800/50 p-4 rounded-2xl border border-slate-700">
+                        <b class="text-emerald-400 block mb-2 underline">PLAN</b>
+                        Ep(arriba) = Ec(suelo) <br> m·g·h = 0.5·m·v²
+                    </div>
+                    <div class="bg-slate-800/50 p-4 rounded-2xl border border-slate-700">
+                        <b class="text-emerald-400 block mb-2 underline">ACCIÓN</b>
+                        9.8 · 5 = 0.5 · v² <br> v = √(98) <br> <span class="text-white font-bold text-lg">v = 9.9 m/s</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MISIÓN 3: ROZAMIENTO -->
+            <div class="bg-slate-900 text-white rounded-[40px] p-8 border-l-8 border-red-500 relative overflow-hidden shadow-2xl">
+                <div class="absolute top-4 right-8 text-4xl opacity-20">🏎️</div>
+                <h4 class="text-red-400 font-black uppercase text-xs tracking-widest mb-4">Misión 3: El Frenazo del Siglo</h4>
+                <p class="text-sm text-slate-300 mb-6 italic">"Un coche de 1200kg va a 72km/h (20m/s). Da un frenazo en seco y se para. ¿Cuánto calor han generado los frenos (W_roz)?"</p>
+                
+                <div class="grid md:grid-cols-3 gap-4 text-[11px] font-mono">
+                    <div class="bg-slate-800/50 p-4 rounded-2xl border border-slate-700">
+                        <b class="text-red-400 block mb-2 underline">DATOS</b>
+                        m = 1200kg <br> vi = 20m/s <br> vf = 0
+                    </div>
+                    <div class="bg-slate-800/50 p-4 rounded-2xl border border-slate-700">
+                        <b class="text-red-400 block mb-2 underline">PLAN</b>
+                        W_ext = ΔEc <br> W_roz = Ec_f - Ec_i
+                    </div>
+                    <div class="bg-slate-800/50 p-4 rounded-2xl border border-slate-700">
+                        <b class="text-red-400 block mb-2 underline">ACCIÓN</b>
+                        0 - (0.5·1200·20²) <br> <span class="text-white font-bold text-lg">W = -240.000 J</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MISIÓN 4: POTENCIA -->
+            <div class="bg-slate-900 text-white rounded-[40px] p-8 border-l-8 border-amber-500 relative overflow-hidden shadow-2xl">
+                <div class="absolute top-4 right-8 text-4xl opacity-20">🏗️</div>
+                <h4 class="text-amber-400 font-black uppercase text-xs tracking-widest mb-4">Misión 4: El Montacargas VIP</h4>
+                <p class="text-sm text-slate-300 mb-6 italic">"Un montacargas sube un palé de 500kg a 10 metros de altura en 20 segundos. ¿Qué potencia desarrolla en CV?"</p>
+                
+                <div class="grid md:grid-cols-3 gap-4 text-[11px] font-mono">
+                    <div class="bg-slate-800/50 p-4 rounded-2xl border border-slate-700">
+                        <b class="text-amber-400 block mb-2 underline">DATOS</b>
+                        m = 500kg, h = 10m <br> t = 20s <br> W = mgh
+                    </div>
+                    <div class="bg-slate-800/50 p-4 rounded-2xl border border-slate-700">
+                        <b class="text-amber-400 block mb-2 underline">PLAN</b>
+                        P = W / t <br> Convertir W a CV
+                    </div>
+                    <div class="bg-slate-800/50 p-4 rounded-2xl border border-slate-700">
+                        <b class="text-amber-400 block mb-2 underline">ACCIÓN</b>
+                        (500·9.8·10)/20 = 2450W <br> 2450 / 735 <br> <span class="text-white font-bold text-lg">P = 3.33 CV</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="feynman-box border-purple-300 bg-purple-50 mt-12">
+            <h4 class="font-black text-purple-700 uppercase text-xs mb-2">💡 El Método Feynman para Problemas:</h4>
+            <p class="text-xs leading-relaxed">1. Escribe el problema en el centro. <br> 2. Explícaselo a alguien que no sepa nada (o a tu gato). <br> 3. Donde te trabes en la explicación, ahí está tu falta de conocimiento. <b>Vuelve a los apuntes solo en ese punto.</b> ¡No estudies de más, estudia mejor!</p>
+        </div>
+    </section>
+
+    <!-- BLOQUE 7: LA POTENCIA (P) - ¡A TODA MECHA! -->
+    <section class="study-chunk border-t-8 border-gold" id="block-power">
+        <div class="chunk-label">Bloque 7 / 10 min Enfoque + 4 min Relax</div>
+
+        <!-- CONTROL DE ENFOQUE (TDAH FRIENDLY) -->
+        <div class="flex flex-wrap justify-between items-center gap-4 mb-10 no-print bg-slate-50 p-6 rounded-3xl border border-slate-200">
+            <div>
+                <h4 class="font-black text-slate-900 uppercase text-sm tracking-widest">⚡ Misión: ¡A Toda Mecha!</h4>
+                <p class="text-xs text-slate-500">Descubre por qué el tiempo lo es todo en el poder.</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <div id="timer-power-display" class="font-mono font-black text-4xl text-amber-600 bg-white px-6 py-2 rounded-2xl shadow-inner border border-slate-100">10:00</div>
+                <button onclick="runStudyCycle('power', 10, 4)" class="bg-amber-500 text-white px-8 py-4 rounded-2xl font-black hover:bg-amber-600 hover:scale-105 active:scale-95 transition-all shadow-lg shadow-amber-200">INICIAR TURBO</button>
+            </div>
+        </div>
+
+        <h2>7. La Potencia (P): ¿Qué tan rápido eres?</h2>
+        <p class="text-xl mb-8 leading-relaxed">Dos personas pueden hacer el mismo trabajo (subir 10 escalones), pero la que lo hace en 2 segundos es más <b>potente</b> que la que tarda 20. La potencia es la <b>velocidad</b> a la que gastas energía.</p>
+        
+        <div class="formula-card py-10 border-2 border-amber-400/50 shadow-2xl shadow-amber-100">
+            <div class="text-xs text-amber-400 mb-4 font-mono uppercase tracking-[0.3em]">El Indicador de Rendimiento</div>
+            \[ P = \frac{W}{t} \]
+        </div>
+
+        <!-- BENTO GRID DE POTENCIA -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-10">
+            <!-- EL WATIO -->
+            <div class="p-6 bg-slate-900 text-white rounded-3xl border-b-4 border-amber-500 transition-all hover:scale-[1.02]">
+                <div class="text-3xl mb-4">🔌</div>
+                <h4 class="font-black text-amber-400 uppercase text-[10px] tracking-widest mb-2">La Unidad: El Watio (W)</h4>
+                <p class="text-xs text-slate-300">Llamado así por James Watt. <br><br><b>1 W = 1 Julio / 1 Segundo</b>. <br>Es muy poco... ¡una bombilla gasta 10W!</p>
+            </div>
+
+            <!-- EL CABALLO DE VAPOR -->
+            <div class="p-6 bg-slate-900 text-white rounded-3xl border-b-4 border-red-500 transition-all hover:scale-[1.02]">
+                <div class="text-3xl mb-4">🐎</div>
+                <h4 class="font-black text-red-400 uppercase text-[10px] tracking-widest mb-2">El Clásico: El CV</h4>
+                <p class="text-xs text-slate-300">Usado en coches y motores. <br><br><b>1 CV = 735 W</b>. <br>Un Fórmula 1 tiene más de 1000 CV. ¡Imagínate la potencia!</p>
+            </div>
+
+            <!-- EL KILOWATIO -->
+            <div class="p-6 bg-slate-900 text-white rounded-3xl border-b-4 border-sky-500 transition-all hover:scale-[1.02]">
+                <div class="text-3xl mb-4">⚡</div>
+                <h4 class="font-black text-sky-400 uppercase text-[10px] tracking-widest mb-2">El Industrial: El kW</h4>
+                <p class="text-xs text-slate-300">Para tu factura de la luz. <br><br><b>1 kW = 1000 W</b>. <br>Tu secador de pelo o el horno usan unos 2 kW.</p>
+            </div>
+        </div>
+
+        <div class="feynman-box border-amber-300 bg-amber-50/50 my-10">
+            <div class="flex gap-4 items-start">
+                <div class="bg-amber-500 text-white p-3 rounded-2xl text-xl">🏗️</div>
+                <div>
+                    <p class="font-black text-amber-900 uppercase text-xs mb-1">Analogía del Montacargas VIP:</p>
+                    <p class="text-sm text-amber-900 leading-relaxed">Imagina subir un piano a un 5º piso. Si lo subes tú por las escaleras en 2 horas o lo sube una grúa en 20 segundos, <b>el TRABAJO es el mismo</b> (misma masa, misma altura). Pero la grúa tiene muchísima más <b>POTENCIA</b> porque hace el mismo "negocio" en un tiempo récord. La potencia es la enemiga de la lentitud.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SPOTLIGHT: JAMES WATT -->
+        <div class="p-8 bg-white border-2 border-slate-100 rounded-[40px] shadow-sm flex flex-col md:flex-row gap-8 items-center">
+            <div class="text-6xl filter grayscale hover:grayscale-0 transition-all duration-500 cursor-help" title="James Watt (1736-1819)">👴🏻</div>
+            <div>
+                <h4 class="font-black text-slate-800 uppercase text-xs mb-2 tracking-widest">El Maestro del Vapor: James Watt</h4>
+                <p class="text-xs text-slate-500 leading-relaxed italic">Watt no inventó la máquina de vapor, pero la hizo tan eficiente que cambió el mundo. Para vender sus máquinas, inventó el concepto de "Caballo de Vapor" porque la gente de su época solo entendía la potencia comparándola con sus caballos. ¡Puro marketing científico!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- BLOQUE EXTRA: EL CLUB DEL CHISTE FÍSICO -->
+    <section class="study-chunk border-t-8 border-pink-500" id="block-jokes">
+        <div class="chunk-label">Bonus / Relax Energético (10+4)</div>
+
+        <!-- CONTROL DE ENFOQUE (PARA REÍR TAMBIÉN HAY QUE ENFOCARSE) -->
+        <div class="flex flex-wrap justify-between items-center gap-4 mb-10 no-print bg-slate-50 p-6 rounded-3xl border border-slate-200">
+            <div>
+                <h4 class="font-black text-slate-900 uppercase text-sm tracking-widest">😂 Terminal de Risas</h4>
+                <p class="text-xs text-slate-500">¿Sabes qué pasa si no estudias? Que el problema eres tú.</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <div id="timer-jokes-display" class="font-mono font-black text-4xl text-pink-600 bg-white px-6 py-2 rounded-2xl shadow-inner border border-slate-100">10:00</div>
+                <button onclick="runStudyCycle('jokes', 10, 4)" class="bg-pink-500 text-white px-8 py-4 rounded-2xl font-black hover:bg-pink-600 hover:scale-105 active:scale-95 transition-all shadow-lg shadow-pink-200">REÍR O MORIR</button>
+            </div>
+        </div>
+
+        <h2>😂 La Terminal del Chiste Malo</h2>
+        <p class="text-xl mb-8 leading-relaxed">Porque después de tanto cálculo, tu cerebro necesita una <b>transferencia de energía humorística</b> (aunque sea de baja calidad).</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-10">
+            <!-- CHISTE 1 -->
+            <div class="p-6 bg-pink-50 border-2 border-pink-100 rounded-3xl hover:rotate-1 transition-transform">
+                <div class="text-3xl mb-4">📖</div>
+                <p class="text-sm font-bold text-pink-900">¿Por qué el libro de física se suicidó?</p>
+                <p class="mt-2 text-xs text-pink-700 italic">¡Porque tenía demasiados problemas! (Pero recuerda: la energía de la caída se conserva).</p>
+            </div>
+
+            <!-- CHISTE 2: CONSERVACIÓN (NUEVO) -->
+            <div class="p-6 bg-violet-50 border-2 border-violet-100 rounded-3xl hover:-rotate-1 transition-transform">
+                <div class="text-3xl mb-4">🔄</div>
+                <p class="text-sm font-bold text-violet-900">¿Qué le dijo la ley de conservación al físico que la despidió?</p>
+                <p class="text-xs text-violet-700 my-2">"No me importa... ¡Simplemente me transformaré en otra cosa!"</p>
+            </div>
+
+            <!-- CHISTE 3 -->
+            <div class="p-6 bg-blue-50 border-2 border-blue-100 rounded-3xl hover:rotate-1 transition-transform">
+                <div class="text-3xl mb-4">🦆</div>
+                <p class="text-sm font-bold text-blue-900">¿Qué es un Vatio?</p>
+                <p class="mt-2 text-xs text-blue-700 italic">¡Lo que se pone el pato cuando sale de la ducha! (Vatio/Bata).</p>
+            </div>
+
+            <!-- CHISTE 9: JULIO Y VATIO (NUEVO) -->
+            <div class="p-6 bg-amber-50 border-2 border-amber-100 rounded-3xl hover:-rotate-1 transition-transform">
+                <div class="text-3xl mb-4">🍻</div>
+                <p class="text-sm font-bold text-amber-900">Un Julio (J) entra en un bar...</p>
+                <p class="text-xs text-amber-700 my-2">Y pide una caña por segundo. El camarero le mira y le dice: <br><br><b>"¡Tío, eres un VATIO!"</b> (W = J/s).</p>
+            </div>
+
+            <!-- CHISTE 5: TRABAJO -->
+            <div class="p-6 bg-emerald-50 border-2 border-emerald-100 rounded-3xl hover:-rotate-1 transition-transform">
+                <div class="text-3xl mb-4">👷‍♂️</div>
+                <p class="text-sm font-bold text-emerald-900">¿Por qué un físico no puede tener un trabajo de oficina?</p>
+                <p class="mt-2 text-xs text-emerald-700 italic">¡Porque dice que estar sentado 8 horas frente al PC sin desplazamiento es TRABAJO CERO!</p>
+            </div>
+
+            <!-- CHISTE 6: CINÉTICA -->
+            <div class="p-6 bg-orange-50 border-2 border-orange-100 rounded-3xl hover:rotate-1 transition-transform">
+                <div class="text-3xl mb-4">🏃‍♂️</div>
+                <p class="text-sm font-bold text-orange-900">¿Cuál es el postre favorito de la Energía Cinética?</p>
+                <p class="mt-2 text-xs text-orange-700 italic">¡El helado al CUADRADO! (Por lo de \( v^2 \)).</p>
+            </div>
+
+            <!-- CHISTE 7: ROZAMIENTO -->
+            <div class="p-6 bg-rose-50 border-2 border-rose-100 rounded-3xl hover:-rotate-1 transition-transform">
+                <div class="text-3xl mb-4">⛸️</div>
+                <p class="text-sm font-bold text-rose-900">¿Qué le dijo el rozamiento a la energía mecánica?</p>
+                <p class="mt-2 text-xs text-rose-700 italic">"Me calientas... ¡pero me quitas las ganas de seguir!" (Pierde energía en forma de calor).</p>
+            </div>
+
+            <!-- CHISTE 8: GRAVEDAD -->
+            <div class="p-6 bg-sky-50 border-2 border-sky-100 rounded-3xl hover:rotate-1 transition-transform">
+                <div class="text-3xl mb-4">🍎</div>
+                <p class="text-sm font-bold text-sky-900">¿Por qué la energía potencial siempre está deprimida?</p>
+                <p class="mt-2 text-xs text-sky-700 italic">¡Porque siempre está bajo mucha PRESIÓN y solo piensa en CAER!</p>
+            </div>
+
+            <!-- CHISTE 4 (NUEVO): MONTAÑA RUSA -->
+            <div class="p-6 bg-amber-50 border-2 border-amber-100 rounded-[40px] md:col-span-2 shadow-inner">
+                <div class="flex gap-6 items-center">
+                    <div class="text-5xl">🎢</div>
+                    <div>
+                        <p class="text-sm font-bold text-amber-900 mb-2">¿Cuál es la parte favorita de un físico en el parque de atracciones?</p>
+                        <p class="text-xs text-amber-800 leading-relaxed font-semibold">La subida de la montaña rusa... ¡porque tiene un POTENCIAL increíble para transformarse en pura diversión CINÉTICA! (Recuerda: la diversión total se conserva).</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BLOQUE 8: EL PANEL DE CONTROL (GUÍA DE SUPERVIVENCIA) -->
+    <section class="study-chunk border-t-8 border-gold" id="block-survival">
+        <div class="chunk-label">Final Boss / Repaso Relámpago (10+4)</div>
+
+        <!-- CONTROL DE ENFOQUE FINAL -->
+        <div class="flex flex-wrap justify-between items-center gap-4 mb-10 no-print bg-slate-50 p-6 rounded-3xl border border-slate-200">
+            <div>
+                <h4 class="font-black text-slate-900 uppercase text-sm tracking-widest">🏆 Misión Final: El Panel de Control</h4>
+                <p class="text-xs text-slate-500">Todo lo que necesitas para sobrevivir al examen en una sola página.</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <div id="timer-survival-display" class="font-mono font-black text-4xl text-gold bg-white px-6 py-2 rounded-2xl shadow-inner border border-slate-100">10:00</div>
+                <button onclick="runStudyCycle('survival', 10, 4)" class="bg-slate-900 text-white px-8 py-4 rounded-2xl font-black hover:scale-105 active:scale-95 transition-all shadow-lg shadow-slate-200">ACTIVAR REPASO</button>
+            </div>
+        </div>
+
+        <h2>🚀 Guía de Supervivencia Extrema</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 my-10">
+            <!-- CHECKLIST DE DESPEGUE -->
+            <div class="p-8 bg-white border-2 border-slate-100 rounded-[40px] shadow-sm lg:col-span-2">
+                <h4 class="font-black text-slate-800 uppercase text-xs mb-6 flex items-center gap-2">
+                    <span class="text-2xl">📋</span> Checklist: Antes de pulsar la calculadora
+                </h4>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="flex gap-3 items-start p-3 bg-slate-50 rounded-2xl">
+                        <span class="bg-sky-500 text-white w-5 h-5 rounded-full flex shrink-0 items-center justify-center text-[10px] font-bold">1</span>
+                        <p class="text-xs text-slate-600"><b>¿Sistema definido?</b> Identifica qué cuerpo estás estudiando.</p>
+                    </div>
+                    <div class="flex gap-3 items-start p-3 bg-slate-50 rounded-2xl">
+                        <span class="bg-sky-500 text-white w-5 h-5 rounded-full flex shrink-0 items-center justify-center text-[10px] font-bold">2</span>
+                        <p class="text-xs text-slate-600"><b>¿Unidades S.I.?</b> Masa en kg, Altura en m, Velocidad en m/s.</p>
+                    </div>
+                    <div class="flex gap-3 items-start p-3 bg-slate-50 rounded-2xl">
+                        <span class="bg-sky-500 text-white w-5 h-5 rounded-full flex shrink-0 items-center justify-center text-[10px] font-bold">3</span>
+                        <p class="text-xs text-slate-600"><b>¿Dos puntos?</b> Elige Punto A y Punto B para comparar energías.</p>
+                    </div>
+                    <div class="flex gap-3 items-start p-3 bg-slate-50 rounded-2xl">
+                        <span class="bg-sky-500 text-white w-5 h-5 rounded-full flex shrink-0 items-center justify-center text-[10px] font-bold">4</span>
+                        <p class="text-xs text-slate-600"><b>¿Hay fricción?</b> Si hay rozamiento, suma \( W_{roz} \) al final.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DICCIONARIO NINJA -->
+            <div class="p-8 bg-slate-900 text-white rounded-[40px] shadow-2xl">
+                <h4 class="font-black text-sky-400 uppercase text-[10px] tracking-widest mb-6">🥷 Diccionario de Unidades</h4>
+                <div class="space-y-4 font-mono text-[11px]">
+                    <div class="flex justify-between border-b border-slate-800 pb-2"><span>Trabajo / Energía</span><span class="text-emerald-400">Julio (J)</span></div>
+                    <div class="flex justify-between border-b border-slate-800 pb-2"><span>Potencia</span><span class="text-amber-400">Watio (W)</span></div>
+                    <div class="flex justify-between border-b border-slate-800 pb-2"><span>Fuerza</span><span class="text-red-400">Newton (N)</span></div>
+                    <div class="flex justify-between border-b border-slate-800 pb-2"><span>Masa</span><span class="text-sky-400">Kilogramo (kg)</span></div>
+                </div>
+                <div class="mt-6 p-4 bg-slate-800 rounded-2xl">
+                    <p class="text-[10px] text-slate-400 italic">Conversión Flash: <br>Km/h ÷ 3.6 = m/s</p>
+                </div>
+            </div>
+
+            <!-- LA ECUACIÓN MAESTRA -->
+            <div class="p-8 bg-gradient-to-br from-amber-400 to-orange-500 text-slate-900 rounded-[40px] md:col-span-2 lg:col-span-1 shadow-lg flex flex-col justify-center text-center">
+                <h4 class="font-black uppercase text-xs tracking-widest mb-4">La Ecuación que lo resuelve TODO</h4>
+                <div class="text-3xl font-black mb-4">
+                    \[ E_{m1} + W_{ext} = E_{m2} \]
+                </div>
+                <p class="text-[11px] font-bold leading-relaxed">"Tu energía inicial + el trabajo de las fuerzas de fuera = Tu energía final"</p>
+            </div>
+
+            <!-- SEMÁFORO DE ERRORES -->
+            <div class="p-8 bg-white border-2 border-slate-100 rounded-[40px] shadow-sm lg:col-span-2">
+                <h4 class="font-black text-slate-800 uppercase text-xs mb-6">🚦 Semáforo de Errores Fatales</h4>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="p-4 bg-red-50 rounded-3xl border border-red-100">
+                        <b class="text-red-700 text-xs block mb-1">🔴 ALTO</b>
+                        <p class="text-[10px] text-red-900">Usar gramos en lugar de kg. ¡Error de x1000!</p>
+                    </div>
+                    <div class="p-4 bg-amber-50 rounded-3xl border border-amber-100">
+                        <b class="text-amber-700 text-xs block mb-1">🟡 ATENCIÓN</b>
+                        <p class="text-[10px] text-amber-900">Olvidar el cuadrado (\( v^2 \)) en la cinética.</p>
+                    </div>
+                    <div class="p-4 bg-emerald-50 rounded-3xl border border-emerald-100">
+                        <b class="text-emerald-700 text-xs block mb-1">🟢 SIGUE</b>
+                        <p class="text-[10px] text-emerald-900">Comprobar siempre que \( E_m \) es la suma de \( E_c + E_p \).</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="text-center py-20 border-t border-slate-200 mt-20">
+        <h2 class="text-4xl text-slate-900">¡MISIÓN COMPLETADA!</h2>
+        <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="mt-8 bg-slate-800 text-white px-12 py-4 rounded-full font-black hover:scale-105 transition">VOLVER ARRIBA</button>
+    </footer>
+
+    <script>
+        const intervals = {};
+        
+        function runStudyCycle(blockId, studyMins, breakMins) {
+            if (intervals[blockId]) return;
+            
+            const display = document.getElementById(`timer-${blockId}-display`) || document.getElementById(`timer-${blockId}`);
+            const btn = event.target;
+            btn.disabled = true;
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
+
+            let isBreak = false;
+            let seconds = studyMins * 60;
+
+            const updateTimer = () => {
+                const m = Math.floor(seconds / 60);
+                const s = seconds % 60;
+                display.innerText = `${m}:${s.toString().padStart(2, '0')}`;
+                
+                if (seconds <= 0) {
+                    if (!isBreak) {
+                        isBreak = true;
+                        seconds = breakMins * 60;
+                        display.classList.replace('text-sky-600', 'text-emerald-500');
+                        alert("🎉 ¡BLOQUE COMPLETADO! Toca descanso de 6 minutos. ¡Desconecta!");
+                    } else {
+                        clearInterval(intervals[blockId]);
+                        delete intervals[blockId];
+                        display.innerText = "FIN";
+                        btn.disabled = false;
+                        btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                        alert("✅ Ciclo terminado. ¡Estás on fire! ¿Siguiente bloque?");
+                    }
+                }
+                seconds--;
+            };
+
+            intervals[blockId] = setInterval(updateTimer, 1000);
+            updateTimer();
+        }
+
+        function startTimer(blockId, minutes) {
+            if (intervals[blockId]) return;
+            let seconds = minutes * 60;
+            const display = document.getElementById(`timer-${blockId}`);
+            const btn = event.target;
+            btn.disabled = true;
+            intervals[blockId] = setInterval(() => {
+                seconds--;
+                const m = Math.floor(seconds / 60);
+                const s = seconds % 60;
+                display.innerText = `${m}:${s.toString().padStart(2, '0')}`;
+                if (seconds <= 0) { clearInterval(intervals[blockId]); delete intervals[blockId]; alert("⏰ ¡Tiempo! Toca descanso."); }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografía Física ULTRA v4.0: El Mapa de la Energía</title>
+    
+    <!-- Scripts de Producción -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Outfit:wght@300;400;700;900&family=JetBrains+Mono:wght@500;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --cyan: #00f2ff;
+            --purple: #bf00ff;
+            --success: #50fa7b;
+            --danger: #ff5555;
+            --gold: #ffb86c;
+            --bg: #050608;
+            --panel: #0d0f14;
+        }
+        
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg);
+            color: #e2e8f0;
+            padding: 40px 20px;
+            background-image: 
+                linear-gradient(rgba(0, 242, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 242, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        h1, h2, h3, h4 { font-family: 'Bangers', cursive; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .glass-panel {
+            background: var(--panel);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 35px;
+            padding: 30px;
+            box-shadow: 0 20px 80px -15px rgba(0, 0, 0, 0.9);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .neon-glow-cyan { box-shadow: 0 0 20px rgba(0, 242, 255, 0.15); border-top: 4px solid var(--cyan); }
+        .neon-glow-purple { box-shadow: 0 0 20px rgba(191, 0, 255, 0.15); border-top: 4px solid var(--purple); }
+        .neon-glow-success { box-shadow: 0 0 20px rgba(80, 250, 123, 0.15); border-top: 4px solid var(--success); }
+        
+        .formula-box {
+            font-family: 'JetBrains Mono', monospace;
+            background: #000;
+            color: var(--cyan);
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            font-weight: 800;
+            border: 1px solid rgba(0, 242, 255, 0.2);
+        }
+
+        .label-pill {
+            background: var(--gold); color: black;
+            padding: 2px 12px; border-radius: 8px;
+            font-weight: 900; font-size: 0.65rem;
+            text-transform: uppercase;
+        }
+
+        .feynman-quote {
+            background: rgba(191, 0, 255, 0.05);
+            border-left: 4px solid var(--purple);
+            padding: 15px;
+            border-radius: 0 20px 20px 0;
+            font-style: italic;
+            font-size: 0.85rem;
+        }
+
+        @media print {
+            body { background: white !important; color: black !important; }
+            .glass-panel { background: white !important; border: 2px solid #eee !important; box-shadow: none !important; break-inside: avoid; }
+            .formula-box { background: #f8f8f8 !important; color: black !important; border: 1px solid #ccc !important; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        }
+
+        .tdah-focus { border: 2px dashed rgba(255, 255, 255, 0.1); }
+    </style>
+</head>
+<body x-data="{ cycle: 'Focus', time: '10:00' }">
+
+    <div class="max-w-[1500px] mx-auto space-y-10">
+        
+        <!-- HEADER DINÁMICO -->
+        <header class="flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="text-left space-y-2">
+                <h1 class="text-6xl text-white">FÍSICA <span class="text-cyan-400">INTELLIGENT MAP</span></h1>
+                <p class="text-xl text-sky-400 tracking-[0.3em] font-light">Energía, Trabajo y Potencia // v4.0</p>
+            </div>
+            <div class="flex items-center gap-4 bg-slate-900/80 p-4 rounded-3xl border border-cyan-500/30">
+                <div class="text-right">
+                    <span class="block text-[10px] uppercase font-black text-cyan-400">Ciclo de Perito</span>
+                    <span class="text-2xl font-mono font-black" x-text="cycle + ': ' + time">Focus: 10:00</span>
+                </div>
+                <i class="fas fa-brain text-3xl text-cyan-400 animate-pulse"></i>
+            </div>
+        </header>
+
+        <!-- FILA 1: CIMIENTOS Y ACTORES -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- EL ESCENARIO (SISTEMA/ENTORNO) -->
+            <div class="lg:col-span-4 glass-panel neon-glow-purple space-y-6">
+                <h2 class="text-3xl text-purple-400"><i class="fas fa-film mr-3"></i>El Escenario</h2>
+                <div class="space-y-4">
+                    <div class="p-4 bg-white/5 rounded-2xl border-l-4 border-cyan-400">
+                        <b class="text-xs uppercase text-cyan-400 block mb-1">Sistema</b>
+                        <p class="text-xs">Lo que estudias. <span class="italic opacity-60">Ej: El balón en movimiento.</span></p>
+                    </div>
+                    <div class="p-4 bg-white/5 rounded-2xl border-l-4 border-purple-400">
+                        <b class="text-xs uppercase text-purple-400 block mb-1">Entorno</b>
+                        <p class="text-xs">Todo lo demás. <span class="italic opacity-60">Ej: El aire, el césped, el público.</span></p>
+                    </div>
+                </div>
+                <div class="feynman-quote">
+                    "La energía es la moneda del universo. Sin ella, no hay cambio."
+                </div>
+            </div>
+
+            <!-- LOS ACTORES (TIPOS DE ENERGÍA) -->
+            <div class="lg:col-span-8 glass-panel neon-glow-cyan">
+                <h2 class="text-3xl text-cyan-400 mb-6"><i class="fas fa-masks-theater mr-3"></i>Los Rostros de la Energía</h2>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                    <div class="p-4 bg-orange-500/10 border border-orange-500/30 rounded-2xl text-center">
+                        <i class="fas fa-fire text-orange-500 text-xl mb-2"></i>
+                        <span class="block text-[9px] font-black uppercase">Térmica</span>
+                    </div>
+                    <div class="p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl text-center">
+                        <i class="fas fa-flask text-emerald-500 text-xl mb-2"></i>
+                        <span class="block text-[9px] font-black uppercase">Química</span>
+                    </div>
+                    <div class="p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-2xl text-center">
+                        <i class="fas fa-sun text-yellow-500 text-xl mb-2"></i>
+                        <span class="block text-[9px] font-black uppercase">Luminosa</span>
+                    </div>
+                    <div class="p-4 bg-blue-500/10 border border-blue-500/30 rounded-2xl text-center">
+                        <i class="fas fa-volume-high text-blue-500 text-xl mb-2"></i>
+                        <span class="block text-[9px] font-black uppercase">Sonora</span>
+                    </div>
+                    <div class="p-4 bg-indigo-500/10 border border-indigo-500/30 rounded-2xl text-center">
+                        <i class="fas fa-bolt text-indigo-500 text-xl mb-2"></i>
+                        <span class="block text-[9px] font-black uppercase">Eléctrica</span>
+                    </div>
+                    <div class="p-4 bg-rose-500/10 border border-rose-500/30 rounded-2xl text-center">
+                        <i class="fas fa-atom text-rose-500 text-xl mb-2"></i>
+                        <span class="block text-[9px] font-black uppercase">Nuclear</span>
+                    </div>
+                </div>
+                <div class="mt-6 flex gap-4">
+                    <div class="flex-1 p-3 bg-cyan-500/5 rounded-xl border border-cyan-500/20 text-[10px] text-center">
+                        <b class="text-cyan-400 block mb-1 uppercase">Transferencia Vía 1: TRABAJO</b>
+                        Fuerza + Desplazamiento
+                    </div>
+                    <div class="flex-1 p-3 bg-orange-500/5 rounded-xl border border-orange-500/20 text-[10px] text-center">
+                        <b class="text-orange-400 block mb-1 uppercase">Transferencia Vía 2: CALOR</b>
+                        Diferencia de Temperatura
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FILA 2: EL TRABAJO Y SUS CASOS -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div class="lg:col-span-7 glass-panel neon-glow-cyan space-y-6">
+                <div class="flex justify-between items-start">
+                    <h2 class="text-4xl text-cyan-400 underline decoration-cyan-400/20">El Trabajo (W)</h2>
+                    <span class="label-pill">Julio (J) = N · m</span>
+                </div>
+                <div class="formula-box text-4xl py-8">
+                    \[ W = F \cdot \Delta x \cdot \cos(\alpha) \]
+                </div>
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="p-4 bg-emerald-500/10 rounded-2xl border border-emerald-500/30 text-center">
+                        <i class="fas fa-plus text-emerald-400 mb-2"></i>
+                        <b class="block text-[10px] text-emerald-400">POSITIVO</b>
+                        <p class="text-[9px] opacity-60 mt-1">Fuerza a favor (0º)</p>
+                    </div>
+                    <div class="p-4 bg-red-500/10 rounded-2xl border border-red-500/30 text-center">
+                        <i class="fas fa-minus text-red-400 mb-2"></i>
+                        <b class="block text-[10px] text-red-400">NEGATIVO</b>
+                        <p class="text-[9px] opacity-60 mt-1">Fuerza en contra (180º)</p>
+                    </div>
+                    <div class="p-4 bg-slate-500/10 rounded-2xl border border-slate-500/30 text-center">
+                        <i class="fas fa-slash text-slate-400 mb-2"></i>
+                        <b class="block text-[10px] text-slate-400">NULO</b>
+                        <p class="text-[9px] opacity-60 mt-1">Perpendicular (90º)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- POTENCIA -->
+            <div class="lg:col-span-5 glass-panel neon-glow-purple space-y-6">
+                <h2 class="text-4xl text-purple-400">Potencia (P)</h2>
+                <p class="text-sm italic text-purple-200">"La prisa por transferir energía"</p>
+                <div class="formula-box text-3xl" style="color: var(--purple);">
+                    \[ P = \frac{W}{t} \]
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="p-4 bg-slate-900 rounded-2xl border border-purple-500/20 text-center">
+                        <span class="text-xs font-black text-white">Watio (W)</span>
+                        <p class="text-[9px] opacity-50 mt-1">1 J / 1 s</p>
+                    </div>
+                    <div class="p-4 bg-slate-900 rounded-2xl border border-purple-500/20 text-center">
+                        <span class="text-xs font-black text-purple-400">Caballo (CV)</span>
+                        <p class="text-[9px] opacity-50 mt-1">1 CV = 735 W</p>
+                    </div>
+                </div>
+                <div class="bg-purple-900/20 p-4 rounded-2xl text-[10px] border-l-4 border-purple-500">
+                    <i class="fas fa-lightbulb mr-2"></i> <b>Marketing de Watt:</b> Inventó el CV para que la gente entendiera la potencia comparándola con caballos reales.
+                </div>
+            </div>
+        </div>
+
+        <!-- FILA 3: LA HUCHA MECÁNICA Y CONSERVACIÓN -->
+        <div class="glass-panel neon-glow-success space-y-10">
+            <div class="flex items-center justify-between">
+                <h2 class="text-5xl text-success"><i class="fas fa-vault mr-4 text-emerald-400"></i>La Hucha Mecánica</h2>
+                <div class="bg-success/10 px-8 py-3 rounded-full border border-success/30 text-2xl font-black text-success">
+                    \[ E_m = E_c + E_p + E_{pe} \]
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- CINÉTICA -->
+                <div class="p-6 bg-white/5 rounded-[35px] border border-white/10 space-y-4">
+                    <h4 class="text-2xl text-red-400"><i class="fas fa-running mr-2"></i>Cinética</h4>
+                    <div class="formula-box">\[ E_c = \frac{1}{2} m v^2 \]</div>
+                    <div class="p-3 bg-red-500/10 rounded-xl border border-red-500/20 text-[9px] text-red-300 italic">
+                        ¡CUIDADO! Si duplicas velocidad, la energía es 4 veces mayor.
+                    </div>
+                </div>
+                <!-- POTENCIAL GRAV -->
+                <div class="p-6 bg-white/5 rounded-[35px] border border-white/10 space-y-4">
+                    <h4 class="text-2xl text-emerald-400"><i class="fas fa-mountain mr-2"></i>Potencial</h4>
+                    <div class="formula-box" style="color: var(--success);">\[ E_p = m \cdot g \cdot h \]</div>
+                    <p class="text-[9px] text-center opacity-50 italic">g = 9.8 m/s² | h desde el suelo</p>
+                </div>
+                <!-- POTENCIAL ELÁSTICA -->
+                <div class="p-6 bg-white/5 rounded-[35px] border border-white/10 space-y-4">
+                    <h4 class="text-2xl text-purple-400"><i class="fas fa-bow-arrow mr-2"></i>Elástica</h4>
+                    <div class="formula-box" style="color: var(--purple);">\[ E_{pe} = \frac{1}{2} k x^2 \]</div>
+                    <p class="text-[9px] text-center opacity-50 italic">k: constante elástica | x: estiramiento</p>
+                </div>
+            </div>
+
+            <!-- DRAMA A-B-C -->
+            <div class="mt-8 p-8 bg-slate-900/50 rounded-[40px] border-2 border-dashed border-emerald-500/20">
+                <h4 class="text-center text-emerald-400 mb-8 tracking-[0.3em]">El Drama en 3 Actos (Conservación)</h4>
+                <div class="grid grid-cols-3 gap-10 text-center">
+                    <div class="space-y-2">
+                        <span class="text-3xl">🏠</span>
+                        <b class="block text-xs uppercase">A: Arriba</b>
+                        <p class="text-[10px] text-gray-500 font-mono">v=0 → Ep MAX</p>
+                    </div>
+                    <div class="space-y-2">
+                        <span class="text-3xl">🎢</span>
+                        <b class="block text-xs uppercase">B: Medio</b>
+                        <p class="text-[10px] text-gray-500 font-mono">Ep se vuelve Ec</p>
+                    </div>
+                    <div class="space-y-2">
+                        <span class="text-3xl">🌍</span>
+                        <b class="block text-xs uppercase">C: Suelo</b>
+                        <p class="text-[10px] text-gray-500 font-mono">h=0 → Ec MAX</p>
+                    </div>
+                </div>
+                <div class="mt-8 text-center font-mono text-xl text-emerald-400 bg-emerald-500/5 py-4 rounded-2xl border border-emerald-500/20">
+                    \[ E_{m,A} = E_{m,B} = E_{m,C} \]
+                </div>
+            </div>
+        </div>
+
+        <!-- FILA FINAL: ROZAMIENTO, RENDIMIENTO Y ERRORES -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div class="lg:col-span-8 grid md:grid-cols-2 gap-8">
+                <!-- ROZAMIENTO -->
+                <div class="glass-panel border-l-8 border-danger space-y-4">
+                    <h2 class="text-3xl text-danger"><i class="fas fa-user-ninja mr-3"></i>El Ladrón Invisble</h2>
+                    <p class="text-[11px] leading-relaxed italic text-danger/80">"El rozamiento roba energía mecánica y la convierte en calor degradado."</p>
+                    <div class="formula-box text-xl" style="color: var(--danger);">
+                        \[ W_{roz} = \Delta E_m = E_{mf} - E_{mi} \]
+                    </div>
+                    <div class="p-3 bg-red-500/10 rounded-xl border border-red-500/20 text-[9px] font-bold text-center">
+                        RECORDATORIO: El Wroz siempre es NEGATIVO.
+                    </div>
+                </div>
+                <!-- RENDIMIENTO -->
+                <div class="glass-panel border-l-8 border-gold space-y-4">
+                    <h2 class="text-3xl text-gold"><i class="fas fa-gauge-high mr-3"></i>Rendimiento (η)</h2>
+                    <p class="text-[11px] leading-relaxed italic text-gold/80">"Ninguna máquina es 100% perfecta. Siempre se pierde algo por el camino."</p>
+                    <div class="formula-box text-xl" style="color: var(--gold);">
+                        \[ \eta = \frac{P_{útil}}{P_{total}} \cdot 100 \]
+                    </div>
+                </div>
+            </div>
+
+            <!-- SEMÁFORO DE ERRORES (TDAH ASSIST) -->
+            <div class="lg:col-span-4 glass-panel bg-red-900/10 border-2 border-red-500/30">
+                <h2 class="text-2xl text-red-500 text-center mb-6">🚦 Errores Fatales</h2>
+                <ul class="text-[10px] space-y-4">
+                    <li class="flex gap-3">🔴 <span><b>Gramo-phobia:</b> Masa siempre en <b>kg</b>. ¡Divide g entre 1000!</span></li>
+                    <li class="flex gap-3">🟡 <span><b>Velocidad Turbo:</b> km/h siempre a <b>m/s</b>. ¡Divide entre 3.6!</span></li>
+                    <li class="flex gap-3">🟢 <span><b>Raíz Cuadrada:</b> Al despejar <b>v</b> en cinética, no olvides la raíz final.</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- FOOTER: RECETA DE RESOLUCIÓN -->
+        <footer class="glass-panel bg-gradient-to-r from-cyan-900/20 to-purple-900/20 border-none text-center">
+            <h2 class="text-4xl mb-10 text-white">Receta del Éxito en Problemas</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="space-y-2">
+                    <span class="label-pill bg-cyan-400">Datos</span>
+                    <p class="text-[10px] opacity-60">Lista m, h, v... ¡Pasa a S.I.!</p>
+                </div>
+                <div class="space-y-2">
+                    <span class="label-pill bg-purple-400">Puntos</span>
+                    <p class="text-[10px] opacity-60">Elige Punto A y B para comparar.</p>
+                </div>
+                <div class="space-y-2">
+                    <span class="label-pill bg-emerald-400">Plantea</span>
+                    <p class="text-[10px] opacity-60">Em1 + Wext = Em2</p>
+                </div>
+                <div class="space-y-2">
+                    <span class="label-pill bg-rose-400">Opera</span>
+                    <p class="text-[10px] opacity-60">Despeja con cuidado matemático.</p>
+                </div>
+            </div>
+            <div class="mt-12 pt-8 border-t border-white/5 flex justify-between items-center text-[9px] uppercase tracking-[0.4em] text-gray-600">
+                <span>Inteligencia Física v4.0</span>
+                <span class="text-cyan-500/50">Focus 10' // Relax 4'</span>
+                <span>Edu-Premium Certified</span>
+            </div>
+        </footer>
+
+    </div>
+
+</body>
+</html>

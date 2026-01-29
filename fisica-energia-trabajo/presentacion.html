@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inteligencia Física: Masterclass Total</title>
+    
+    <!-- Reveal.js Core -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/dracula.min.css">
+    
+    <!-- Tailwind & MathJax -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Outfit:wght@300;400;700;900&family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --cyan: #00f2ff;
+            --purple: #bf00ff;
+            --bg-dark: #050608;
+            --success: #50fa7b;
+            --gold: #ffb86c;
+            --dark-card: #0f172a;
+        }
+        
+        body { background: var(--bg-dark); overflow: hidden; }
+        .reveal { font-family: 'Outfit', sans-serif; background: var(--bg-dark); }
+
+        /* Tipografía Cine 16:9 Optimizada */
+        .reveal h1 { font-size: 3.5em; color: var(--cyan); text-transform: uppercase; font-weight: 900; text-shadow: 0 0 60px rgba(0, 242, 255, 0.8); line-height: 0.9; }
+        .reveal h2 { font-family: 'Bangers', cursive; font-size: 3.2em; color: var(--cyan); letter-spacing: 2px; }
+        .reveal h3 { font-size: 2em; color: var(--purple); font-weight: 900; margin-bottom: 20px; text-transform: uppercase; }
+        .reveal section { font-size: 40px; line-height: 1.2; text-align: center; height: 100%; display: flex !important; flex-direction: column; justify-content: center; align-items: center; } 
+        
+        .huge-quote {
+            font-size: 1.3em;
+            line-height: 1.1;
+            font-weight: 800;
+            color: white;
+            text-align: center;
+            max-width: 95%;
+            margin: 0 auto;
+        }
+
+        .highlight-text { color: var(--cyan); text-shadow: 0 0 30px var(--cyan); }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(30px);
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            padding: 40px !important;
+            width: 100%;
+        }
+
+        .formula-hero {
+            font-family: 'Fira Code', monospace;
+            background: #000;
+            color: var(--cyan);
+            padding: 30px 80px;
+            border-radius: 40px;
+            font-size: 2.2em !important;
+            border: 4px solid var(--cyan);
+            box-shadow: 0 0 80px rgba(0, 242, 255, 0.3);
+            margin: 20px auto;
+            width: fit-content;
+        }
+
+        .icon-hero { font-size: 6em; color: var(--cyan); margin-bottom: 15px; filter: drop-shadow(0 0 30px var(--cyan)); }
+
+        .joke-card {
+            background: var(--dark-card);
+            border: 6px solid var(--gold);
+            border-radius: 60px;
+            padding: 60px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 90%;
+            box-shadow: 0 0 80px rgba(255, 184, 108, 0.15);
+        }
+        .joke-punchline { 
+            color: var(--gold); 
+            font-weight: 900; 
+            margin-top: 40px; 
+            font-size: 1.8em; 
+            text-transform: uppercase; 
+            border-top: 4px dashed rgba(255, 184, 108, 0.3);
+            padding-top: 30px;
+            width: 100%;
+        }
+
+        .step-tag {
+            background: var(--gold); color: black;
+            padding: 8px 30px; border-radius: 15px;
+            font-weight: 900; font-size: 0.6em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        @media print { * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; } }
+    </style>
+</head>
+<body>
+
+    <div class="reveal">
+        <div class="slides">
+            
+            <!-- 1. PORTADA -->
+            <section data-background-gradient="radial-gradient(#1a1b26, #000000)">
+                <div class="flex flex-col items-center">
+                    <i class="fas fa-bolt-lightning text-[10rem] text-cyan-400 mb-8 animate-pulse"></i>
+                    <h1 class="tracking-tighter underline decoration-purple-500 decoration-8 underline-offset-8">INTELIGENCIA<br><span class="text-white">FÍSICA</span></h1>
+                    <div class="h-2 w-full max-w-4xl bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 rounded-full my-10 shadow-[0_0_40px_var(--cyan)]"></div>
+                    <h3 class="text-gray-400 tracking-[1em] font-light uppercase text-sm italic">Dominando la Energía & el Trabajo</h3>
+                </div>
+            </section>
+
+            <!-- BLOQUE 1: ESCENARIO -->
+            <section>
+                <section data-background-color="#0a0b10">
+                    <h2 class="text-[8rem] mb-8 uppercase font-black tracking-tighter">ESCENARIO</h2>
+                    <div class="grid grid-cols-3 gap-6 w-full px-10">
+                        <div class="p-6 bg-white/5 rounded-2xl border-t-4 border-cyan-500">
+                            <i class="fas fa-search-plus text-cyan-400 text-4xl mb-2"></i>
+                            <p class="text-xl font-black uppercase">AISLAR</p>
+                        </div>
+                        <div class="p-6 bg-white/5 rounded-2xl border-t-4 border-purple-500">
+                            <i class="fas fa-eye text-purple-400 text-4xl mb-2"></i>
+                            <p class="text-xl font-black uppercase">OBSERVAR</p>
+                        </div>
+                        <div class="p-6 bg-white/5 rounded-2xl border-t-4 border-emerald-500">
+                            <i class="fas fa-calculator text-emerald-400 text-4xl mb-2"></i>
+                            <p class="text-xl font-black uppercase">MEDIR</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h3 class="text-6xl mb-8 text-cyan-400">El Sistema</h3>
+                    <div class="glass-panel">
+                        <i class="fas fa-crosshairs text-cyan-400 text-[8rem] mb-6"></i>
+                        <p class="text-3xl leading-relaxed">"Es el cuerpo objeto de nuestro estudio. <br><span class="text-white font-black underline decoration-cyan-500 decoration-4 uppercase">Nada existe fuera</span> para el perito."</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h3 class="text-6xl mb-8 text-purple-400">El Entorno</h3>
+                    <div class="glass-panel border-purple-500/30">
+                        <i class="fas fa-globe-europe text-purple-400 text-[8rem] mb-6"></i>
+                        <p class="text-3xl leading-relaxed">"Todo lo que puede interaccionar con el sistema. <br><span class="text-white font-black underline decoration-purple-500 decoration-4 uppercase">Es el resto del mapa.</span>"</p>
+                    </div>
+                </section>
+
+                <section data-background-color="#000">
+                    <h2 class="text-white text-7xl mb-10 uppercase font-black tracking-tighter">La Regla de Oro</h2>
+                    <div class="huge-quote highlight-text italic">
+                        "Si algo tiene la <span class="text-white uppercase">Capacidad de producir cambios</span>, entonces tiene energía."
+                    </div>
+                </section>
+            </section>
+
+            <!-- BLOQUE 2: LOS ACTORES -->
+            <section>
+                <section data-background-color="#050608">
+                    <h2 class="text-[8rem] mb-10">LOS ACTORES</h2>
+                    <div class="flex justify-center gap-10">
+                        <i class="fas fa-fire-flame-curved text-orange-500 text-6xl"></i>
+                        <i class="fas fa-flask-vial text-emerald-500 text-6xl"></i>
+                        <i class="fas fa-plug-circle-bolt text-indigo-400 text-6xl"></i>
+                        <i class="fas fa-sun text-yellow-400 text-6xl"></i>
+                        <i class="fas fa-atom text-rose-500 text-6xl"></i>
+                    </div>
+                </section>
+
+                <section>
+                    <h3 class="text-orange-500 text-7xl uppercase font-black">🔥 Térmica</h3>
+                    <div class="huge-quote">"Energía de la <span class="text-orange-400 uppercase font-black">Vibración</span>. <br>A más meneo de átomos, más calor."</div>
+                    <i class="fas fa-fire-flame-curved text-[8rem] text-orange-500 mt-8"></i>
+                </section>
+
+                <section>
+                    <h3 class="text-emerald-500 text-7xl uppercase font-black">🧪 Química</h3>
+                    <div class="huge-quote">"Guardada en los <span class="text-emerald-400 uppercase font-black">Enlaces</span>. <br>Comida, pilas y gasolina."</div>
+                    <i class="fas fa-battery-three-quarters text-[8rem] text-emerald-400 mt-8"></i>
+                </section>
+
+                <section>
+                    <h3 class="text-indigo-400 text-7xl uppercase font-black">⚡ Eléctrica</h3>
+                    <div class="huge-quote">"Flujo de <span class="text-indigo-400 uppercase font-black">Electrones</span>. <br>Pura potencia para tu tecnología."</div>
+                    <i class="fas fa-plug-circle-bolt text-[8rem] text-indigo-400 mt-8"></i>
+                </section>
+
+                <section data-background-color="#000">
+                    <h3 class="text-rose-500 text-7xl uppercase font-black">⚛️ Nuclear</h3>
+                    <div class="huge-quote">"Fuerza del <span class="text-rose-400 uppercase font-black">Núcleo</span>. <br>El motor de las estrellas."</div>
+                    <i class="fas fa-atom text-[8rem] text-rose-500 mt-8 animate-spin-slow"></i>
+                </section>
+            </section>
+
+            <!-- BLOQUE 3: TRANSFERENCIA -->
+            <section>
+                <section data-background-color="#1a1b26">
+                    <h2 class="text-8xl mb-8 uppercase font-black">EL PAGO</h2>
+                    <p class="text-4xl text-slate-400 italic">¿Cómo se transfiere?</p>
+                </section>
+
+                <section>
+                    <h3 class="text-cyan-400 text-7xl uppercase font-black underline">Trabajo (W)</h3>
+                    <div class="huge-quote mb-12">"Intercambio por <span class="highlight-text uppercase font-black">Fuerza</span>. <br>Empujas y consigues movimiento."</div>
+                    <i class="fas fa-hand-fist text-[10rem] text-cyan-400"></i>
+                </section>
+
+                <section>
+                    <h3 class="text-orange-400 text-7xl uppercase font-black underline">Calor (Q)</h3>
+                    <div class="huge-quote mb-12">"Intercambio por <span class="text-orange-400 uppercase font-black">Temperatura</span>."</div>
+                    <i class="fas fa-temperature-full text-[10rem] text-orange-500"></i>
+                </section>
+            </section>
+
+            <!-- BLOQUE 4: TRABAJO (W) -->
+            <section>
+                <section data-background-color="#000">
+                    <h2 class="text-cyan-400 text-[10rem] font-black">TRABAJO</h2>
+                    <div class="formula-hero">
+                        \[ W = F \cdot \Delta x \cdot \cos(\alpha) \]
+                    </div>
+                </section>
+
+                <section>
+                    <h3 class="text-6xl mb-10 uppercase font-black">El Coseno</h3>
+                    <div class="huge-quote text-slate-300 italic">"Filtro de eficiencia del esfuerzo."</div>
+                    <div class="grid grid-cols-2 gap-10 mt-12 w-full px-10">
+                        <div class="p-8 bg-emerald-500/10 border-4 border-emerald-500/30 rounded-3xl">
+                            <b class="text-emerald-400 text-3xl block mb-2 font-mono uppercase font-black">cos(0º) = 1</b>
+                            <p class="text-xl font-bold">Máximo Beneficio</p>
+                        </div>
+                        <div class="p-8 bg-red-500/10 border-4 border-red-500/30 rounded-3xl">
+                            <b class="text-red-400 text-3xl block mb-2 font-mono uppercase font-black">cos(180º) = -1</b>
+                            <p class="text-xl font-bold">Robo de Energía</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section data-background-color="#450a0a">
+                    <h2 class="text-white text-7xl mb-10 font-black tracking-tighter uppercase">Trabajo Nulo</h2>
+                    <div class="huge-quote mb-8">"Fuerza <span class="text-cyan-400">ARRIBA</span> + Movimiento <span class="text-cyan-400">ADELANTE</span>."</div>
+                    <div class="formula-hero border-white text-white">
+                        \[ \cos(90^\circ) = 0 \implies W = 0 \]
+                    </div>
+                    <p class="mt-8 text-2xl font-black uppercase text-white animate-pulse underline tracking-widest">Esfuerzo ≠ Trabajo Físico</p>
+                </section>
+            </section>
+
+            <!-- BLOQUE 5: LA HUCHA -->
+            <section>
+                <section data-background-color="#0a100a">
+                    <h2 class="text-emerald-400 text-[8rem] font-black uppercase">La Hucha</h2>
+                    <div class="mt-12 p-10 bg-white/5 border-8 border-dashed border-emerald-500 rounded-[60px]">
+                        <p class="text-7xl font-black">\( E_m = E_c + E_p + E_{pe} \)</p>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="grid grid-cols-2 gap-10 items-center w-full px-10">
+                        <i class="fas fa-person-running text-red-400 text-[10rem]"></i>
+                        <div class="text-left space-y-8 glass-panel border-red-500/30">
+                            <h3 class="text-red-400 text-7xl mb-0 font-black uppercase">Ec</h3>
+                            <div class="formula-hero text-4xl mx-0">\[ \frac{1}{2} m v^2 \]</div>
+                            <p class="text-2xl font-bold uppercase tracking-widest text-slate-400 italic">Energía de la Velocidad</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section data-background-color="#000">
+                    <h2 class="text-red-500 text-[8rem] mb-10 animate-pulse font-black uppercase tracking-tighter">¡PELIGRO: v²!</h2>
+                    <div class="grid grid-cols-2 gap-10 w-full px-10">
+                        <div class="p-10 bg-red-900/20 border-4 border-red-500 rounded-[50px]">
+                            <span class="text-2xl font-light uppercase tracking-widest">Velocidad x2</span><br>
+                            <span class="text-[8rem] font-black text-white leading-none tracking-tighter">Ec x4</span>
+                        </div>
+                        <div class="p-10 bg-red-900/20 border-4 border-red-500 rounded-[50px]">
+                            <span class="text-2xl font-light uppercase tracking-widest">Velocidad x3</span><br>
+                            <span class="text-[8rem] font-black text-white leading-none tracking-tighter">Ec x9</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="grid grid-cols-2 gap-10 items-center w-full px-10">
+                        <div class="text-left space-y-8 glass-panel border-emerald-500/30">
+                            <h3 class="text-emerald-400 text-7xl mb-0 font-black uppercase">Ep</h3>
+                            <div class="formula-hero border-emerald-500 text-emerald-500 text-4xl mx-0">\[ m \cdot g \cdot h \]</div>
+                            <p class="text-2xl font-bold uppercase tracking-widest text-slate-400 italic">Monedas en Reserva</p>
+                        </div>
+                        <i class="fas fa-mountain-sun text-emerald-400 text-[10rem]"></i>
+                    </div>
+                </section>
+            </section>
+
+            <!-- BLOQUE 6: CONSERVACIÓN -->
+            <section>
+                <section data-background-color="#1a1b26">
+                    <h2 class="text-amber-400 text-[8rem] font-black uppercase tracking-tighter">Eterna</h2>
+                    <div class="huge-quote highlight-text mb-12 uppercase font-black">"La energía total nunca cambia."</div>
+                    <div class="text-[8rem] font-black text-white underline decoration-[15px] decoration-amber-500">\( E_{m1} = E_{m2} \)</div>
+                </section>
+
+                <section data-background-color="#0a0b10">
+                    <h2 class="text-red-500 text-8xl mb-8 font-black uppercase">ACTO A</h2>
+                    <div class="grid grid-cols-2 gap-10 items-center px-10 w-full">
+                        <i class="fas fa-house text-white text-[12rem]"></i>
+                        <div class="glass-panel border-red-500/30">
+                            <p class="text-5xl font-black italic tracking-tighter uppercase"><span class="text-red-500">v = 0</span> → Ep MAX</p>
+                            <div class="formula-hero border-red-500 text-red-500 text-4xl mx-0">\( E_m = mgh \)</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section data-background-color="#0a0b10">
+                    <h2 class="text-amber-500 text-8xl mb-8 font-black uppercase">ACTO B</h2>
+                    <div class="grid grid-cols-2 gap-10 items-center px-10 w-full">
+                        <i class="fas fa-roller-coaster text-white text-[12rem]"></i>
+                        <div class="glass-panel border-amber-500/30">
+                            <p class="text-5xl font-black italic tracking-tighter uppercase">VUELO LIBRE</p>
+                            <div class="formula-hero border-amber-500 text-amber-500 text-4xl mx-0">\( E_m = Ec + Ep \)</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section data-background-color="#0a0b10">
+                    <h2 class="text-emerald-500 text-8xl mb-8 font-black uppercase">ACTO C</h2>
+                    <div class="grid grid-cols-2 gap-10 items-center px-10 w-full">
+                        <i class="fas fa-earth-europe text-white text-[12rem]"></i>
+                        <div class="glass-panel border-emerald-500/30">
+                            <p class="text-5xl font-black italic tracking-tighter uppercase"><span class="text-emerald-500">h = 0</span> → Ec MAX</p>
+                            <div class="formula-hero border-emerald-500 text-emerald-500 text-4xl mx-0">\( E_m = \frac{1}{2}mv^2 \)</div>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <!-- BLOQUE 7: POTENCIA -->
+            <section>
+                <section data-background-color="#221133">
+                    <h2 class="text-gold text-[10rem] font-black tracking-tighter uppercase">Potencia</h2>
+                    <div class="formula-hero border-gold text-gold">\[ P = \frac{W}{t} \]</div>
+                    <p class="text-4xl text-slate-300 italic mt-8 tracking-[0.4em]">¿QUÉ TAN RÁPIDO ERES?</p>
+                </section>
+
+                <section data-background-color="#000">
+                    <h2 class="text-gold text-6xl mb-10 font-black uppercase tracking-tighter underline decoration-gold decoration-4 underline-offset-[20px]">Marketing Real</h2>
+                    <div class="huge-quote leading-tight italic text-slate-200">"James Watt no inventó el caballo, lo usó para <span class="text-white font-black uppercase underline decoration-4">Vender</span>. Dijo:"</div>
+                    <div class="highlight-text text-[6rem] mt-12 font-black uppercase leading-none tracking-tighter">**"MI MÁQUINA TIENE<br>50 CABALLOS"**</div>
+                    <p class="mt-12 text-4xl font-black text-white bg-white/5 px-10 py-4 rounded-full border-4 border-gold inline-block tracking-widest">1 CV = 735 W</p>
+                </section>
+            </section>
+
+            <!-- BLOQUE 8: COMEDY CLUB -->
+            <section data-background-color="#0f172a">
+                <i class="fas fa-face-laugh-beam text-[12rem] text-gold mb-12 animate-bounce"></i>
+                <h2 class="text-gold text-[9rem] font-black tracking-tighter uppercase">Comedy Club</h2>
+            </section>
+
+            <section data-background-color="#0f172a">
+                <div class="joke-card">
+                    <i class="fas fa-book-skull text-[10rem] text-gold mb-10"></i>
+                    <p class="text-5xl font-black text-white italic leading-tight">"¿Por qué el libro de física se suicidó?"</p>
+                    <div class="joke-punchline underline decoration-8">¡PORQUE TENÍA DEMASIADOS PROBLEMAS!</div>
+                </div>
+            </section>
+
+            <section data-background-color="#0f172a">
+                <div class="joke-card">
+                    <i class="fas fa-beer-mug-empty text-[10rem] text-gold mb-10"></i>
+                    <p class="text-5xl font-black text-white italic leading-tight">"Un Julio (J) entra en un bar..."</p>
+                    <div class="joke-punchline underline decoration-8">"¡TÍO, ERES UN VATIO!"</div>
+                </div>
+            </section>
+
+            <!-- CIERRE TRIUNFAL -->
+            <section data-background-gradient="linear-gradient(#0a0b10, #1a1b26)">
+                <i class="fas fa-award text-[15rem] text-gold mb-12 animate-pulse"></i>
+                <h2 class="text-[10rem] font-black mb-10 tracking-tighter uppercase text-white leading-none">Operación<br>Éxito</h2>
+                <div class="flex gap-10">
+                    <button onclick="location.reload()" class="bg-white text-black px-16 py-6 rounded-full font-black text-2xl hover:bg-cyan-400 transition">REBOOT</button>
+                    <button onclick="alert('🏆 Certificación Alcanzada')" class="bg-cyan-500 text-black px-16 py-6 rounded-full font-black text-2xl hover:scale-110 transition">EXIT</button>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Reveal.js Core JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let deck = new Reveal({
+                navigationMode: 'linear',
+                progress: true,
+                hash: true,
+                center: true,
+                transition: 'slide',
+                backgroundTransition: 'zoom',
+                width: 1600,
+                height: 900,
+                margin: 0.05,
+                minScale: 0.2,
+                maxScale: 3.0,
+                controls: true,
+                controlsLayout: 'edges',
+                touch: true,
+                slideNumber: 'c/t'
+            });
+            deck.initialize();
+        });
+    </script>
+</body>
+</html>
