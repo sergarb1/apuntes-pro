@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log&iacute;stica y Almacenamiento | Apuntes Maestros</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.2/marked.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <!-- Bloques de Datos -->
+    <script src="data/intro.js"></script>
+    <script src="data/clientes.js"></script>
+    <script src="data/merchan.js"></script>
+    <script src="data/cobro.js"></script>
+    <script src="data/abc.js"></script>
+    <script src="data/wilson.js"></script>
+    <script src="data/stocks.js"></script>
+    <script src="data/ventas.js"></script>
+
+    <style>
+        body { font-family: 'Outfit', sans-serif; scroll-behavior: smooth; }
+        .prose h1 { font-size: 3rem; font-weight: 800; margin-bottom: 2rem; color: #1e293b; letter-spacing: -0.05em; line-height: 1; }
+        .prose h2 { font-size: 1.875rem; font-weight: 700; margin-top: 4rem; margin-bottom: 1.5rem; color: #334155; border-bottom: 4px solid #38bdf8; width: fit-content; padding-bottom: 0.25rem; }
+        .prose h3 { font-size: 1.5rem; font-weight: 600; margin-top: 2rem; margin-bottom: 1rem; color: #475569; }
+        .prose p { margin-bottom: 1.5rem; color: #334155; line-height: 1.8; font-size: 1.125rem; }
+        .prose ul { list-style-type: none; padding-left: 0; margin-bottom: 1.5rem; }
+        .prose li { position: relative; padding-left: 1.75rem; margin-bottom: 0.75rem; }
+        .prose li::before { content: "→"; position: absolute; left: 0; color: #38bdf8; font-weight: bold; }
+        
+        .nextra-callout {
+            padding: 1.5rem; margin: 2rem 0; border-radius: 1.5rem; display: flex; gap: 1rem; border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+        }
+        .callout-info { background: #f0f9ff; border-left: 6px solid #38bdf8; }
+        .callout-warning { background: #fffbeb; border-left: 6px solid #f59e0b; }
+        .callout-error { background: #fef2f2; border-left: 6px solid #ef4444; }
+        .callout-exercise { background: #f0fdf4; border-left: 6px solid #10b981; }
+        .callout-trick { background: #fff7ed; border-left: 6px solid #f97316; }
+        .callout-formula { background: #eef2ff; border-left: 6px solid #6366f1; font-family: monospace; }
+        
+        .sidebar-item-active { background-color: #f0f9ff; color: #0ea5e9; font-weight: 700; border-right: 4px solid #0ea5e9; }
+        .movement-pause { background: #f8fafc; border: 2px dashed #cbd5e1; padding: 2rem; border-radius: 2rem; margin: 3rem 0; text-align: center; }
+        
+        @media (max-width: 1024px) { .sidebar { display: none; } }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+
+    <nav class="sticky top-0 z-50 w-full border-b bg-white/90 backdrop-blur-lg">
+        <div class="mx-auto flex h-20 max-w-[1440px] items-center justify-between px-8">
+            <div class="flex items-center gap-3 font-extrabold text-2xl tracking-tighter">
+                <div class="bg-sky-500 text-white p-2 rounded-xl shadow-lg shadow-sky-200">
+                    <i class="fa-solid fa-truck-ramp-box"></i>
+                </div>
+                <span>LOG&Iacute;STICA <span class="text-sky-500 uppercase text-sm tracking-widest block font-bold -mt-1">Y Almacenamiento Comercial</span></span>
+            </div>
+            <div class="hidden md:flex items-center gap-6">
+                <div class="flex flex-col items-end">
+                    <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Nivel de Progresi&oacute;n</span>
+                    <div class="w-32 h-2 bg-slate-100 rounded-full mt-1 overflow-hidden">
+                        <div id="progress-bar" class="h-full bg-sky-500 transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                </div>
+                <a href="index.html" class="bg-slate-900 text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-slate-800 transition-colors">VOLVER AL HUB</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="mx-auto flex max-w-[1440px] px-8">
+        <!-- Sidebar -->
+        <aside class="sticky top-20 h-[calc(100vh-5rem)] w-72 shrink-0 overflow-y-auto py-12 pr-8 sidebar">
+            <nav class="space-y-2" id="sidebar-nav">
+                <p class="px-4 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-4">M&Oacute;DULOS</p>
+                <a href="#intro" class="flex items-center px-4 py-3 text-sm rounded-xl sidebar-item hover:bg-white transition-all">
+                    <i class="fa-solid fa-rocket mr-3 opacity-50"></i> Introducci&oacute;n
+                </a>
+                <a href="#clientes" class="flex items-center px-4 py-3 text-sm rounded-xl sidebar-item hover:bg-white transition-all">
+                    <i class="fa-solid fa-handshake mr-3 opacity-50"></i> Atenci&oacute;n al Cliente
+                </a>
+                <a href="#merchan" class="flex items-center px-4 py-3 text-sm rounded-xl sidebar-item hover:bg-white transition-all">
+                    <i class="fa-solid fa-palette mr-3 opacity-50"></i> Merchandising
+                </a>
+                <a href="#cobro" class="flex items-center px-4 py-3 text-sm rounded-xl sidebar-item hover:bg-white transition-all">
+                    <i class="fa-solid fa-credit-card mr-3 opacity-50"></i> Operaciones de Cobro
+                </a>
+                <p class="px-4 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-8 mb-4">LOG&Iacute;STICA</p>
+                <a href="#abc" class="flex items-center px-4 py-3 text-sm rounded-xl sidebar-item hover:bg-white transition-all">
+                    <i class="fa-solid fa-bullseye mr-3 opacity-50"></i> M&eacute;todo ABC
+                </a>
+                <a href="#wilson" class="flex items-center px-4 py-3 text-sm rounded-xl sidebar-item hover:bg-white transition-all">
+                    <i class="fa-solid fa-wand-sparkles mr-3 opacity-50"></i> Modelo de Wilson
+                </a>
+                <a href="#stocks" class="flex items-center px-4 py-3 text-sm rounded-xl sidebar-item hover:bg-white transition-all">
+                    <i class="fa-solid fa-layer-group mr-3 opacity-50"></i> Gesti&oacute;n de Stocks
+                </a>
+                <a href="#ventas" class="flex items-center px-4 py-3 text-sm rounded-xl sidebar-item hover:bg-white transition-all">
+                    <i class="fa-solid fa-crystal-ball mr-3 opacity-50"></i> Previsi&oacute;n Ventas
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="w-full min-w-0 py-12 lg:px-16 prose max-w-none bg-white my-8 rounded-[3rem] shadow-sm border border-slate-100" id="content-area">
+            <section id="intro" class="mb-20"></section>
+            <section id="clientes" class="mb-20"></section>
+            <section id="merchan" class="mb-20"></section>
+            <section id="cobro" class="mb-20"></section>
+            <section id="abc" class="mb-20"></section>
+            <section id="wilson" class="mb-20"></section>
+            <section id="stocks" class="mb-20"></section>
+            <section id="ventas" class="mb-20"></section>
+        </main>
+    </div>
+
+    <script>
+        const renderBlock = (id, data) => {
+            const container = document.getElementById(id);
+            if (container && data) {
+                container.innerHTML = marked.parse(data);
+            }
+        };
+
+        renderBlock('intro', window.DATA_INTRO);
+        renderBlock('clientes', window.DATA_CLIENTES);
+        renderBlock('merchan', window.DATA_MERCHAN);
+        renderBlock('cobro', window.DATA_COBRO);
+        renderBlock('abc', window.DATA_ABC);
+        renderBlock('wilson', window.DATA_WILSON);
+        renderBlock('stocks', window.DATA_STOCKS);
+        renderBlock('ventas', window.DATA_VENTAS);
+
+        const sections = document.querySelectorAll('section');
+        const navItems = document.querySelectorAll('.sidebar-item');
+        const progressBar = document.getElementById('progress-bar');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navItems.forEach(item => {
+                item.classList.remove('sidebar-item-active');
+                if (item.getAttribute('href').slice(1) === current) {
+                    item.classList.add('sidebar-item-active');
+                    const index = Array.from(navItems).indexOf(item);
+                    progressBar.style.width = ((index + 1) / navItems.length * 100) + '%';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -21,6 +21,17 @@ const APUNTES_DATA = {
             "iconBg": "bg-sky-50 text-sky-500"
         },
         {
+            "category": "commerce",
+            "level": "FPB Comercio",
+            "title": "Logística y Almacenamiento",
+            "description": "Aprende a gestionar el corazón financiero de la empresa: Recepción, picking, método ABC y modelo de Wilson.",
+            "path": "comercio-almacenamiento-fpb/index.html",
+            "icon": "fas fa-truck-ramp-box",
+            "colorClass": "bg-emerald-600",
+            "badgeClass": "bg-emerald-50 text-emerald-700",
+            "iconBg": "bg-emerald-50 text-emerald-600"
+        },
+        {
             "category": "math",
             "level": "5º Primaria",
             "title": "Maestro de Fracciones",

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infograf&iacute;a Maestra: Comercio y Log&iacute;stica</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; background-color: #020617; color: #f1f5f9; }
+        .glass { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); }
+        .card-header { border-bottom: 1px solid rgba(56, 189, 248, 0.2); }
+        .accent-text { color: #38bdf8; }
+        .formula-box { background: rgba(0,0,0,0.3); border-radius: 12px; padding: 10px; margin: 10px 0; border: 1px dashed rgba(56, 189, 248, 0.3); }
+        .solved-ex { background: rgba(16, 185, 129, 0.1); border-left: 4px solid #10b981; padding: 15px; border-radius: 0 12px 12px 0; }
+        .trick-box { background: rgba(245, 158, 11, 0.1); border-left: 4px solid #f59e0b; padding: 15px; border-radius: 0 12px 12px 0; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #020617; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-[1400px] mx-auto">
+        <!-- Header -->
+        <header class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6 border-b border-slate-800 pb-8">
+            <div>
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="bg-sky-500 text-slate-900 px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest italic">Dashboard v9.0</span>
+                    <span class="text-slate-500 text-xs font-bold uppercase tracking-widest">SME & Visual Artist Certified</span>
+                </div>
+                <h1 class="text-5xl md:text-7xl font-800 tracking-tighter leading-none">Log&iacute;stica & <span class="accent-text italic">Ventas</span></h1>
+            </div>
+            <div class="text-right hidden md:block">
+                <p class="text-slate-500 font-mono text-sm">Resumen Acad&eacute;mico Integral</p>
+                <p class="text-sky-400 font-bold">FPB COMERCIO TOTAL</p>
+            </div>
+        </header>
+
+        <!-- Main Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+            
+            <!-- COLUMNA IZQUIERDA: LOGÍSTICA PURA (8 COLS) -->
+            <div class="md:col-span-8 space-y-6">
+                
+                <!-- Bloque 1: Gestión de Inventarios (ABC & Wilson) -->
+                <div class="glass rounded-[2rem] p-8 overflow-hidden relative">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="h-12 w-12 bg-sky-500/20 rounded-xl flex items-center justify-center text-sky-400 text-xl">
+                            <i class="fa-solid fa-calculator"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold italic">C&aacute;lculo de Maestr&iacute;a</h2>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 italic">
+                        <div>
+                            <h3 class="text-lg font-bold mb-4 accent-text uppercase tracking-widest"><i class="fa-solid fa-bell mr-2"></i>Punto de Pedido (PP)</h3>
+                            <p class="text-sm text-slate-400 mb-4">Indica el nivel de stock exacto para emitir una orden de compra y evitar roturas.</p>
+                            <div class="formula-box text-lg">
+                                \( PP = (V_d \cdot LT) + SS \)
+                            </div>
+                            <div class="solved-ex text-xs mt-4">
+                                <p class="font-bold text-emerald-400 uppercase mb-2">Ejercicio Resuelto:</p>
+                                <p><b>Datos:</b> Ventas diarias (\(V_d\)): 15u. Plazo entrega (\(LT\)): 4 d&iacute;as. Stock Seguridad (\(SS\)): 20u.</p>
+                                <p class="mt-2 text-sm italic">\( PP = (15 \cdot 4) + 20 = 60 + 20 = \mathbf{80 \text{ unidades.}} \)</p>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold mb-4 accent-text uppercase tracking-widest"><i class="fa-solid fa-coins mr-2"></i>Valoraci&oacute;n PMP</h3>
+                            <p class="text-sm text-slate-400 mb-4">M&eacute;todo contable para valorar las existencias promediando el coste de las entradas.</p>
+                            <div class="formula-box text-lg">
+                                \( PMP = \frac{\sum (Q_i \cdot P_i)}{\sum Q_i} \)
+                            </div>
+                            <div class="solved-ex text-xs mt-4">
+                                <p class="font-bold text-emerald-400 uppercase mb-2">Ejercicio Resuelto:</p>
+                                <p><b>Entrada 1:</b> 10u @ 5&euro;. <b>Entrada 2:</b> 20u @ 8&euro;.</p>
+                                <p class="mt-2 text-sm italic">\( PMP = \frac{(10 \cdot 5) + (20 \cdot 8)}{10 + 20} = \frac{210}{30} = \mathbf{7\text{&euro;/u.}} \)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bloque 2: El Almacén 5.0 (Tecnología & Layout) -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="glass rounded-[2rem] p-8">
+                        <h3 class="text-xl font-bold mb-6 flex items-center gap-3">
+                            <i class="fa-solid fa-microchip text-pink-500"></i> Tech-Stack
+                        </h3>
+                        <ul class="space-y-4 text-sm">
+                            <li class="flex gap-4">
+                                <b class="text-pink-500 font-mono">RFID:</b> 
+                                <span class="text-slate-400">Lectura masiva por radio sin contacto visual. Adi&oacute;s al error humano.</span>
+                            </li>
+                            <li class="flex gap-4">
+                                <b class="text-pink-500 font-mono">SGA:</b> 
+                                <span class="text-slate-400">El cerebro digital que gestiona ubicaciones y optimiza rutas de picking.</span>
+                            </li>
+                            <li class="flex gap-4">
+                                <b class="text-pink-500 font-mono">RFID:</b> 
+                                <span class="text-slate-400">Lectura de 500 bultos en 2 segundos. Control de inventario en tiempo real.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="glass rounded-[2rem] p-8">
+                        <h3 class="text-xl font-bold mb-6 flex items-center gap-3">
+                            <i class="fa-solid fa-map-location-dot text-amber-500"></i> Estrategia ABC
+                        </h3>
+                        <div class="space-y-3 text-xs">
+                            <div class="p-3 bg-slate-800/50 rounded-xl border-l-4 border-emerald-500">
+                                <b class="text-emerald-500">ZONA A (VIP):</b> 20% productos / 80% valor. Ubicaci&oacute;n: <b>Hot Zone</b> (cerca salida).
+                            </div>
+                            <div class="p-3 bg-slate-800/50 rounded-xl border-l-4 border-amber-500">
+                                <b class="text-amber-500">ZONA B (Medios):</b> 30% productos / 15% valor. Ubicaci&oacute;n: Zonas centrales.
+                            </div>
+                            <div class="p-3 bg-slate-800/50 rounded-xl border-l-4 border-sky-500">
+                                <b class="text-sky-500">ZONA C (Moralla):</b> 50% productos / 5% valor. Ubicaci&oacute;n: Zonas altas o fondo.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COLUMNA DERECHA: VENTAS & CLIENTES (4 COLS) -->
+            <div class="md:col-span-4 space-y-6">
+                
+                <!-- Atención al Cliente -->
+                <div class="glass rounded-[2rem] p-8 border-l-4 border-indigo-500">
+                    <h3 class="text-xl font-bold mb-6 flex items-center gap-3">
+                        <i class="fa-solid fa-people-arrows text-indigo-400"></i> Habilidades Soft
+                    </h3>
+                    <div class="space-y-6">
+                        <div>
+                            <p class="text-[10px] uppercase font-black text-indigo-400 mb-2 tracking-widest">Regla de las 3V</p>
+                            <div class="flex h-4 w-full rounded-full overflow-hidden bg-slate-800">
+                                <div class="h-full bg-indigo-500" style="width: 55%" title="Visual"></div>
+                                <div class="h-full bg-indigo-400" style="width: 38%" title="Vocal"></div>
+                                <div class="h-full bg-indigo-300" style="width: 7%" title="Verbal"></div>
+                            </div>
+                            <p class="text-[10px] mt-2 text-slate-500 font-bold">55% GESTOS | 38% TONO | 7% PALABRAS</p>
+                        </div>
+                        <div class="trick-box text-xs">
+                            <b class="text-amber-400"><i class="fa-solid fa-bolt mr-1"></i>M&eacute;todo BLAST:</b>
+                            <p class="mt-1 opacity-80">Believe, Listen, Apologize, Solve, Thank. El algoritmo para quejas.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Merchandising -->
+                <div class="glass rounded-[2rem] p-8 border-l-4 border-purple-500">
+                    <h3 class="text-xl font-bold mb-6 flex items-center gap-3">
+                        <i class="fa-solid fa-eye text-purple-400"></i> Merchandising
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between text-xs p-3 bg-purple-500/10 rounded-xl">
+                            <span>Nivel Ojos (Venta Caliente)</span>
+                            <b class="text-purple-400">+80%</b>
+                        </div>
+                        <div class="flex items-center justify-between text-xs p-3 bg-slate-800/50 rounded-xl">
+                            <span>Nivel Manos (Comodidad)</span>
+                            <b class="text-slate-400">+15%</b>
+                        </div>
+                        <div class="flex items-center justify-between text-xs p-3 bg-slate-800/50 rounded-xl">
+                            <span>Nivel Suelo (Pesados/Bajo $)</span>
+                            <b class="text-slate-400">+5%</b>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cobro & Seguridad -->
+                <div class="glass rounded-[2rem] p-8 border-l-4 border-emerald-500">
+                    <h3 class="text-xl font-bold mb-6 flex items-center gap-3">
+                        <i class="fa-solid fa-shield-halved text-emerald-400"></i> Control & Caja
+                    </h3>
+                    <div class="space-y-4 text-xs">
+                        <div class="p-3 bg-emerald-500/10 rounded-xl">
+                            <b class="text-emerald-400">REGLA TOCA:</b> Toca, Observa, Gira (Billetes falsos).
+                        </div>
+                        <div class="p-3 bg-slate-800/50 rounded-xl">
+                            <b class="text-slate-400">ARQUEO:</b> El cierre de caja es sagrado. Sin descuadres.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer / Chuleta Final -->
+        <footer class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="md:col-span-2 glass rounded-3xl p-6 flex items-center justify-between">
+                <div class="flex items-center gap-6">
+                    <div class="text-4xl text-sky-500 opacity-50"><i class="fa-solid fa-quote-left"></i></div>
+                    <p class="text-sm italic text-slate-400">"En el comercio de &eacute;lite, el orden en el almac&eacute;n es el beneficio en la sala de ventas."</p>
+                </div>
+                <div class="flex gap-4">
+                    <a href="apuntes.html" class="px-6 py-2 bg-sky-500 text-slate-900 rounded-full font-black text-xs hover:scale-105 transition-transform uppercase italic">Ver Apuntes</a>
+                    <a href="index.html" class="px-6 py-2 bg-slate-800 text-white rounded-full font-black text-xs hover:scale-105 transition-transform uppercase italic">Volver Hub</a>
+                </div>
+            </div>
+            <div class="glass rounded-3xl p-6 flex items-center gap-4 bg-gradient-to-r from-sky-500/10 to-indigo-500/10">
+                <div class="text-3xl text-sky-400"><i class="fa-solid fa-mobile-screen-button"></i></div>
+                <div>
+                    <p class="text-[10px] font-black uppercase tracking-widest text-slate-500">Modo Examen</p>
+                    <p class="text-xs font-bold">Chuleta Pro optimizada para m&oacute;vil</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

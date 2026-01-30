@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PMO | Log&iacute;stica y Almacenamiento Comercial</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #38bdf8;
+            --secondary: #818cf8;
+            --bg: #020617;
+            --surface: #0f172a;
+        }
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            background-color: var(--bg); 
+            color: #f1f5f9;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.1) 0, transparent 50%), 
+                radial-gradient(at 100% 100%, rgba(129, 140, 248, 0.1) 0, transparent 50%);
+            background-attachment: fixed;
+        }
+        .glass { 
+            background: rgba(15, 23, 42, 0.6); 
+            backdrop-filter: blur(12px); 
+            border: 1px solid rgba(255,255,255,0.05); 
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass:hover { 
+            transform: translateY(-8px); 
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px -20px rgba(56, 189, 248, 0.4);
+            background: rgba(30, 41, 59, 0.7);
+        }
+        .gradient-text { 
+            background: linear-gradient(135deg, #fff 30%, var(--primary) 100%); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+        }
+        .status-badge {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+        .icon-container {
+            width: 64px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 20px;
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+        .glass:hover .icon-container {
+            transform: scale(1.1) rotate(5deg);
+        }
+        .nav-line {
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), transparent);
+            width: 60px;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body class="min-h-screen py-12 px-6">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header Section -->
+        <header class="mb-20 text-center md:text-left flex flex-col md:flex-row justify-between items-end gap-8">
+            <div class="space-y-2">
+                <div class="flex items-center gap-3 justify-center md:justify-start">
+                    <span class="status-badge px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-[0.2em]">Ecosistema v8.0</span>
+                    <span class="text-slate-500 text-[10px] font-bold uppercase tracking-widest">FPB Comercio Especializado</span>
+                </div>
+                <h1 class="text-5xl md:text-7xl font-800 tracking-tighter leading-none">Log&iacute;stica <br><span class="gradient-text">& Almacenamiento</span></h1>
+                <div class="nav-line mx-auto md:mx-0"></div>
+            </div>
+            <div class="glass p-6 rounded-3xl flex items-center gap-6 border-slate-800">
+                <div class="text-right">
+                    <p class="text-xs text-slate-500 uppercase font-bold tracking-widest">Nivel de Formaci&oacute;n</p>
+                    <p class="text-xl font-bold text-emerald-400 italic">Maestr&iacute;a Operativa</p>
+                </div>
+                <div class="h-12 w-12 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400">
+                    <i class="fa-solid fa-check-double text-xl"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 mb-8">
+            
+            <!-- Apuntes: Col 8 -->
+            <a href="apuntes.html" class="md:col-span-8 glass p-10 rounded-[2.5rem] flex flex-col justify-between min-h-[450px] relative overflow-hidden group">
+                <div class="relative z-10">
+                    <div class="icon-container bg-sky-500/20 text-sky-400">
+                        <i class="fa-solid fa-book-open-reader text-3xl"></i>
+                    </div>
+                    <h2 class="text-4xl font-bold mb-4">Manual Maestro Integral</h2>
+                    <p class="text-slate-400 text-lg leading-relaxed max-w-md">
+                        Explora los fundamentos del comercio moderno: Atenci&oacute;n al cliente, Merchandising, Operaciones de Cobro y la gesti&oacute;n avanzada de almac&eacute;n.
+                    </p>
+                </div>
+                <div class="relative z-10 flex items-center gap-4 text-sky-400 font-black tracking-widest text-sm uppercase">
+                    <span>Iniciar aprendizaje</span>
+                    <i class="fa-solid fa-arrow-right group-hover:translate-x-2 transition-transform"></i>
+                </div>
+                <!-- Background Icon Decor -->
+                <i class="fa-solid fa-boxes-stacked absolute -bottom-16 -right-16 text-[300px] text-white opacity-[0.02] group-hover:opacity-[0.05] transition-opacity"></i>
+            </a>
+
+            <!-- Sidebar tools: Col 4 -->
+            <div class="md:col-span-4 flex flex-col gap-8">
+                <!-- Masterclass -->
+                <a href="presentacion_comercio.html" class="glass p-8 rounded-[2rem] flex items-center gap-6 group">
+                    <div class="h-16 w-16 bg-purple-500/20 rounded-2xl flex items-center justify-center text-purple-400 shrink-0 group-hover:bg-purple-500 group-hover:text-white transition-colors">
+                        <i class="fa-solid fa-chalkboard-user text-2xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold">Masterclass</h3>
+                        <p class="text-xs text-slate-500 mt-1">Sesi&oacute;n interactiva visual</p>
+                    </div>
+                </a>
+
+                <!-- Juego -->
+                <a href="juego_comercio.html" class="glass p-8 rounded-[2rem] border-emerald-500/20 bg-emerald-500/5 flex items-center gap-6 group">
+                    <div class="h-16 w-16 bg-emerald-500/20 rounded-2xl flex items-center justify-center text-emerald-400 shrink-0 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
+                        <i class="fa-solid fa-gamepad text-2xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-emerald-400">Logistics Quest</h3>
+                        <p class="text-xs text-slate-500 mt-1">Desaf&iacute;o de maestr&iacute;a 100Q</p>
+                    </div>
+                </a>
+
+                <!-- Infografía -->
+                <a href="infografia_motivadora.html" class="glass p-8 rounded-[2rem] flex items-center gap-6 group">
+                    <div class="h-16 w-16 bg-amber-500/20 rounded-2xl flex items-center justify-center text-amber-400 shrink-0 group-hover:bg-amber-500 group-hover:text-white transition-colors">
+                        <i class="fa-solid fa-map-location-dot text-2xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-amber-400">Mapa Visual</h3>
+                        <p class="text-xs text-slate-500 mt-1">Resumen gr&aacute;fico de procesos</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Quote / Footer Section -->
+        <footer class="mt-12 text-center md:text-left">
+            <div class="glass p-8 rounded-[2rem] border-slate-800 flex flex-col md:flex-row items-center justify-between gap-8">
+                <div class="flex items-center gap-6">
+                    <div class="text-4xl text-slate-700"><i class="fa-solid fa-quote-left"></i></div>
+                    <p class="text-slate-400 italic text-sm md:text-base">"Un almac&eacute;n no es solo un dep&oacute;sito de mercanc&iacute;as, es el coraz&oacute;n financiero de la empresa comercial."</p>
+                </div>
+                <div class="flex gap-4 items-center">
+                    <p class="text-[10px] font-black uppercase tracking-widest text-slate-600">Certificado por</p>
+                    <div class="flex gap-2">
+                        <div class="h-8 w-8 rounded-lg bg-sky-500/10 flex items-center justify-center text-sky-500 text-xs border border-sky-500/20" title="SME Checked">SME</div>
+                        <div class="h-8 w-8 rounded-lg bg-pink-500/10 flex items-center justify-center text-pink-500 text-xs border border-pink-500/20" title="Design Approved">ART</div>
+                    </div>
+                </div>
+            </div>
+            <p class="mt-12 text-center text-slate-600 text-[10px] font-bold uppercase tracking-[0.4em]">Log&iacute;stica Avanzada | Ecosistema Educativo de &Eacute;lite</p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Masterclass: Log&iacute;stica y Comercio Total v9.0</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/blood.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Configuración MathJax para LaTeX Pro -->
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --r-main-font: 'Outfit', sans-serif;
+            --accent: #38bdf8;
+            --focus-bg: rgba(255, 255, 255, 0.05);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #0ea5e9;
+            --gold: #fbbf24;
+        }
+        .reveal .slides section { text-align: left; padding: 40px; }
+        .card { background: var(--focus-bg); border-left: 10px solid var(--accent); padding: 25px; border-radius: 15px; margin: 20px 0; }
+        .timer-badge { background: var(--danger); color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.4em !important; float: right; vertical-align: middle; font-weight: 800; }
+        .pro-tip { color: var(--success); font-weight: bold; font-size: 0.75em; display: block; margin-top: 10px; border-top: 1px dashed rgba(16, 185, 129, 0.3); padding-top: 10px; }
+        .icon-hero { font-size: 3.5em; color: var(--accent); margin-bottom: 20px; filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.4)); }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .label { font-size: 0.45em; text-transform: uppercase; color: var(--accent); font-weight: 800; display: block; margin-bottom: 5px; tracking-widest; }
+        .latex-box { background: rgba(0,0,0,0.4); padding: 15px; border-radius: 10px; color: var(--info); text-align: center; margin: 10px 0; font-size: 1.2em; }
+        b { color: var(--accent); }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- 1. PORTADA ADAPTADA -->
+            <section data-background-gradient="linear-gradient(to bottom, #020617, #0f172a)">
+                <div class="icon-hero"><i class="fa-solid fa-truck-ramp-box"></i></div>
+                <h1 style="text-transform: none; font-size: 3.2em; line-height: 1;">Log&iacute;stica y <br><b>Almacenamiento</b></h1>
+                <p style="color: #94a3b8; font-size: 1.2em;">El Motor Invisible del Sector Comercio.</p>
+                <div class="card fragment">
+                    <p style="font-size: 0.8em;"><i class="fa-solid fa-link"></i> <b>Sinergia:</b> Sin una log&iacute;stica perfecta, la sala de ventas est&aacute; vac&iacute;a. Sin una sala de ventas eficiente, el almac&eacute;n no tiene sentido.</p>
+                </div>
+            </section>
+
+            <!-- 2. EL ALMACÉN COMO BASE -->
+            <section>
+                <h2><i class="fa-solid fa-warehouse"></i> El Almac&eacute;n: La Base</h2>
+                <div class="grid-2">
+                    <div class="card fragment" style="border-color: var(--success);">
+                        <span class="label">Suministro</span>
+                        <p style="font-size: 0.6em;">Garantiza que el cliente siempre encuentre lo que busca. La rotura de stock es el fin de la venta.</p>
+                    </div>
+                    <div class="card fragment" style="border-color: var(--info);">
+                        <span class="label">Rentabilidad</span>
+                        <p style="font-size: 0.6em;">Un almac&eacute;n optimizado (ABC, PMP) reduce costes y aumenta los beneficios netos del comercio.</p>
+                    </div>
+                </div>
+                <p class="fragment pro-tip">⚠️ Recuerda: El comercio empieza en el muelle de descarga.</p>
+            </section>
+
+            <!-- 3. ATENCIÓN AL CLIENTE: PSICOLOGÍA -->
+            <section>
+                <span class="timer-badge"><i class="fa-solid fa-hourglass-start"></i> 5 min</span>
+                <h2><i class="fa-solid fa-user-tie"></i> Atenci&oacute;n al Cliente</h2>
+                <div class="grid-2">
+                    <div class="card fragment">
+                        <span class="label">Regla de las 3V</span>
+                        <p style="font-size: 0.55em;">55% Visual (Gesto), 38% Vocal (Tono), 7% Verbal (Palabras). &iexcl;Tu cara vende m&aacute;s que tu guion!</p>
+                    </div>
+                    <div class="card fragment" style="border-color: var(--danger);">
+                        <span class="label">M&eacute;todo BLAST</span>
+                        <p style="font-size: 0.55em;"><b>B</b>elieve, <b>L</b>isten, <b>A</b>pologize, <b>S</b>olve, <b>T</b>hank. El algoritmo para quejas.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. MERCHANDISING: EL VENDEDOR SILENCIOSO -->
+            <section>
+                <h2><i class="fa-solid fa-palette"></i> Merchandising Pro</h2>
+                <div class="grid-2">
+                    <ul style="font-size: 0.55em; list-style: none;">
+                        <li class="fragment" style="margin-bottom: 15px;"><i class="fa-solid fa-eye text-accent"></i> <b>Nivel Ojos:</b> 80% de ventas. Marcas cara/beneficio.</li>
+                        <li class="fragment" style="margin-bottom: 15px;"><i class="fa-solid fa-hand-pointer text-success"></i> <b>Nivel Manos:</b> Comodidad. Compra diaria.</li>
+                        <li class="fragment"><i class="fa-solid fa-shoe-prints text-danger"></i> <b>Nivel Suelo:</b> Pesados o marca blanca.</li>
+                    </ul>
+                    <div class="card fragment" style="border-color: var(--gold);">
+                        <p style="font-size: 0.5em;"><b>Punto Caliente:</b> Donde el cliente mira sin querer. <br><b>Punto Fr&iacute;o:</b> Rincones que necesitan "ofertas im&aacute;n".</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. LOGÍSTICA: EL MÉTODO ABC -->
+            <section>
+                <span class="timer-badge">7 min</span>
+                <h2><i class="fa-solid fa-chart-pie"></i> Estrategia ABC</h2>
+                <p style="font-size: 0.6em;">Priorizaci&oacute;n basada en la Ley de Pareto ($80/20$):</p>
+                <div class="grid-2">
+                    <div class="card fragment" style="border-color: var(--success);">
+                        <span class="label">Clase A (Diamantes)</span>
+                        <p style="font-size: 0.5em;">20% de productos = 80% del valor. <br><b>Control:</b> Diario. <br><b>Ubicaci&oacute;n:</b> Zona de salida.</p>
+                    </div>
+                    <div class="card fragment" style="border-color: var(--info);">
+                        <span class="label">Clase C (Arena)</span>
+                        <p style="font-size: 0.5em;">50% de productos = 5% del valor. <br><b>Control:</b> Visual/Anual. <br><b>Ubicaci&oacute;n:</b> Fondo/Altos.</p>
+                    </div>
+                </div>
+                <div class="latex-box fragment">
+                    $\text{Valor Consumo} = \text{Unidades Vendidas} \times \text{Precio Coste}$
+                </div>
+            </section>
+
+            <!-- 6. MODELO DE WILSON (Q) -->
+            <section>
+                <h2><i class="fa-solid fa-wand-sparkles"></i> Wilson: ¿Cu&aacute;nto pedir?</h2>
+                <p style="font-size: 0.6em;">Buscamos el punto donde el coste de pedir y de almacenar se cruzan:</p>
+                <div class="latex-box fragment">
+                    $Q^* = \sqrt{\frac{2 \cdot D \cdot S}{H}}$
+                </div>
+                <div style="font-size: 0.45em;" class="fragment">
+                    <p><b>D:</b> Demanda anual. <b>S:</b> Coste emisi&oacute;n pedido. <b>H:</b> Coste posesi&oacute;n (almac&eacute;n).</p>
+                </div>
+                <p class="fragment pro-tip">💡 Truco: Si el resultado es $12.3$, pide $13$. Siempre redondea hacia arriba para cubrir imprevistos.</p>
+            </section>
+
+            <!-- 7. PUNTO DE PEDIDO (PP) -->
+            <section>
+                <h2><i class="fa-solid fa-bell"></i> Punto de Pedido (PP)</h2>
+                <p style="font-size: 0.6em;">Es el nivel de stock que dispara la alarma de compra:</p>
+                <div class="latex-box fragment">
+                    $PP = (V_d \cdot LT) + SS$
+                </div>
+                <div class="card fragment" style="font-size: 0.5em;">
+                    <p><b>$V_d$:</b> Ventas diarias. <br><b>$LT$:</b> Lead Time (D&iacute;as de espera + d&iacute;as gesti&oacute;n). <br><b>$SS$:</b> Stock Seguridad.</p>
+                </div>
+                <p class="fragment pro-tip">⚠️ El Lead Time real incluye la descarga y el etiquetado.</p>
+            </section>
+
+            <!-- 8. VALORACIÓN PMP -->
+            <section>
+                <h2><i class="fa-solid fa-coins"></i> Valoraci&oacute;n PMP</h2>
+                <p style="font-size: 0.6em;">Precio Medio Ponderado para valorar el stock cuando los precios cambian:</p>
+                <div class="latex-box fragment">
+                    $PMP = \frac{\sum (Q_i \cdot P_i)}{\sum Q_i}$
+                </div>
+                <div class="solved-ex fragment" style="background: rgba(16, 185, 129, 0.1); padding: 15px; border-radius: 10px; font-size: 0.5em;">
+                    <b>Ejercicio:</b> 10u @ 5&euro; + 20u @ 8&euro; = $\frac{50+160}{30} = \mathbf{7\text{\euro}/u}$
+                </div>
+            </section>
+
+            <!-- 9. OPERACIONES DE COBRO -->
+            <section data-background-color="#1e293b">
+                <h2><i class="fa-solid fa-cash-register"></i> La Caja y el TPV</h2>
+                <div class="grid-2">
+                    <div class="card fragment">
+                        <span class="label">Seguridad: Regla TOCA</span>
+                        <p style="font-size: 0.5em;"><b>T</b>oca el relieve. <b>O</b>bserva al trasluz. <b>G</b>ira para ver el color. &iexcl;Evita billetes falsos!</p>
+                    </div>
+                    <div class="card fragment">
+                        <span class="label">Arqueo</span>
+                        <p style="font-size: 0.5em;">$Saldo_{real} - Saldo_{te&oacute;rico} = \text{Diferencia}$. <br>El arqueo es el examen final del cajero.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 10. SALUD LABORAL -->
+            <section data-background-color="#064e3b">
+                <h2><i class="fa-solid fa-heart-pulse"></i> El Almacenero Ironman</h2>
+                <p style="font-size: 0.7em;">Tu espalda es tu mayor activo financiero.</p>
+                <div class="grid-2">
+                    <div style="font-size: 0.55em;">
+                        <p class="fragment">✅ <b>Carga:</b> Pegada al cuerpo.</p>
+                        <p class="fragment">✅ <b>Piernas:</b> Dobladas al bajar.</p>
+                        <p class="fragment">✅ <b>Calzado:</b> Puntera de acero y antideslizante.</p>
+                    </div>
+                    <div class="fragment" style="text-align: center;">
+                        <i class="fa-solid fa-person-running text-success" style="font-size: 5em;"></i>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 11. RESUMEN MAESTRO -->
+            <section data-background-color="#000">
+                <h2 style="color: var(--accent); text-align: center;"><i class="fa-solid fa-camera"></i> CHULETA SUPREMA</h2>
+                <div style="font-size: 0.5em; border: 2px solid var(--accent); padding: 25px; border-radius: 20px;">
+                    <p>✅ <b>ABC:</b> Cuida el 20% para salvar el 80% del dinero.</p>
+                    <p>✅ <b>PP:</b> Llama al proveedor antes de que el estante llore.</p>
+                    <p>✅ <b>FIFO:</b> Lo viejo sale antes que lo nuevo. Frescura.</p>
+                    <p>✅ <b>AIDA:</b> Atenci&oacute;n, Inter&eacute;s, Deseo, Acci&oacute;n. El camino al s&iacute;.</p>
+                    <p>✅ <b>TPV:</b> Sin ticket no hay venta legal. Sin arqueo no hay orden.</p>
+                </div>
+            </section>
+
+            <!-- 12. CIERRE -->
+            <section data-background-gradient="linear-gradient(to right, #020617, #1e293b)">
+                <div style="text-align: center;">
+                    <h2>&iexcl;FORMACI&Oacute;N COMPLETADA!</h2>
+                    <p>Domina el almac&eacute;n y dominar&aacute;s el comercio.</p>
+                    <button onclick="window.location.href='index.html'" style="padding: 15px 30px; background: var(--accent); color: #020617; border: none; border-radius: 10px; cursor: pointer; font-weight: 800; margin-top: 20px; font-family: 'Outfit';">VOLVER AL PMO</button>
+                </div>
+            </section>
+
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            controls: true,
+            progress: true,
+            center: true,
+            transition: 'slide',
+            width: 1100,
+            height: 750,
+            margin: 0.1
+        });
+    </script>
+</body>
+</html>

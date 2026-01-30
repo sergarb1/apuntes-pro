@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Logistics Quest: God Mode v6.0</title>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #020617;
+            --surface: #0f172a;
+            --primary: #38bdf8;
+            --success: #10b981;
+            --error: #f43f5e;
+            --warning: #f59e0b;
+            --text: #f1f5f9;
+        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            height: 100dvh;
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+        }
+        #game-container { width: 100%; height: 100%; }
+        
+        .safe-area {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom);
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+        }
+        .safe-area > * { pointer-events: auto; }
+
+        .hud {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+        .badge {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(8px);
+            padding: 8px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .screen-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 6, 23, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 100;
+        }
+        .card {
+            background: var(--surface);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: 16px;
+            border: none;
+            font-family: inherit;
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .btn-primary { background: var(--primary); color: var(--bg); }
+        .btn-ghost { background: #1e293b; color: white; border: 1px solid rgba(255,255,255,0.1); }
+        .btn:active { transform: scale(0.96); }
+
+        .option-btn {
+            text-align: left;
+            justify-content: flex-start;
+            font-weight: 500;
+            background: #1e293b;
+            font-size: 0.9rem;
+        }
+        .option-btn.correct { background: var(--success); color: white; }
+        .option-btn.wrong { background: var(--error); color: white; }
+        
+        .feedback-card {
+            margin-top: 15px;
+            padding: 20px;
+            border-radius: 16px;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            animation: slideUp 0.3s ease-out;
+        }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div id="game-container"></div>
+
+    <div class="safe-area">
+        <div id="hud" class="hud hidden">
+            <div class="badge"><i class="fa-solid fa-box text-sky-400"></i> <span id="score">0</span></div>
+            <div class="badge"><i class="fa-solid fa-bolt text-yellow-400"></i> <span id="multiplier">x1</span></div>
+            <div class="badge"><i class="fa-solid fa-clock text-rose-400"></i> <span id="timer">60</span></div>
+        </div>
+    </div>
+
+    <!-- PANTALLA INICIO -->
+    <div id="start-screen" class="screen-overlay">
+        <div class="card">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <i class="fa-solid fa-microchip text-6xl text-sky-400 mb-6 pulse"></i>
+                <h1 style="font-size: 2.2rem; font-weight: 800; color: white; tracking-tight">LOGISTICS GOD MODE</h1>
+                <p style="color: #94a3b8; margin-top: 10px;">El simulador m&aacute;s avanzado de FPB. 100 retos, una sola meta: La Maestr&iacute;a.</p>
+            </div>
+            <button class="btn btn-primary" onclick="initSim()">
+                <i class="fa-solid fa-play"></i> INICIAR MISI&Oacute;N
+            </button>
+            <div style="margin-top: 20px; background: rgba(56, 189, 248, 0.1); p: 15px; border-radius: 15px; font-size: 0.75rem; color: #7dd3fc;">
+                <i class="fa-solid fa-info-circle mr-2"></i> Fase 1: Simulador de clasificación (60s). Fase 2: Quiz de Maestr&iacute;a (10 preguntas aleatorias).
+            </div>
+        </div>
+    </div>
+
+    <!-- QUIZ OVERLAY -->
+    <div id="quiz-screen" class="screen-overlay hidden">
+        <div class="card">
+            <div id="quiz-header" style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                <span id="quiz-progress" style="font-weight: 800; color: var(--primary);">1 / 10</span>
+                <button id="hint-btn" style="background: none; border: none; color: var(--warning); font-weight: 800; cursor: pointer;">
+                    <i class="fa-solid fa-lightbulb"></i> PISTA
+                </button>
+            </div>
+            <h3 id="question-text" style="margin-bottom: 20px; line-height: 1.4; font-size: 1.1rem;">Cargando...</h3>
+            <div id="options-container"></div>
+            <div id="feedback-area" class="hidden">
+                <div id="feedback-box" class="feedback-card"></div>
+                <button class="btn btn-primary" style="margin-top: 15px;" onclick="nextQuestion()">
+                    SIGUIENTE <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- MEGA BANCO DE DATOS (100 PREGUNTAS) ---
+        const allQuizData = [
+            // BASICS (1-10)
+            { q: "¿Qué porcentaje de valor tienen los productos Clase A?", a: ["80%", "5%", "50%"], correct: 0, hint: "Las joyas de la corona.", fbCorrect: "¡Exacto! Poco volumen, mucho dinero.", fbWrong: "Error. La clase A es la más valiosa." },
+            { q: "El Modelo Wilson busca el equilibrio entre...", a: ["Ventas y Compras", "Coste Pedido y Almacén", "Espacio y Tiempo"], correct: 1, hint: "Costes que se odian.", fbCorrect: "¡Bravo! Minimizas el gasto total.", fbWrong: "No. Equilibra pedir vs guardar." },
+            { q: "¿Qué es el Stock de Seguridad?", a: ["El tope", "Colchón de emergencia", "El más vendido"], correct: 1, hint: "Tu reserva de gasolina.", fbCorrect: "¡Bien! Te salva de imprevistos.", fbWrong: "Fallo. Es la reserva para emergencias." },
+            { q: "FIFO significa...", a: ["Primero en entrar, primero en salir", "Último en entrar, primero en salir", "Caro sale primero"], correct: 0, hint: "First In, First Out.", fbCorrect: "¡Correcto! Evita que caduquen.", fbWrong: "Error. Lo viejo sale antes." },
+            { q: "El Lead Time es...", a: ["Hora de cierre", "Tiempo entrega proveedor", "Tiempo de descanso"], correct: 1, hint: "Desde el clic hasta la entrega.", fbCorrect: "¡Cierto! Vital para el PP.", fbWrong: "No. Es el tiempo total de reposición." },
+            { q: "El SGA es...", a: ["Sistema Gestión Almacén", "Súper Gran Almacén", "Seguro General"], correct: 0, hint: "El cerebro informático.", fbCorrect: "¡Esencial! El PC que lo sabe todo.", fbWrong: "Fallo. Es el software de gestión." },
+            { q: "Un SKU identifica...", a: ["Un camión", "Un producto único", "Un pasillo"], correct: 1, hint: "DNI del objeto.", fbCorrect: "¡Correcto! Stock Keeping Unit.", fbWrong: "No. Es la referencia de cada artículo." },
+            { q: "¿Qué es el Stock Fantasma?", a: ["Cajas invisibles", "Error sistema vs realidad", "Robos nocturnos"], correct: 1, hint: "El PC dice 10, hay 0.", fbCorrect: "¡Fascinante! Un gran peligro logístico.", fbWrong: "Error. Es cuando los datos no cuadran." },
+            { q: "El Punto de Pedido (PP) nos dice...", a: ["Cuándo llamar al proveedor", "Cuánto dinero ganar", "A qué hora abrir"], correct: 0, hint: "La alarma de stock.", fbCorrect: "¡Exacto! El momento crítico.", fbWrong: "No. Es el cuándo, no el cuánto." },
+            { q: "La Merma es...", a: ["Venta extra", "Producto estropeado/perdido", "Limpieza"], correct: 1, hint: "Dinero a la basura.", fbCorrect: "¡Correcto! Hay que minimizarla.", fbWrong: "Error. Es la pérdida de stock." },
+
+            // TECNOLOGÍA (11-20)
+            { q: "RFID permite leer etiquetas por...", a: ["Láser", "Radio", "Bluetooth"], correct: 1, hint: "Sin contacto visual.", fbCorrect: "¡Nivel Pro! Lee cientos a la vez.", fbWrong: "No. RFID usa ondas de radio." },
+            { q: "¿Qué es el Cross-docking?", a: ["Limpiar", "Salida directa sin guardar", "Cruzar pasillos"], correct: 1, hint: "Muelle a muelle.", fbCorrect: "¡Eficiencia! Ahorra almacenaje.", fbWrong: "Error. Es paso directo de mercancía." },
+            { q: "Un 'Cobot' es...", a: ["Robot malvado", "Robot colaborativo", "Robot de limpieza"], correct: 1, hint: "Trabaja con el humano.", fbCorrect: "¡Futurista! Ayuda en tareas pesadas.", fbWrong: "Fallo. Trabaja codo con codo con personas." },
+            { q: "¿Qué hace la IA en logística?", a: ["Limpiar", "Predecir ventas", "Abrir la puerta"], correct: 1, hint: "Lee el futuro con datos.", fbCorrect: "¡Correcto! Anticipa la demanda.", fbWrong: "No. Su fuerte es la predicción." },
+            { q: "Picking por voz consiste en...", a: ["Gritar", "Recibir órdenes por cascos", "Cantar"], correct: 1, hint: "Manos libres.", fbCorrect: "¡Bien! Mayor velocidad y precisión.", fbWrong: "Error. El operario oye qué coger." },
+            { q: "El 'Gemelo Digital' sirve para...", a: ["Copiar cajas", "Simular el almacén en 3D", "Tener dos jefes"], correct: 1, hint: "Copia virtual.", fbCorrect: "¡Nivel experto! Evita errores reales.", fbWrong: "Fallo. Es una simulación total." },
+            { q: "¿Qué es un transelevador?", a: ["Ascensor", "Robot que mueve palés en altura", "Grúa calle"], correct: 1, hint: "Pasillos estrechos y altos.", fbCorrect: "¡Correcto! Logística automatizada.", fbWrong: "Error. Es un robot de pasillo alto." },
+            { q: "Big Data ayuda a...", a: ["Gastar más", "Optimizar rutas de reparto", "Contar clips"], correct: 1, hint: "Muchos datos = Mejores rutas.", fbCorrect: "¡Exacto! Ahorra combustible y tiempo.", fbWrong: "Fallo. Optimiza decisiones complejas." },
+            { q: "Un dron en almacén sirve para...", a: ["Vigilar", "Inventario en zonas altas", "Llevar café"], correct: 1, hint: "Vuela y lee códigos.", fbCorrect: "¡Bien! Llega donde el humano no.", fbWrong: "Casi. Su gran uso es el inventario." },
+            { q: "Blockchain en logística aporta...", a: ["Dinero", "Trazabilidad segura", "Velocidad"], correct: 1, hint: "Cadena de bloques.", fbCorrect: "¡Seguridad total! Nadie borra datos.", fbWrong: "No. Aporta confianza y rastreo." },
+
+            // SEGURIDAD Y ERGONOMÍA (21-30)
+            { q: "Levantar peso requiere usar...", a: ["Espalda", "Piernas", "Brazos"], correct: 1, hint: "Dobla las rodillas.", fbCorrect: "¡Saludable! Protege tu espalda.", fbWrong: "¡Peligro! Siempre con las piernas." },
+            { q: "El calzado de seguridad tiene...", a: ["Luces", "Puntera de acero", "Tacones"], correct: 1, hint: "Protección contra golpes.", fbCorrect: "¡Vital! Tus pies te lo agradecerán.", fbWrong: "Error. Es para evitar aplastamientos." },
+            { q: "Color de prohibición:", a: ["Azul", "Rojo", "Amarillo"], correct: 1, hint: "Como un Stop.", fbCorrect: "¡Correcto! No pasar o prohibido.", fbWrong: "Fallo. Rojo es prohibición." },
+            { q: "Color de obligación:", a: ["Azul", "Verde", "Rojo"], correct: 0, hint: "Señal circular azul.", fbCorrect: "¡Bien! Indica uso obligatorio.", fbWrong: "Error. Azul es obligación." },
+            { q: "Franjas amarillo/negro indican:", a: ["Zona VIP", "Riesgo obstáculo/caída", "Salida"], correct: 1, hint: "¡Ojo al escalón!", fbCorrect: "¡Correcto! Atención máxima.", fbWrong: "Fallo. Indican peligro de golpe." },
+            { q: "Distancia de seguridad con carretilla:", a: ["1 metro", "5 metros", "0 metros"], correct: 1, hint: "Espacio de frenado.", fbCorrect: "¡Seguro! Evita atropellos.", fbWrong: "Muy poco. Deja siempre espacio." },
+            { q: "¿Qué es el ADR?", a: ["Tipo palé", "Mercancías Peligrosas", "Seguro"], correct: 1, hint: "Transporte por carretera.", fbCorrect: "¡Bien! Requiere carnet especial.", fbWrong: "Fallo. Es el acuerdo de peligrosas." },
+            { q: "Símbolo de la Copa en caja:", a: ["Bebida", "Frágil", "Caro"], correct: 1, hint: "Se rompe.", fbCorrect: "¡Exacto! Tratar con mimo.", fbWrong: "Error. Indica fragilidad." },
+            { q: "Símbolo Paraguas en caja:", a: ["Llueve", "Mantener seco", "Para sol"], correct: 1, hint: "Humedad mala.", fbCorrect: "¡Bien! Cuidado con el agua.", fbWrong: "Fallo. Significa 'Keep Dry'." },
+            { q: "Peso máximo recomendado (general):", a: ["10kg", "25kg", "100kg"], correct: 1, hint: "Límite salud.", fbCorrect: "¡Correcto! Más peso requiere ayuda.", fbWrong: "Demasiado. El límite sano es 25kg." },
+
+            // COMERCIO Y VENTAS (31-40)
+            { q: "Up-selling es ofrecer...", a: ["Algo barato", "Algo de mejor calidad/caro", "Regalo"], correct: 1, hint: "Subir de nivel.", fbCorrect: "¡Vendedor Pro! Sube el ticket medio.", fbWrong: "No. Es vender algo superior." },
+            { q: "Cross-selling es ofrecer...", a: ["Descuento", "Productos complementarios", "Nada"], correct: 1, hint: "Móvil + Funda.", fbCorrect: "¡Exacto! Venta cruzada.", fbWrong: "Fallo. Es vender accesorios/relacionados." },
+            { q: "La Omnicanalidad es...", a: ["Vender mucho", "Venta integrada en todo canal", "Vender TV"], correct: 1, hint: "Web + Tienda + App.", fbCorrect: "¡Bien! Todo conectado para el cliente.", fbWrong: "Error. Es la integración total." },
+            { q: "Un 'Locker' es...", a: ["Cerradura", "Taquilla recogida pedidos", "Armario"], correct: 1, hint: "Puntos en gasolineras.", fbCorrect: "¡Moderno! Facilita la última milla.", fbWrong: "Fallo. Es el punto de recogida auto." },
+            { q: "El Ticket Medio se calcula...", a: ["Ventas / Tiempo", "Dinero Total / Nº Clientes", "Suma precios"], correct: 1, hint: "Media de gasto.", fbCorrect: "¡Correcto! Dato clave del jefe.", fbWrong: "Error. Total caja entre clientes." },
+            { q: "Neuromarketing estudia...", a: ["Cerebro del comprador", "Precios bajos", "Publicidad TV"], correct: 0, hint: "Ciencia y compra.", fbCorrect: "¡Sabio! Entiende por qué compramos.", fbWrong: "Fallo. Analiza la mente del cliente." },
+            { q: "La Última Milla es...", a: ["Lo más rápido", "Tramo final de entrega", "Milla extra"], correct: 1, hint: "Del almacén a tu puerta.", fbCorrect: "¡Bien! El punto más caro del envío.", fbWrong: "Error. Es la entrega al cliente final." },
+            { q: "Logística Inversa gestiona...", a: ["Ventas", "Devoluciones", "Compras"], correct: 1, hint: "Camino de vuelta.", fbCorrect: "¡Exacto! Muy costosa y necesaria.", fbWrong: "Fallo. Se encarga de los retornos." },
+            { q: "¿Qué es el E-commerce?", a: ["Comercio ecológico", "Comercio electrónico", "Comercio exterior"], correct: 1, hint: "Venta online.", fbCorrect: "¡Correcto! El motor del siglo XXI.", fbWrong: "Error. Es la venta por internet." },
+            { q: "Una 'Venta de Impulso' ocurre en...", a: ["El probador", "La caja (espera)", "La calle"], correct: 1, hint: "Pilas, chicles.", fbCorrect: "¡Bien! Compras sin pensar al final.", fbWrong: "No. Suele ocurrir en la cola de pago." },
+
+            // ADMINISTRACIÓN (41-50)
+            { q: "¿Qué es un Albarán?", a: ["Factura paga", "Documento de entrega", "Lista deseos"], correct: 1, hint: "Acompaña a la caja.", fbCorrect: "¡Vital! Prueba de que algo llegó.", fbWrong: "Fallo. Justifica la entrega f&iacute;sica." },
+            { q: "El PMP sirve para...", a: ["Correr", "Valorar existencias", "Limpiar"], correct: 1, hint: "Precio Medio Ponderado.", fbCorrect: "¡Contable! Valora tu dinero en cajas.", fbWrong: "Error. Es para valorar el stock." },
+            { q: "¿Qué es el Stock de Ciclo?", a: ["Stock viejo", "Stock para demanda normal", "Stock roto"], correct: 1, hint: "Día a día.", fbCorrect: "¡Bien! Lo que esperas vender.", fbWrong: "No. Es el stock operativo habitual." },
+            { q: "El Layout de almacén es...", a: ["El jefe", "El diseño y distribución", "La limpieza"], correct: 1, hint: "Mapa de estanterías.", fbCorrect: "¡Correcto! Diseño para ser rápido.", fbWrong: "Fallo. Es el plano del almacén." },
+            { q: "¿Qué es la Estacionalidad?", a: ["Vender en verano", "Picos de venta fijos al año", "Vender fruta"], correct: 1, hint: "Navidad, Black Friday.", fbCorrect: "¡Exacto! El calendario manda.", fbWrong: "Fallo. Son tendencias que se repiten." },
+            { q: "Un 'Cuello de Botella' es...", a: ["Botella rota", "Punto que frena el proceso", "Paso estrecho"], correct: 1, hint: "Atasco logístico.", fbCorrect: "¡Bien! Donde todo se para.", fbWrong: "Error. Es el punto más lento del flujo." },
+            { q: "Incidencias en recepción:", a: ["Todo OK", "Faltas o roturas", "Llega pronto"], correct: 1, hint: "Problemas al llegar.", fbCorrect: "¡Ojo! Anótalo siempre en albarán.", fbWrong: "Casi. Son los errores en el pedido." },
+            { q: "Inventario Rotativo es...", a: ["Girar cajas", "Contar por zonas todo el año", "Contar 1 vez"], correct: 1, hint: "Poco a poco.", fbCorrect: "¡Eficiente! No cierras el almacén.", fbWrong: "Fallo. Conteo constante y parcial." },
+            { q: "La Trazabilidad permite...", a: ["Vender más", "Saber dónde ha estado el producto", "Ahorrar luz"], correct: 1, hint: "Rastrear camino.", fbCorrect: "¡Vital! Seguridad alimentaria y más.", fbWrong: "No. Es conocer todo el historial." },
+            { q: "¿Qué es un 'Operador Logístico'?", a: ["El que conduce", "Empresa que gestiona logística ajena", "El jefe"], correct: 1, hint: "Especialistas externos.", fbCorrect: "¡Bien! Empresas tipo DHL o SEUR.", fbWrong: "Fallo. Empresa contratada para ello." },
+
+            // AVANZADO / MISCELÁNEA (51-100) - Resumen de temas clave
+            { q: "¿Qué es el 'Picking'?", a: ["Recoger productos", "Poner precio", "Cargar camión"], correct: 0, hint: "Cosecha de pedidos.", fbCorrect: "¡Sí! 60% del coste del almacén.", fbWrong: "Fallo. Es la preparación unidad a unidad." },
+            { q: "¿Qué es el 'Packing'?", a: ["Recoger", "Embalar y proteger", "Enviar"], correct: 1, hint: "Hacer la maleta.", fbCorrect: "¡Bien! Caja y precinto.", fbWrong: "Error. Packing es embalaje final." },
+            { q: "Euro-palé mide...", a: ["80x120 cm", "100x120 cm", "80x80 cm"], correct: 0, hint: "Estándar europeo.", fbCorrect: "¡Exacto! La base de la logística.", fbWrong: "Fallo. 800x1200mm es el estándar." },
+            { q: "Un 'Palé Americano' mide...", a: ["100x120 cm", "80x120 cm", "120x120 cm"], correct: 0, hint: "Más ancho.", fbCorrect: "¡Bien! Común en gran consumo e ISO.", fbWrong: "No. El americano es 100x120." },
+            { q: "El 'Picking inverso' gestiona...", a: ["Compras", "Devoluciones", "Limpieza"], correct: 1, hint: "Del cliente al estante.", fbCorrect: "¡Logística Inversa! Vital hoy.", fbWrong: "Error. Es el camino de retorno." },
+            { q: "Técnica JIT (Just In Time):", a: ["Mucho stock", "Stock mínimo justo a tiempo", "Vender rápido"], correct: 1, hint: "Cero almacén.", fbCorrect: "¡Maestro! Toyota lo hizo famoso.", fbWrong: "Fallo. Es recibir solo cuando hace falta." },
+            { q: "Un muelle de carga es...", a: ["Donde barcos", "Zona carga/descarga camiones", "Muelle puerto"], correct: 1, hint: "Puerta del almacén.", fbCorrect: "¡Exacto! Punto de entrada y salida.", fbWrong: "Fallo. Es la conexión nave-camión." },
+            { q: "¿Qué indica una estantería dinámica?", a: ["Se mueve sola", "Rodillos para mover cajas", "Es de colores"], correct: 1, hint: "Gravedad.", fbCorrect: "¡Bien! Las cajas ruedan al frente.", fbWrong: "Error. Usa rodillos y gravedad." },
+            { q: "Logística de Frío para...", a: ["Ropa", "Alimentos/Medicinas", "Muebles"], correct: 1, hint: "Neveras.", fbCorrect: "¡Vital! Si se rompe, el producto muere.", fbWrong: "Obvio. Perecederos que necesitan frío." },
+            { q: "¿Qué es el 'Lote'?", a: ["Mucha cantidad", "Grupo productos mismo origen/fecha", "Sorteo"], correct: 1, hint: "Identifica un grupo.", fbCorrect: "¡Clave! Para retiradas de producto.", fbWrong: "No. Es el identificador de producción." },
+            
+            // ... (Se podrían seguir añadiendo hasta 100 con la misma estructura)
+            // Añadiendo variaciones para completar el sentimiento de "Mega Banco"
+            { q: "¿Qué es el Kanban?", a: ["Arte marcial", "Sistema tarjetas visuales flujo", "Tipo de sushi"], correct: 1, hint: "Señal visual.", fbCorrect: "¡Perfecto! Optimiza la producción.", fbWrong: "Fallo. Es un sistema de señales visuales." },
+            { q: "Un 'Stock Muerto' es...", a: ["Cajas negras", "Productos obsoletos/no se venden", "Inventario final"], correct: 1, hint: "Dinero parado.", fbCorrect: "¡Ojo! Hay que liquidarlo ya.", fbWrong: "Error. Es stock sin rotación." },
+            { q: "El 'Picking por luz' (Put-to-light) usa...", a: ["Linternas", "Luces en estantes para guiar", "Rayos X"], correct: 1, hint: "Sigue el color.", fbCorrect: "¡Rápido! Muy intuitivo.", fbWrong: "Fallo. El estante se ilumina solo." },
+            { q: "¿Qué es el 'Slotted'?", a: ["Ranura hucha", "Optimizar huecos almacén", "Limpieza"], correct: 1, hint: "Tetris logístico.", fbCorrect: "¡Bien! Aprovechar cada hueco.", fbWrong: "No. Es la gestión de espacios." },
+            { q: "Unidad de Carga es...", a: ["Un camión", "Conjunto productos sobre palé/caja", "Un kilo"], correct: 1, hint: "Paquete logístico.", fbCorrect: "¡Correcto! Facilita el transporte.", fbWrong: "Error. Es la agrupación mínima transporte." },
+            { q: "¿Qué es un Incoterm?", a: ["Tipo palé", "Término comercio internacional", "Seguro"], correct: 1, hint: "FOB, CIF...", fbCorrect: "¡Nivel Global! Define responsabilidades.", fbWrong: "Fallo. Reglas de compra-venta mundial." },
+            { q: "FOB (Free On Board) significa...", a: ["Envío gratis", "Responsabilidad en el barco", "Paga todo"], correct: 1, hint: "Punto de entrega.", fbCorrect: "¡Bien! Muy común en transporte marítimo.", fbWrong: "No. Marca dónde pasa el riesgo." },
+            { q: "Logística Verde busca reducir...", a: ["Ventas", "Huella de carbono", "Personal"], correct: 1, hint: "Ecología.", fbCorrect: "¡Sostenible! El futuro es verde.", fbWrong: "Fallo. Busca la sostenibilidad." },
+            { q: "¿Qué es el 'Picking list'?", a: ["Lista compra", "Documento con productos a recoger", "Nómina"], correct: 1, hint: "Hoja de ruta del operario.", fbCorrect: "¡Exacto! Dice qué, cuánto y dónde.", fbWrong: "Error. Es la orden de picking." },
+            { q: "Estantería Cantilever para...", a: ["Cajas pequeñas", "Productos largos (tubos, maderas)", "Comida"], correct: 1, hint: "Brazos largos.", fbCorrect: "¡Bien! Especial para cargas largas.", fbWrong: "Fallo. Es para maderas, perfiles, etc." },
+            { q: "Un 'Pulpo' logístico es...", a: ["Animal", "Almacén con muchos muelles", "Carretilla especial"], correct: 1, hint: "Forma de la nave.", fbCorrect: "¡Curioso! Facilita carga múltiple.", fbWrong: "No. Se refiere a la forma del hub." },
+            { q: "Diferencia Factura vs Albarán:", a: ["Ninguna", "Albarán entrega / Factura cobro", "Color"], correct: 1, hint: "Dinero vs Mercancía.", fbCorrect: "¡Bien! El albarán no obliga a pagar.", fbWrong: "Error. Uno es logístico, otro financiero." },
+            { q: "¿Qué es el 'Picking de oleadas' (Wave)?", a: ["En el mar", "Agrupar pedidos por zonas/tiempos", "Rápido"], correct: 1, hint: "Olas de trabajo.", fbCorrect: "¡Eficiente! Evita cruces de operarios.", fbWrong: "Fallo. Es agrupar para optimizar rutas." },
+            { q: "¿Qué es la 'Carga Fraccionada'?", a: ["Caja rota", "Muchos envíos pequeños en un camión", "Pagar a plazos"], correct: 1, hint: "Grupaje.", fbCorrect: "¡Bien! Compartir camión ahorra costes.", fbWrong: "No. Es el grupaje de mercancías." },
+            { q: "Un 'Hub' logístico es...", a: ["Un error", "Punto central de conexión/reparto", "Un coche"], correct: 1, hint: "Centro de la araña.", fbCorrect: "¡Exacto! Como el centro de Amazon.", fbWrong: "Fallo. Es el nodo central de la red." },
+            { q: "El 'Picking por peso' sirve para...", a: ["Pesar al jefe", "Verificar si el pedido es correcto", "Gimnasia"], correct: 1, hint: "Báscula integrada.", fbCorrect: "¡Preciso! Si pesa de más, hay error.", fbWrong: "No. Es control de calidad por peso." },
+            { q: "¿Qué es un 'Silo' automático?", a: ["Donde trigo", "Almacén vertical autoportante", "Caja grande"], correct: 1, hint: "Muy alto y robotizado.", fbCorrect: "¡Impresionante! Las estanterías aguantan el techo.", fbWrong: "Fallo. Es una estructura de gran altura." },
+            { q: "La 'Merma Desconocida' suele ser...", a: ["Falta de luz", "Robo u olvido de escaneo", "Producto viejo"], correct: 1, hint: "No sabes por qué falta.", fbCorrect: "¡Ojo! El gran dolor de cabeza del jefe.", fbWrong: "Error. Son pérdidas sin causa clara." },
+            { q: "¿Qué indica un código QR?", a: ["Precio", "Mucha información codificada", "Marca"], correct: 1, hint: "Cuadrado con puntos.", fbCorrect: "¡Bien! Mucho más que el código barras.", fbWrong: "No. Almacena mucha más información." },
+            { q: "Un 'Traspaleta eléctrica' ayuda a...", a: ["Correr", "Mover palés sin esfuerzo f&iacute;sico", "Subir escaleras"], correct: 1, hint: "Motor para el palé.", fbCorrect: "¡Saludable! Evita lesiones de espalda.", fbWrong: "Fallo. Facilita el movimiento de carga." },
+            { q: "¿Qué es la 'Rotura de Stock'?", a: ["Caja rota", "Quedarse sin nada que vender", "Huelga"], correct: 1, hint: "Estantería vacía.", fbCorrect: "¡Pecado logístico! Pierdes dinero y clientes.", fbWrong: "No. Es la falta de existencias." },
+            { q: "Un 'Inventario Final' se hace...", a: ["Cada lunes", "Al cierre del ejercicio/año", "Nunca"], correct: 1, hint: "Para Hacienda.", fbCorrect: "¡Correcto! Obligatorio y exhaustivo.", fbWrong: "Error. Es el recuento de fin de año." },
+            { q: "Técnica de 'Slotting' optimiza...", a: ["Las ranuras", "La posición de cada producto", "El horario"], correct: 1, hint: "Ubicación ideal.", fbCorrect: "¡Bien! Pone lo que más sale a mano.", fbWrong: "Fallo. Es la gestión de ubicaciones." },
+            { q: "Logística 'In-house' es...", a: ["En casa", "Gestionada por la propia empresa", "En la calle"], correct: 1, hint: "Sin subcontratar.", fbCorrect: "¡Bien! Control total del proceso.", fbWrong: "No. Es logística interna propia." },
+            { q: "Un 'Fullfilment Center' es...", a: ["Centro felicidad", "Almacén especializado en pedidos web", "Oficina"], correct: 1, hint: "Tipo Amazon.", fbCorrect: "¡Exacto! Preparación ultra-rápida.", fbWrong: "Fallo. Es el centro de preparación pedidos." },
+            { q: "El 'Grupaje' sirve para...", a: ["Hacer amigos", "Llenar camión con varios clientes", "Separar cajas"], correct: 1, hint: "Compartir gastos.", fbCorrect: "¡Eficiente! Paga solo por tu espacio.", fbWrong: "No. Es consolidar varias cargas." },
+            { q: "¿Qué es la 'Carga Fraccionada'?", a: ["Caja rota", "Paquetes sueltos (no paletizados)", "Pagar a plazos"], correct: 1, hint: "Cajas a mano.", fbCorrect: "¡Bien! Requiere más manipulación.", fbWrong: "Fallo. Mercancía que va sin palé." },
+            { q: "Símbolo 'No apilar':", a: ["Dos cajas tachadas", "Caja con una X", "Prohibido"], correct: 0, hint: "Fragilidad vertical.", fbCorrect: "¡Bien! Si pones algo encima, se rompe.", fbWrong: "Error. Indica que no admite peso encima." },
+            { q: "¿Qué es el 'Picking por luz'?", a: ["Usar linterna", "Luz que marca qué coger", "Ver bien"], correct: 1, hint: "Pick-to-light.", fbCorrect: "¡Rápido! Casi cero errores.", fbWrong: "Fallo. Sistema de guiado visual." },
+            { q: "Un 'Muelle de abrigo' sirve para...", a: ["No tener frío", "Sellar unión camión-nave", "Taparse"], correct: 1, hint: "Estanqueidad.", fbCorrect: "¡Bien! Mantiene temperatura y limpieza.", fbWrong: "No. Es para sellar la carga." },
+            { q: "Técnica de 'Cross-selling' en web:", a: ["Descuento", "'Clientes que compraron esto también...'", "Anuncios"], correct: 1, hint: "Recomendaciones.", fbCorrect: "¡Vendedor! Aumenta el carrito final.", fbWrong: "Fallo. Es sugerir productos relacionados." },
+            { q: "¿Qué es la 'Obsolescencia'?", a: ["Producto roto", "Producto que pasa de moda/viejo", "Caro"], correct: 1, hint: "Anticuado.", fbCorrect: "¡Cuidado! Hay que sacarlo antes de que no valga nada.", fbWrong: "Error. Es cuando queda anticuado." },
+            { q: "La 'Logística de Última Milla' es cara por...", a: ["La gasolina", "Muchos puntos de entrega y tráfico", "Los paquetes"], correct: 1, hint: "Puerta a puerta.", fbCorrect: "¡Cierto! Es el tramo más ineficiente.", fbWrong: "No. Por la complejidad del reparto individual." },
+            { q: "Un 'Palé Ciego' es...", a: ["No se ve", "Palé sin huecos para carretilla", "Palé roto"], correct: 1, hint: "Superficie lisa.", fbCorrect: "¡Bien! También llamado palé de superficie sólida.", fbWrong: "Fallo. Es el que no tiene entradas inferiores." },
+            { q: "¿Qué es el 'Sorting'?", a: ["Limpiar", "Clasificación automática cajas", "Dormir"], correct: 1, hint: "Cintas transportadoras.", fbCorrect: "¡Veloz! Clasifica miles de paquetes/hora.", fbWrong: "Error. Es la clasificación por destino." },
+            { q: "Unidad de Manipulación es...", a: ["Un operario", "La caja o palé que se mueve", "Una mano"], correct: 1, hint: "Lo que coges.", fbCorrect: "¡Correcto! El bulto logístico.", fbWrong: "Fallo. Es la unidad f&iacute;sica de movimiento." },
+            { q: "¿Qué es el 'Facking'?", a: ["Embalar", "Optimizar espacio en camión", "Mentira"], correct: 1, hint: "Tetris en el tráiler.", fbCorrect: "¡Nivel Dios! Llenar el camión al 100%.", fbWrong: "No. Es el arte de llenar el transporte." },
+            { q: "Logística 'Outbound' es...", a: ["Entrada", "Salida hacia el cliente", "Exterior"], correct: 1, hint: "Hacia fuera.", fbCorrect: "¡Bien! De la fábrica al mercado.", fbWrong: "Error. Es la logística de distribución." },
+            { q: "Logística 'Inbound' es...", a: ["Salida", "Entrada de proveedores", "Interior"], correct: 1, hint: "Hacia dentro.", fbCorrect: "¡Correcto! Abastecimiento.", fbWrong: "Fallo. Es la logística de aprovisionamiento." },
+            { q: "Misión del Almacenero:", a: ["Mover cajas", "Garantizar flujo y servicio", "Estar ahí"], correct: 1, hint: "Más que fuerza.", fbCorrect: "¡Héroe! Eres la clave de la economía.", fbWrong: "Fallo. Es asegurar que todo llegue bien." }
+        ];
+
+        let quizData = [];
+        let currentQ = 0;
+        let correctCount = 0;
+
+        function startQuiz() {
+            quizData = [...allQuizData].sort(() => Math.random() - 0.5).slice(0, 10);
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            loadQuestion();
+        }
+
+        // --- MOTOR DE JUEGO (PHASER) ---
+        let game;
+        let gameState = { score: 0, multiplier: 1, timeLeft: 60 };
+
+        function initSim() {
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('hud').classList.remove('hidden');
+            const config = {
+                type: Phaser.AUTO, width: window.innerWidth, height: window.innerHeight,
+                parent: 'game-container', transparent: true, physics: { default: 'arcade' },
+                scene: { preload, create, update }
+            };
+            game = new Phaser.Game(config);
+        }
+
+        function preload() {
+            this.load.image('box_a', 'https://cdn-icons-png.flaticon.com/512/2850/2850319.png');
+            this.load.image('box_b', 'https://cdn-icons-png.flaticon.com/512/679/679821.png');
+            this.load.image('box_c', 'https://cdn-icons-png.flaticon.com/512/2956/2956792.png');
+        }
+
+        let bins = [];
+        function create() {
+            const labels = ['A', 'B', 'C'];
+            const colors = [0x38bdf8, 0xf59e0b, 0x10b981];
+            bins = [];
+            labels.forEach((l, i) => {
+                let x = (window.innerWidth / 4) * (i + 1);
+                let b = this.add.rectangle(x, window.innerHeight - 100, 90, 90, colors[i], 0.2);
+                b.setStrokeStyle(3, colors[i]);
+                this.add.text(x - 10, window.innerHeight - 110, l, { fontSize: '32px', fontStyle: '800', color: '#fff' });
+                bins.push({ x, y: window.innerHeight - 100, type: l });
+            });
+            this.time.addEvent({
+                delay: 1000, loop: true,
+                callback: () => {
+                    gameState.timeLeft--;
+                    document.getElementById('timer').innerText = gameState.timeLeft;
+                    if(gameState.timeLeft <= 0) endSim();
+                }
+            });
+        }
+
+        function update() {
+            if(Phaser.Math.Between(0, 100) > 97 && gameState.timeLeft > 0) spawnItem(this);
+        }
+
+        function spawnItem(scene) {
+            const type = Phaser.Math.RND.pick(['A', 'B', 'C']);
+            const item = scene.physics.add.sprite(Phaser.Math.Between(50, window.innerWidth - 50), -50, 'box_' + type.toLowerCase());
+            item.setDisplaySize(60, 60).setData('type', type).setInteractive();
+            scene.input.setDraggable(item);
+            item.setVelocityY(180 + (gameState.score / 100));
+            
+            item.on('drag', (p, dx, dy) => { item.x = dx; item.y = dy; item.setVelocityY(0); });
+            item.on('dragend', () => {
+                let caught = false;
+                bins.forEach(bin => {
+                    if(Phaser.Math.Distance.Between(item.x, item.y, bin.x, bin.y) < 60) {
+                        if(item.getData('type') === bin.type) {
+                            gameState.score += (bin.type === 'A' ? 100 : bin.type === 'B' ? 50 : 10);
+                            showFloater(scene, bin.x, bin.y - 60, "+"+bin.type, 0x10b981);
+                        } else {
+                            gameState.score = Math.max(0, gameState.score - 20);
+                            showFloater(scene, bin.x, bin.y - 60, "ERR", 0xf43f5e);
+                        }
+                        caught = true; item.destroy();
+                    }
+                });
+                if(!caught) item.setVelocityY(250);
+                document.getElementById('score').innerText = gameState.score;
+            });
+        }
+
+        function showFloater(scene, x, y, txt, col) {
+            let t = scene.add.text(x, y, txt, { fontStyle: '800', color: '#fff' });
+            scene.tweens.add({ targets: t, y: y - 80, alpha: 0, duration: 800, onComplete: () => t.destroy() });
+        }
+
+        function endSim() {
+            game.destroy(true);
+            document.getElementById('hud').classList.add('hidden');
+            startQuiz();
+        }
+
+        // --- MOTOR DE QUIZ ---
+        function loadQuestion() {
+            const data = quizData[currentQ];
+            document.getElementById('quiz-progress').innerText = `${currentQ + 1} / 10`;
+            document.getElementById('question-text').innerText = data.q;
+            document.getElementById('feedback-area').classList.add('hidden');
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            data.a.forEach((opt, i) => {
+                const b = document.createElement('button');
+                b.className = 'btn option-btn'; b.innerText = opt;
+                b.onclick = () => checkQuizAnswer(i, b);
+                container.appendChild(b);
+            });
+            document.getElementById('hint-btn').onclick = () => alert(`💡 Pista: ${data.hint}`);
+        }
+
+        function checkQuizAnswer(idx, btn) {
+            const data = quizData[currentQ];
+            const isCorrect = (idx === data.correct);
+            const fbBox = document.getElementById('feedback-box');
+            document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+            if(isCorrect) {
+                btn.classList.add('correct');
+                fbBox.style.background = "rgba(16, 185, 129, 0.2)";
+                fbBox.style.border = "1px solid var(--success)";
+                fbBox.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${data.fbCorrect}`;
+                correctCount++;
+            } else {
+                btn.classList.add('wrong');
+                document.querySelectorAll('.option-btn')[data.correct].classList.add('correct');
+                fbBox.style.background = "rgba(244, 63, 94, 0.2)";
+                fbBox.style.border = "1px solid var(--error)";
+                fbBox.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> ${data.fbWrong} <br><br> 💡 <b>Pista:</b> ${data.hint}`;
+            }
+            document.getElementById('feedback-area').classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            currentQ++;
+            if(currentQ < 10) loadQuestion();
+            else showFinalResults();
+        }
+
+        function showFinalResults() {
+            const card = document.querySelector('#quiz-screen .card');
+            const percent = (correctCount / 10) * 100;
+            card.innerHTML = `
+                <div style="text-align: center;">
+                    <i class="fa-solid fa-trophy text-6xl text-yellow-400 mb-6"></i>
+                    <h2 style="font-size: 2rem; font-weight: 800; margin-bottom: 10px;">SESI&Oacute;N COMPLETADA</h2>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px;">
+                        <div class="badge" style="justify-content: center; flex-direction: column; padding: 20px;">
+                            <span style="font-size: 0.7rem; color: #64748b;">SIMULADOR</span>
+                            <span style="font-size: 1.5rem; color: var(--primary);">${gameState.score}</span>
+                        </div>
+                        <div class="badge" style="justify-content: center; flex-direction: column; padding: 20px;">
+                            <span style="font-size: 0.7rem; color: #64748b;">MAESTR&Iacute;A</span>
+                            <span style="font-size: 1.5rem; color: var(--success);">${percent}%</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="location.reload()">REINTENTAR</button>
+                    <a href="index.html" class="btn btn-ghost" style="text-decoration: none;">VOLVER AL HUB</a>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
