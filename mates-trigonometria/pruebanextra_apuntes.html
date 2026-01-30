@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrigoMaster: Documentación Maestra | 4º ESO</title>
+    
+    <!-- Librerías -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\(', '\)']],
+                displayMath: [['$$', '$$'], ['\[', '\]']],
+                processEscapes: true
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Estilos de Nextra / Modern Docs -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700&display=swap');
+        
+        :root {
+            --nextra-primary: #6366f1;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: white;
+            color: #111;
+        }
+
+        h1, h2, h3, h4, h5 {
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: -0.02em;
+        }
+
+        .sidebar-link {
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-link:hover {
+            background-color: #f3f4f6;
+            color: var(--nextra-primary);
+        }
+
+        .sidebar-link.active {
+            background-color: #eef2ff;
+            color: var(--nextra-primary);
+            font-weight: 600;
+        }
+
+        .nextra-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem;
+            transition: all 0.2s ease;
+        }
+
+        .nextra-card:hover {
+            border-color: var(--nextra-primary);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+        }
+
+        /* ADHD Progress Bar - Custom */
+        .nx-progress-container {
+            height: 2px;
+            width: 100%;
+            background: #f3f4f6;
+            position: fixed;
+            top: 64px;
+            z-index: 50;
+        }
+
+        .nx-progress-bar {
+            height: 100%;
+            background: var(--nextra-primary);
+            transition: width 0.3s ease;
+        }
+
+        /* Hide scrollbar for sidebar */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .math-block {
+            overflow-x: auto;
+            padding: 1rem 0;
+        }
+    </style>
+</head>
+<body class="antialiased text-slate-900">
+
+<div id="app">
+    <!-- NAVBAR (Nextra Style) -->
+    <header class="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/80 backdrop-blur-md">
+        <div class="mx-auto flex h-16 max-w-[1440px] items-center justify-between px-6">
+            <div class="flex items-center gap-2">
+                <div class="bg-indigo-600 p-1.5 rounded-lg text-white">
+                    <i data-lucide="triangle" class="w-5 h-5"></i>
+                </div>
+                <span class="text-xl font-bold tracking-tight">Trigo<span class="text-indigo-600">Master</span></span>
+                <span class="hidden md:inline-block ml-2 px-2 py-0.5 rounded-full bg-gray-100 text-[10px] font-bold text-gray-500 uppercase">Docs v2.0</span>
+            </div>
+
+            <div class="flex items-center gap-6">
+                <!-- Temporizador ADHD (Con Gracia) -->
+                <div class="flex items-center gap-2 px-3 py-1.5 rounded-full transition-all duration-500"
+                     :class="isStudyTime ? 'bg-amber-50 text-amber-700 border border-amber-200' : 'bg-green-50 text-green-700 border border-green-200'">
+                    <i data-lucide="timer" class="w-4 h-4 animate-pulse"></i>
+                    <span class="text-xs font-bold font-mono">{{ formattedTime }}</span>
+                </div>
+                
+                <nav class="hidden md:flex items-center gap-4 text-sm font-medium text-gray-600">
+                    <a href="#" class="hover:text-indigo-600 transition-colors">Guía</a>
+                    <a href="#" class="hover:text-indigo-600 transition-colors">Ejercicios</a>
+                    <a href="https://github.com" target="_blank" class="text-gray-400 hover:text-gray-900">
+                        <i data-lucide="github" class="w-5 h-5"></i>
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- PROGRESS BAR -->
+    <div class="nx-progress-container">
+        <div class="nx-progress-bar" :style="{ width: scrollProgress + '%' }"></div>
+    </div>
+
+    <div class="mx-auto flex max-w-[1440px]">
+        <!-- SIDEBAR IZQUIERDA -->
+        <aside class="sticky top-16 h-[calc(100vh-64px)] w-64 shrink-0 overflow-y-auto border-r border-gray-200 p-6 no-scrollbar hidden lg:block">
+            <div class="space-y-8">
+                <div>
+                    <h4 class="mb-3 text-xs font-bold uppercase tracking-widest text-gray-400">Fundamentos</h4>
+                    <nav class="space-y-1">
+                        <a v-for="level in levels.slice(0, 3)" :key="level.id" :href="'#' + level.id" 
+                           class="sidebar-link block px-3 py-2 rounded-md text-sm text-gray-600">
+                            {{ level.title }}
+                        </a>
+                    </nav>
+                </div>
+                <div>
+                    <h4 class="mb-3 text-xs font-bold uppercase tracking-widest text-gray-400">Operativa</h4>
+                    <nav class="space-y-1">
+                        <a v-for="level in levels.slice(3, 7)" :key="level.id" :href="'#' + level.id" 
+                           class="sidebar-link block px-3 py-2 rounded-md text-sm text-gray-600">
+                            {{ level.title }}
+                        </a>
+                    </nav>
+                </div>
+                <div>
+                    <h4 class="mb-3 text-xs font-bold uppercase tracking-widest text-gray-400">Avanzado</h4>
+                    <nav class="space-y-1">
+                        <a v-for="level in levels.slice(7)" :key="level.id" :href="'#' + level.id" 
+                           class="sidebar-link block px-3 py-2 rounded-md text-sm text-gray-600">
+                            {{ level.title }}
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </aside>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <main class="w-full min-w-0 px-6 py-12 lg:px-12">
+            <div class="max-w-3xl mx-auto">
+                <!-- Breadcrumbs -->
+                <div class="flex items-center gap-2 text-xs font-medium text-gray-400 mb-8 uppercase tracking-widest">
+                    <span>Trigonometría</span>
+                    <i data-lucide="chevron-right" class="w-3 h-3"></i>
+                    <span class="text-gray-900">Curso Completo 4º ESO</span>
+                </div>
+
+                <!-- BLOQUE 1 -->
+                <section id="block-1" class="mb-24 scroll-mt-24">
+                    <div class="mb-12 border-b border-gray-200 pb-8">
+                        <span class="bg-indigo-100 text-indigo-700 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Nivel 1: Conceptos Fundamentales</span>
+                        <h1 class="text-4xl font-extrabold text-gray-900 mt-6 mb-4 sm:text-5xl">1. Introducción a la Trigonometría</h1>
+                        <p class="text-xl text-gray-500 max-w-3xl leading-relaxed">
+                            Bienvenido a la rama de las matemáticas que conectó el cielo con la tierra. Aquí transformamos problemas geométricos (dibujos) en algebraicos (números).
+                        </p>
+                    </div>
+
+                    <!-- 1. DEFINICIÓN Y ETIMOLOGÍA -->
+                    <div class="nextra-card overflow-hidden mb-12">
+                        <div class="bg-indigo-50 border-b border-indigo-100 p-6 flex items-center gap-3">
+                            <div class="bg-indigo-600 text-white p-2 rounded-lg">
+                                <i data-lucide="book-open" class="w-5 h-5"></i>
+                            </div>
+                            <h3 class="font-bold text-lg uppercase tracking-wide text-indigo-900">1.1 Definición</h3>
+                        </div>
+                        <div class="p-8 md:p-12">
+                            <!-- Etimología Visual -->
+                            <div class="flex flex-col md:flex-row gap-6 items-center justify-center mb-10">
+                                <div class="bg-slate-100 px-8 py-6 rounded-2xl text-center border-b-4 border-indigo-400 w-full md:w-auto">
+                                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-2">Griego</span>
+                                    <span class="text-3xl font-serif text-slate-700">Trígonos</span>
+                                    <span class="block text-indigo-600 font-bold mt-1">"Triángulo"</span>
+                                </div>
+                                <div class="text-slate-300 hidden md:block">
+                                    <i data-lucide="plus" class="w-8 h-8"></i>
+                                </div>
+                                <div class="bg-slate-100 px-8 py-6 rounded-2xl text-center border-b-4 border-pink-400 w-full md:w-auto">
+                                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-2">Griego</span>
+                                    <span class="text-3xl font-serif text-slate-700">Metron</span>
+                                    <span class="block text-pink-600 font-bold mt-1">"Medida"</span>
+                                </div>
+                            </div>
+                            <p class="text-lg text-slate-700 leading-relaxed mb-6">
+                                La <strong>Trigonometría</strong> es la parte de las matemáticas que se encarga de estudiar y calcular la relación precisa entre los <strong>elementos de un triángulo</strong>: sus lados y sus ángulos.
+                            </p>
+                            <div class="p-6 bg-indigo-50 border-l-4 border-indigo-500 rounded-r-xl">
+                                <h4 class="font-bold text-indigo-900 mb-2 flex items-center gap-2">
+                                    <i data-lucide="lightbulb" class="w-5 h-5"></i>
+                                    El Superpoder de la Medición Indirecta
+                                </h4>
+                                <p class="text-indigo-800 text-sm leading-relaxed">
+                                    Permite calcular distancias o alturas <strong>sin necesidad de recorrerlas físicamente</strong>. Si tienes una sombra y un ángulo, puedes saber la altura de un edificio sin subirte a él.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 1.2 GEOMETRÍA VS TRIGONOMETRÍA -->
+                    <div class="grid md:grid-cols-2 gap-8 mb-12">
+                        <div class="nextra-card p-8 bg-slate-50 border-slate-200">
+                            <h4 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                <i data-lucide="ruler" class="text-indigo-600"></i>
+                                Geometría Clásica
+                            </h4>
+                            <p class="text-xs text-slate-500 leading-relaxed">
+                                Se centra en las <strong>propiedades de las formas</strong>. Te dice que un triángulo tiene 3 lados, pero si solo tienes ángulos, la geometría se queda "coja".
+                            </p>
+                        </div>
+                        <div class="nextra-card p-8 bg-indigo-600 text-white border-indigo-500">
+                            <h4 class="font-bold mb-4 flex items-center gap-2 text-indigo-100">
+                                <i data-lucide="activity" class="text-white"></i>
+                                Trigonometría
+                            </h4>
+                            <p class="text-xs text-indigo-100 leading-relaxed">
+                                Es el <strong>puente conector</strong>. Permite pasar de ángulos a metros y de metros a ángulos. Es la geometría puesta en movimiento.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 1.3 EL LENGUAJE DE LOS ÁNGULOS -->
+                    <div class="nextra-card p-8 border border-gray-200 mb-12">
+                        <h3 class="text-2xl font-bold mb-6 text-slate-800 flex items-center gap-3">
+                            <i data-lucide="compass" class="text-pink-500 w-8 h-8"></i>
+                            1.3 Los Grados: Nuestra Brújula
+                        </h3>
+                        <p class="text-sm text-slate-600 leading-relaxed mb-6">
+                            En 4º ESO usamos el sistema <strong>Sexagesimal</strong>. Una circunferencia completa son $360^\circ$.
+                        </p>
+                        <div class="bg-pink-50 p-6 rounded-2xl border border-pink-100">
+                            <h4 class="font-bold text-pink-900 text-xs uppercase tracking-widest mb-3 italic">Curiosidad ADHD</h4>
+                            <p class="text-xs text-pink-800 leading-relaxed">
+                                ¿Por qué 360? Porque los antiguos babilonios amaban el número 60. El 360 es genial porque se puede dividir entre casi todo (2, 3, 4, 5, 6, 8, 9, 10, 12...). ¡Es el número más "ordenado" del mundo!
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Desafío Rápido #0 -->
+                    <div class="mt-8 nextra-card p-6 bg-white border-indigo-200 mb-12">
+                        <h4 class="text-indigo-700 font-bold mb-4 flex items-center gap-2">
+                            <i data-lucide="zap" class="w-4 h-4"></i>
+                            Desafío Relámpago #0
+                        </h4>
+                        <p class="text-sm mb-4">¿Cuál es el valor de la suma de los tres ángulos internos de cualquier triángulo?</p>
+                        <div class="flex gap-2">
+                            <button @click="checkAnswerSimple(true, '¡Correcto! Siempre suman 180º')" class="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg text-xs font-bold hover:bg-indigo-200">180º</button>
+                            <button @click="checkAnswerSimple(false, 'Nop, eso es una circunferencia completa')" class="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg text-xs font-bold hover:bg-gray-200">360º</button>
+                        </div>
+                        <div v-if="flashFeedback" :class="flashFeedback.type === 'success' ? 'bg-green-50 text-green-700 border-green-200' : 'bg-red-50 text-red-700 border-red-200'" class="mt-4 p-3 rounded-lg border text-xs font-bold transition-all animate-pulse">
+                            {{ flashFeedback.text }}
+                        </div>
+                    </div>
+
+                    <!-- Hito Histórico -->
+                    <div class="nextra-card p-8 border border-gray-200 mb-12">
+                        <h4 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                            <i data-lucide="history" class="w-6 h-6 text-indigo-600"></i>
+                            Hito Histórico: Tales y la Gran Pirámide
+                        </h4>
+                        <div class="flex flex-col md:flex-row gap-8 items-center">
+                            <div class="flex-1 text-sm text-gray-600 leading-relaxed">
+                                <p class="mb-4">Tales de Mileto fue capaz de medir la altura de la pirámide de Keops sin escaleras. Solo necesitó:</p>
+                                <ul class="space-y-2 mb-4">
+                                    <li class="flex gap-2"><strong>1.</strong> Un bastón de altura conocida.</li>
+                                    <li class="flex gap-2"><strong>2.</strong> Medir la sombra del bastón.</li>
+                                    <li class="flex gap-2"><strong>3.</strong> Medir la sombra de la pirámide.</li>
+                                </ul>
+                                <p class="bg-gray-50 p-3 rounded-lg border-l-4 border-indigo-400 italic">
+                                    "La relación entre la altura y la sombra es constante para un mismo ángulo solar. ¡Eso es pura trigonometría!"
+                                </p>
+                            </div>
+                            <div class="w-full md:w-1/3 bg-indigo-50 rounded-2xl p-6 text-center border border-indigo-100">
+                                <div class="text-5xl mb-2">🏜️📐</div>
+                                <p class="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">Semejanza y Ángulos</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contextos de Aplicación -->
+                    <div class="mb-12">
+                        <h3 class="text-2xl font-bold mb-8 text-center text-gray-800">¿Para qué sirve todo esto?</h3>
+                        <div class="grid md:grid-cols-3 gap-8">
+                            <div class="space-y-3">
+                                <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center mb-2">
+                                    <i data-lucide="mountain"></i>
+                                </div>
+                                <h4 class="font-bold text-lg text-gray-800">Topografía</h4>
+                                <p class="text-sm text-gray-500 leading-relaxed">Fundamental para hacer mapas mediante la <strong>Triangulación</strong>, localizando puntos con precisión milimétrica.</p>
+                            </div>
+                            <div class="space-y-3">
+                                <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center mb-2">
+                                    <i data-lucide="stars"></i>
+                                </div>
+                                <h4 class="font-bold text-lg text-gray-800">Astronomía</h4>
+                                <p class="text-sm text-gray-500 leading-relaxed">Para medir la distancia a estrellas cercanas se usa el <strong>Paralaje</strong>, trigonometría aplicada al cambio de perspectiva.</p>
+                            </div>
+                            <div class="space-y-3">
+                                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-2">
+                                    <i data-lucide="gamepad-2"></i>
+                                </div>
+                                <h4 class="font-bold text-lg text-gray-800">Tecnología Digital</h4>
+                                <p class="text-sm text-gray-500 leading-relaxed">Desde el formato JPG y MP3 hasta los gráficos de <strong>Fortnite</strong>. Todo se basa en descomponer señales en ondas simples.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <hr class="my-16 border-gray-100">
+
+                <!-- BLOQUE 2: EL TRIÁNGULO RECTÁNGULO -->
+                <section id="block-2" class="mb-24 scroll-mt-24">
+                    <div class="mb-12 border-b border-gray-200 pb-8">
+                        <span class="bg-emerald-100 text-emerald-700 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Nivel 2: El Terreno de Juego</span>
+                        <h2 class="text-3xl font-bold text-gray-900 mt-6 mb-4">2. El Triángulo Rectángulo</h2>
+                        <p class="text-gray-600 mb-8 leading-relaxed">
+                            No todos los triángulos valen. La trigonometría básica solo funciona si el triángulo tiene un ángulo "perfecto" de 90 grados. Es nuestro escenario obligatorio.
+                        </p>
+                    </div>
+
+                    <!-- Definición -->
+                    <div class="nextra-card p-8 border-l-8 border-emerald-500 mb-12 flex flex-col md:flex-row gap-8 items-center">
+                        <div class="flex-1">
+                            <h3 class="text-2xl font-bold mb-4 flex items-center gap-3 text-slate-800">
+                                <i data-lucide="bookmark" class="text-emerald-500 w-8 h-8"></i>
+                                ¿Qué es exactamente?
+                            </h3>
+                            <p class="text-lg text-slate-600 leading-relaxed mb-4">
+                                Es un triángulo que tiene <strong>un ángulo recto ($90^\circ$)</strong>. Imagina la esquina de una habitación o una escuadra. Si tienes esa "L", tienes un triángulo rectángulo.
+                            </p>
+                            <div class="bg-emerald-50 p-4 rounded-xl text-emerald-800 text-sm font-medium border border-emerald-100">
+                                💡 Dato Clave: Los otros dos ángulos siempre serán agudos ($<90^\circ$) y sumarán exactamente $90^\circ$.
+                            </div>
+                        </div>
+                        <div class="w-full md:w-1/3 flex justify-center">
+                            <div class="bg-emerald-100 w-40 h-40 rounded-full flex items-center justify-center text-emerald-600">
+                                <i data-lucide="triangle" class="w-24 h-24 stroke-[1.5]"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Anatomía -->
+                    <div class="grid md:grid-cols-2 gap-8 mb-12">
+                        <div class="nextra-card p-8 hover:border-indigo-400 transition-colors group bg-white">
+                            <div class="bg-indigo-100 w-14 h-14 rounded-2xl flex items-center justify-center mb-6 text-indigo-600 group-hover:rotate-12 transition-transform">
+                                <i data-lucide="trending-up" class="w-8 h-8"></i>
+                            </div>
+                            <h4 class="text-2xl font-bold text-slate-800 mb-3 flex items-center gap-2">
+                                La Hipotenusa
+                                <span class="text-[10px] bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-full uppercase">Lado VIP</span>
+                            </h4>
+                            <ul class="space-y-3 text-slate-600 text-sm">
+                                <li class="flex gap-3"><i data-lucide="shield-check" class="text-green-500 w-5 h-5 shrink-0 mt-1"></i> Es el lado <strong>más largo</strong>.</li>
+                                <li class="flex gap-3"><i data-lucide="target" class="text-green-500 w-5 h-5 shrink-0 mt-1"></i> Siempre está <strong>frente al ángulo de 90º</strong>.</li>
+                            </ul>
+                        </div>
+                        <div class="nextra-card p-8 hover:border-pink-400 transition-colors group bg-white">
+                            <div class="bg-pink-100 w-14 h-14 rounded-2xl flex items-center justify-center mb-6 text-pink-600 group-hover:-rotate-12 transition-transform">
+                                <i data-lucide="layers" class="w-8 h-8"></i>
+                            </div>
+                            <h4 class="text-2xl font-bold text-slate-800 mb-3 flex items-center gap-2">
+                                Los Catetos
+                                <span class="text-[10px] bg-pink-50 text-pink-600 px-2 py-0.5 rounded-full uppercase">Los Escuderos</span>
+                            </h4>
+                            <ul class="space-y-3 text-slate-600 text-sm">
+                                <li class="flex gap-3"><i data-lucide="corner-down-right" class="text-green-500 w-5 h-5 shrink-0 mt-1"></i> Son los que <strong>forman la "L"</strong> del ángulo recto.</li>
+                                <li class="flex gap-3"><i data-lucide="maximize-2" class="text-green-500 w-5 h-5 shrink-0 mt-1"></i> Sumados (al cuadrado) dan la hipotenusa.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Side Identification Cheat Sheet -->
+                    <div class="bg-indigo-50 p-8 rounded-[2rem] border border-indigo-100 mb-12">
+                        <h4 class="text-lg font-bold text-indigo-900 mb-6 flex items-center gap-2">
+                            <i data-lucide="glasses" class="text-indigo-600"></i>
+                            Guía Rápida de Identificación
+                        </h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div class="bg-white p-4 rounded-xl border border-indigo-100 text-center">
+                                <div class="text-xs font-bold text-slate-400 uppercase mb-2">¿Es el más largo?</div>
+                                <div class="text-indigo-600 font-bold text-sm">→ Hipotenusa</div>
+                            </div>
+                            <div class="bg-white p-4 rounded-xl border border-indigo-100 text-center">
+                                <div class="text-xs font-bold text-slate-400 uppercase mb-2">¿Está enfrente?</div>
+                                <div class="text-pink-600 font-bold text-sm">→ Opuesto</div>
+                            </div>
+                            <div class="bg-white p-4 rounded-xl border border-indigo-100 text-center">
+                                <div class="text-xs font-bold text-slate-400 uppercase mb-2">¿Lo estás tocando?</div>
+                                <div class="text-blue-600 font-bold text-sm">→ Contiguo</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Punto de Vista -->
+                    <div class="bg-gray-900 text-white rounded-[2.5rem] p-10 md:p-16 shadow-2xl relative overflow-hidden mb-12">
+                        <div class="absolute top-0 right-0 w-64 h-64 bg-emerald-500 rounded-full blur-[80px] opacity-10 pointer-events-none"></div>
+                        <div class="relative z-10 text-center mb-10">
+                            <span class="bg-white/10 text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest border border-white/20">Concepto Vital</span>
+                            <h3 class="text-3xl md:text-4xl font-bold mt-4 mb-4 flex items-center justify-center gap-3">
+                                <i data-lucide="eye" class="text-emerald-400 w-8 h-8"></i>
+                                Todo depende de tu <span class="text-emerald-400">Punto de Vista</span>
+                            </h3>
+                            <p class="text-slate-300 max-w-2xl mx-auto">Un cateto no nace siendo "Opuesto" o "Contiguo". Se convierte en uno u otro según el ángulo que elijas para mirar.</p>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div class="bg-white/5 p-8 rounded-3xl border border-white/10 group hover:bg-white/10 transition-colors">
+                                <div class="flex items-center gap-4 mb-4">
+                                    <div class="bg-pink-500/20 p-3 rounded-2xl text-pink-400"><i data-lucide="move-horizontal"></i></div>
+                                    <h4 class="text-xl font-bold text-pink-400">Cateto Opuesto</h4>
+                                </div>
+                                <p class="text-sm text-slate-300 mb-4">Es el que está <strong>al otro lado</strong>. Tienes que cruzar el triángulo para llegar a él.</p>
+                                <div class="bg-black/30 p-3 rounded-lg text-xs text-center font-mono text-pink-200 italic border border-pink-500/20">"El que mira el ángulo de frente"</div>
+                            </div>
+                            <div class="bg-white/5 p-8 rounded-3xl border border-white/10 group hover:bg-white/10 transition-colors">
+                                <div class="flex items-center gap-4 mb-4">
+                                    <div class="bg-blue-500/20 p-3 rounded-2xl text-blue-400"><i data-lucide="touchpad"></i></div>
+                                    <h4 class="text-xl font-bold text-blue-400">Cateto Contiguo</h4>
+                                </div>
+                                <p class="text-sm text-slate-300 mb-4">Es el que <strong>toca</strong> tu pie. Forma parte de la esquina donde estás.</p>
+                                <div class="bg-black/30 p-3 rounded-lg text-xs text-center font-mono text-blue-200 italic border border-blue-500/20">"El vecino de al lado"</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Desafío Rápido #1 -->
+                    <div class="mt-8 nextra-card p-6 bg-white border-emerald-200">
+                        <h4 class="text-emerald-700 font-bold mb-4 flex items-center gap-2">
+                            <i data-lucide="zap" class="w-4 h-4 fill-emerald-500"></i>
+                            Desafío Relámpago #1
+                        </h4>
+                        <p class="text-sm mb-4">Si el cateto vertical mide 3 y el horizontal 4, ¿cuánto mide la hipotenusa?</p>
+                        <div class="flex gap-2">
+                            <button @click="checkAnswerSimple(true, '¡Correcto! 3²+4²=5²')" class="px-4 py-2 bg-emerald-100 text-emerald-700 rounded-lg text-xs font-bold hover:bg-emerald-200 transition-all">5</button>
+                            <button @click="checkAnswerSimple(false, 'Casi... revisa los cuadrados')" class="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg text-xs font-bold hover:bg-gray-200 transition-all">7</button>
+                        </div>
+                        <!-- Feedback UI -->
+                        <div v-if="flashFeedback" :class="flashFeedback.type === 'success' ? 'bg-green-50 text-green-700 border-green-200' : 'bg-red-50 text-red-700 border-red-200'" class="mt-4 p-3 rounded-lg border text-xs font-bold transition-all animate-pulse">
+                            {{ flashFeedback.text }}
+                        </div>
+                    </div>
+
+                    <!-- El Laberinto del Triángulo Girado -->
+                    <div class="nextra-card p-8 bg-slate-900 text-white rounded-3xl mt-12 mb-12 relative overflow-hidden">
+                        <div class="absolute -bottom-10 -right-10 opacity-5"><i data-lucide="refresh-cw" class="w-48 h-48"></i></div>
+                        <h4 class="text-xl font-bold mb-6 flex items-center gap-2 relative z-10">
+                            <i data-lucide="rotate-cw" class="text-emerald-600"></i>
+                            El Laberinto del Triángulo Girado
+                        </h4>
+                        <div class="grid md:grid-cols-2 gap-8 items-center relative z-10">
+                            <div class="space-y-4">
+                                <p class="text-sm text-slate-300 leading-relaxed">
+                                    Un error clásico es creer que el cateto "vertical" siempre es el opuesto. ¡No caigas en la trampa!
+                                </p>
+                                <div class="bg-emerald-500/10 p-4 rounded-xl border border-emerald-500/20 text-sm text-emerald-200 flex gap-3">
+                                    <i data-lucide="info" class="w-5 h-5 shrink-0"></i>
+                                    <span>📌 <strong>Regla de Oro:</strong> Olvida "arriba" y "abajo". Usa solo "enfrente" (opuesto) y "al lado" (contiguo).</span>
+                                </div>
+                            </div>
+                            <div class="aspect-video bg-slate-800 rounded-2xl flex items-center justify-center p-4 border border-white/5 shadow-inner">
+                                <svg viewBox="0 0 200 150" class="w-48 h-auto drop-shadow-2xl">
+                                    <path d="M 40 40 L 160 110 L 40 110 Z" fill="none" stroke="#10b981" stroke-width="2.5"></path>
+                                    <path d="M 40 100 L 50 100 L 50 110" fill="none" stroke="#ffffff" stroke-width="1.5" opacity="0.5"></path>
+                                    <text x="100" y="130" font-size="10" fill="#10b981" font-weight="bold">Contiguo a β</text>
+                                    <text x="10" y="80" font-size="10" fill="#10b981" font-weight="bold" transform="rotate(-90, 10, 80)">Opuesto a β</text>
+                                    <text x="165" y="115" font-size="14" fill="#fff" font-weight="bold">β</text>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <hr class="my-16 border-gray-100">
+
+                <!-- BLOQUE 3: LAS RAZONES TRIGONOMÉTRICAS -->
+                <section id="block-3" class="mb-24 scroll-mt-24">
+                    <div class="mb-12 border-b border-gray-200 pb-8">
+                        <span class="bg-pink-100 text-pink-700 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Nivel 3: Las Herramientas Maestras</span>
+                        <h2 class="text-3xl font-bold text-gray-900 mt-6 mb-4">3. Las Razones Trigonométricas</h2>
+                        <p class="text-gray-600 mb-8 leading-relaxed">
+                            No te dejes asustar por los nombres. Una "razón" es simplemente una <strong>división</strong>. Comparamos cuánto mide un lado respecto a otro para un ángulo concreto.
+                        </p>
+                    </div>
+
+                    <!-- Concepto de Razón -->
+                    <div class="nextra-card p-8 border border-slate-100 mb-12 flex flex-col md:flex-row gap-8 items-center bg-white shadow-sm">
+                        <div class="bg-pink-50 p-6 rounded-2xl text-pink-600 shrink-0 group-hover:scale-110 transition-transform">
+                            <i data-lucide="calculator" class="w-12 h-12"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold mb-3 text-slate-800 flex items-center gap-2">
+                                <i data-lucide="sparkles" class="text-amber-400 w-5 h-5"></i>
+                                ¿Qué estamos haciendo realmente?
+                            </h3>
+                            <p class="text-slate-600 leading-relaxed text-sm">
+                                Para un ángulo de $30^\circ$, la relación entre sus lados <strong>siempre es la misma</strong>, sin importar el tamaño del triángulo. La trigonometría estudia esos números mágicos llamados razones.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Las Tres Funciones -->
+                    <div class="grid gap-8 mb-12">
+                        <!-- SENO -->
+                        <div class="nextra-card overflow-hidden group bg-white border-l-8 border-l-pink-500">
+                            <div class="flex flex-col md:flex-row">
+                                <div class="bg-pink-500 text-white p-8 md:w-1/4 flex flex-col justify-center items-center relative overflow-hidden">
+                                    <i data-lucide="move-vertical" class="absolute -bottom-4 -right-4 w-24 h-24 opacity-10 rotate-12"></i>
+                                    <span class="text-sm font-bold uppercase tracking-widest opacity-80 mb-2">Función</span>
+                                    <h4 class="text-4xl font-black">SENO</h4>
+                                    <span class="text-xs mt-4 bg-white/20 px-3 py-1 rounded-full border border-white/30">sen / sin</span>
+                                </div>
+                                <div class="p-8 flex-1">
+                                    <p class="text-slate-700 font-medium mb-4 flex items-center gap-2">
+                                        <i data-lucide="arrow-right-circle" class="text-pink-500 w-4 h-4"></i>
+                                        Relaciona el cateto <strong>enfrente</strong> con la hipotenusa.
+                                    </p>
+                                    <div class="text-3xl font-serif font-bold text-slate-800 mb-4 bg-slate-50 p-4 rounded-xl inline-block border border-slate-100">
+                                        sen $\alpha$ = $\frac{\text{Cateto Opuesto}}{\text{Hipotenusa}}$
+                                    </div>
+                                    <p class="text-xs text-slate-500 italic flex items-center gap-2">
+                                        <i data-lucide="info" class="w-3 h-3"></i>
+                                        Mide la proporción de altura del triángulo.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- COSENO -->
+                        <div class="nextra-card overflow-hidden group bg-white border-l-8 border-l-blue-500">
+                            <div class="flex flex-col md:flex-row">
+                                <div class="bg-blue-500 text-white p-8 md:w-1/4 flex flex-col justify-center items-center relative overflow-hidden">
+                                    <i data-lucide="move-horizontal" class="absolute -bottom-4 -right-4 w-24 h-24 opacity-10 -rotate-12"></i>
+                                    <span class="text-sm font-bold uppercase tracking-widest opacity-80 mb-2">Función</span>
+                                    <h4 class="text-4xl font-black">COSENO</h4>
+                                    <span class="text-xs mt-4 bg-white/20 px-3 py-1 rounded-full border border-white/30">cos</span>
+                                </div>
+                                <div class="p-8 flex-1">
+                                    <p class="text-slate-700 font-medium mb-4 flex items-center gap-2">
+                                        <i data-lucide="arrow-right-circle" class="text-blue-500 w-4 h-4"></i>
+                                        Relaciona el cateto <strong>al lado</strong> con la hipotenusa.
+                                    </p>
+                                    <div class="text-3xl font-serif font-bold text-slate-800 mb-4 bg-slate-50 p-4 rounded-xl inline-block border border-slate-100">
+                                        cos $\alpha$ = $\frac{\text{Cateto Contiguo}}{\text{Hipotenusa}}$
+                                    </div>
+                                    <p class="text-xs text-slate-500 italic flex items-center gap-2">
+                                        <i data-lucide="info" class="w-3 h-3"></i>
+                                        Mide la proporción de base (anchura) del triángulo.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- TANGENTE -->
+                        <div class="nextra-card overflow-hidden group bg-white border-l-8 border-l-amber-500">
+                            <div class="flex flex-col md:flex-row">
+                                <div class="bg-amber-500 text-white p-8 md:w-1/4 flex flex-col justify-center items-center relative overflow-hidden">
+                                    <i data-lucide="trending-up" class="absolute -bottom-4 -right-4 w-24 h-24 opacity-10 rotate-45"></i>
+                                    <span class="text-sm font-bold uppercase tracking-widest opacity-80 mb-2">Función</span>
+                                    <h4 class="text-4xl font-black">TANGENTE</h4>
+                                    <span class="text-xs mt-4 bg-white/20 px-3 py-1 rounded-full border border-white/30">tan / tg</span>
+                                </div>
+                                <div class="p-8 flex-1">
+                                    <p class="text-slate-700 font-medium mb-4 flex items-center gap-2">
+                                        <i data-lucide="arrow-right-circle" class="text-amber-500 w-4 h-4"></i>
+                                        Relaciona los dos catetos. No usa la hipotenusa.
+                                    </p>
+                                    <div class="text-3xl font-serif font-bold text-slate-800 mb-4 bg-slate-50 p-4 rounded-xl inline-block border border-slate-100">
+                                        tan $\alpha$ = $\frac{\text{Cateto Opuesto}}{\text{Cateto Contiguo}}$
+                                    </div>
+                                    <p class="text-xs text-slate-500 italic flex items-center gap-2">
+                                        <i data-lucide="info" class="w-3 h-3"></i>
+                                        Mide la pendiente o inclinación de una rampa.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mantra de Examen -->
+                    <div class="bg-gray-900 rounded-3xl p-10 md:p-16 text-center shadow-2xl relative overflow-hidden mb-12">
+                        <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-pink-500 rounded-full blur-[100px] opacity-20"></div>
+                        <div class="absolute -right-10 -top-10 w-40 h-40 bg-blue-500 rounded-full blur-[100px] opacity-20"></div>
+                        <h3 class="text-xl font-bold text-gray-400 uppercase tracking-[0.3em] mb-8 italic flex items-center justify-center gap-4">
+                            <i data-lucide="music" class="w-6 h-6"></i>
+                            Mantra de Examen
+                            <i data-lucide="music" class="w-6 h-6"></i>
+                        </h3>
+                        <div class="flex justify-center items-center gap-4 text-6xl md:text-8xl font-black mb-4">
+                            <span class="text-pink-500 hover:scale-110 transition-transform cursor-default">SOH</span>
+                            <span class="text-blue-400 hover:scale-110 transition-transform cursor-default">CAH</span>
+                            <span class="text-amber-400 hover:scale-110 transition-transform cursor-default">TOA</span>
+                        </div>
+                        <p class="text-slate-500 text-sm mb-12 font-medium">Repítelo hasta que tus oídos sangren (metafóricamente)</p>
+                        <div class="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-8 text-left border-t border-gray-800 pt-10 text-gray-400 font-mono text-sm">
+                            <div class="group"><span class="text-pink-500 font-bold block mb-1 group-hover:translate-x-1 transition-transform">S · O / H</span> Seno = Op / Hip</div>
+                            <div class="group"><span class="text-blue-400 font-bold block mb-1 group-hover:translate-x-1 transition-transform">C · A / H</span> Coseno = Ady / Hip</div>
+                            <div class="group"><span class="text-amber-400 font-bold block mb-1 group-hover:translate-x-1 transition-transform">T · O / A</span> Tangente = Op / Ady</div>
+                        </div>
+                    </div>
+
+                    <!-- Ángulos VIP -->
+                    <div class="nextra-card overflow-hidden bg-white mb-12 shadow-sm border border-slate-200">
+                        <div class="p-6 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="bg-indigo-600 text-white p-2 rounded-lg"><i data-lucide="table-2"></i></div>
+                                <h3 class="font-bold text-lg text-gray-800">Ángulos "V.I.P." (Valores Exactos)</h3>
+                            </div>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-white px-3 py-1 rounded-full border border-slate-200 shadow-sm">Imprescindible</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-center border-collapse text-sm">
+                                <thead>
+                                    <tr class="bg-slate-50/50">
+                                        <th class="p-6 border-b border-slate-100 text-slate-400 uppercase text-xs font-black tracking-tighter">Ángulo</th>
+                                        <th class="p-6 border-b border-slate-100">
+                                            <div class="flex flex-col items-center">
+                                                <span class="text-pink-600 font-bold text-base">Seno</span>
+                                                <span class="text-[10px] text-slate-400 font-medium">Vertical</span>
+                                            </div>
+                                        </th>
+                                        <th class="p-6 border-b border-slate-100">
+                                            <div class="flex flex-col items-center">
+                                                <span class="text-blue-600 font-bold text-base">Coseno</span>
+                                                <span class="text-[10px] text-slate-400 font-medium">Horizontal</span>
+                                            </div>
+                                        </th>
+                                        <th class="p-6 border-b border-slate-100">
+                                            <div class="flex flex-col items-center">
+                                                <span class="text-amber-600 font-bold text-base">Tangente</span>
+                                                <span class="text-[10px] text-slate-400 font-medium">Pendiente</span>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-50">
+                                    <tr class="hover:bg-indigo-50/30 transition-colors">
+                                        <td class="p-6 font-black text-slate-700 bg-slate-50/30">30º</td>
+                                        <td class="p-6 font-medium">1/2</td>
+                                        <td class="p-6 font-medium text-slate-600">$\sqrt{3}/2$</td>
+                                        <td class="p-6 font-medium text-slate-600">$\sqrt{3}/3$</td>
+                                    </tr>
+                                    <tr class="hover:bg-indigo-50/30 transition-colors">
+                                        <td class="p-6 font-black text-slate-700 bg-slate-50/30">45º</td>
+                                        <td class="p-6 font-medium text-slate-600">$\sqrt{2}/2$</td>
+                                        <td class="p-6 font-medium text-slate-600">$\sqrt{2}/2$</td>
+                                        <td class="p-6 font-medium text-slate-600">1</td>
+                                    </tr>
+                                    <tr class="hover:bg-indigo-50/30 transition-colors">
+                                        <td class="p-6 font-black text-slate-700 bg-slate-50/30">60º</td>
+                                        <td class="p-6 font-medium text-slate-600">$\sqrt{3}/2$</td>
+                                        <td class="p-6 font-medium">1/2</td>
+                                        <td class="p-6 font-medium text-slate-600">$\sqrt{3}$</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="p-6 bg-indigo-900 text-white flex gap-6 items-center border-t border-indigo-800">
+                            <div class="bg-indigo-800 p-3 rounded-full animate-bounce"><i data-lucide="lightbulb" class="text-amber-400"></i></div>
+                            <div>
+                                <p class="text-xs font-bold uppercase text-indigo-300 mb-1 tracking-widest">Mnemotecnia Pro</p>
+                                <p class="text-[11px] leading-relaxed text-indigo-100">Para el Seno escribe $\sqrt{1}/2, \sqrt{2}/2, \sqrt{3}/2$. Para el Coseno hazlo al revés. ¡No falla!</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <hr class="my-16 border-gray-100">
+
+                <!-- BLOQUE 4: RELACIONES FUNDAMENTALES -->
+                <section id="block-4" class="mb-24 scroll-mt-24">
+                    <div class="mb-12 border-b border-gray-200 pb-8">
+                        <span class="bg-purple-100 text-purple-700 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Nivel 4: El Poder de la Deducción</span>
+                        <h2 class="text-3xl font-bold text-gray-900 mt-6 mb-4 flex items-center gap-3">
+                            <i data-lucide="infinity" class="text-purple-600"></i>
+                            4. Relaciones Fundamentales
+                        </h2>
+                        <p class="text-gray-600 mb-8 leading-relaxed">
+                            ¿Sabías que si conoces una sola razón, puedes calcular todas las demás sin medir nada más? Todo está conectado mediante leyes matemáticas universales.
+                        </p>
+                    </div>
+
+                    <div class="nextra-card p-10 bg-gradient-to-br from-gray-50 to-purple-50 border-gray-200 text-center mb-12 relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 w-64 h-64 bg-purple-200 rounded-full blur-[80px] opacity-20 group-hover:opacity-40 transition-opacity"></div>
+                        <div class="relative z-10">
+                            <h3 class="text-2xl font-bold text-slate-800 mb-8 flex items-center justify-center gap-3">
+                                <i data-lucide="shield-check" class="text-purple-600 w-8 h-8"></i>
+                                1. La Identidad Pitagórica
+                            </h3>
+                            <div class="bg-slate-900 text-white p-10 rounded-[2.5rem] shadow-2xl transform -rotate-1 hover:rotate-0 transition-all duration-500 border border-purple-500/30 mb-10">
+                                <span class="block text-4xl md:text-5xl font-serif font-bold tracking-[0.1em] text-transparent bg-clip-text bg-gradient-to-r from-purple-200 to-white">
+                                    $sen^2 \alpha + cos^2 \alpha = 1$
+                                </span>
+                            </div>
+                            <div class="flex flex-col items-center gap-4">
+                                <div class="text-xl md:text-2xl font-serif font-bold text-gray-800 p-6 bg-white rounded-2xl border border-purple-100 shadow-sm inline-flex items-center gap-4">
+                                    <i data-lucide="git-merge" class="text-amber-500 w-6 h-6"></i>
+                                    $tan \alpha = \frac{sen \alpha}{cos \alpha}$
+                                </div>
+                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest text-glow">Las llaves maestras de la trigonometría</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ejemplo Maestro Bloque 4 -->
+                    <div class="bg-purple-50 rounded-3xl p-8 border-2 border-purple-100 shadow-inner mb-12 group">
+                        <h4 class="text-xl font-bold text-purple-900 mb-6 flex items-center gap-2">
+                            <i data-lucide="star" class="fill-purple-500 text-purple-500 group-hover:rotate-45 transition-transform"></i>
+                            Ejemplo Maestro: Efecto Dominó
+                        </h4>
+                        <div class="grid md:grid-cols-2 gap-8 items-center">
+                            <div class="space-y-4">
+                                <p class="text-sm text-purple-800 flex gap-2">
+                                    <i data-lucide="help-circle" class="w-4 h-4 shrink-0 mt-0.5"></i>
+                                    <strong>Situación:</strong> Solo sabes que $sen \alpha = 0.6$. ¿Puedes hallar el resto?
+                                </p>
+                                <div class="bg-white p-6 rounded-2xl text-xs font-mono space-y-3 border border-purple-100 shadow-sm">
+                                    <p class="flex justify-between border-b border-slate-50 pb-2"><span>1. Pitágoras:</span> <span>$(0.6)^2 + cos^2 \alpha = 1$</span></p>
+                                    <p class="flex justify-between border-b border-slate-50 pb-2"><span>2. Calculo:</span> <span>$0.36 + cos^2 \alpha = 1$</span></p>
+                                    <p class="flex justify-between border-b border-slate-50 pb-2"><span>3. Raíz:</span> <span>$cos \alpha = \sqrt{0.64} = 0.8$</span></p>
+                                    <p class="flex justify-between"><span>4. Tangente:</span> <span>$tan \alpha = 0.6 / 0.8 = 0.75$</span></p>
+                                </div>
+                            </div>
+                            <div class="bg-white p-8 rounded-[2rem] border border-purple-100 text-center shadow-lg relative overflow-hidden">
+                                <div class="absolute inset-0 bg-gradient-to-b from-transparent to-purple-50/30"></div>
+                                <p class="text-xs font-bold text-slate-400 uppercase mb-6 tracking-widest relative z-10">Ficha Técnica del Ángulo</p>
+                                <div class="space-y-4 font-bold relative z-10">
+                                    <div class="flex items-center justify-between bg-pink-50 p-3 rounded-xl border border-pink-100">
+                                        <span class="text-pink-600 text-xs uppercase">Seno</span>
+                                        <span class="text-pink-700 text-lg">0.6</span>
+                                    </div>
+                                    <div class="flex items-center justify-between bg-blue-50 p-3 rounded-xl border border-blue-100">
+                                        <span class="text-blue-600 text-xs uppercase">Coseno</span>
+                                        <span class="text-blue-700 text-lg">0.8</span>
+                                    </div>
+                                    <div class="flex items-center justify-between bg-amber-50 p-3 rounded-xl border border-amber-100">
+                                        <span class="text-amber-600 text-xs uppercase">Tangente</span>
+                                        <span class="text-amber-700 text-lg">0.75</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <hr class="my-16 border-gray-100">
+
+                <!-- BLOQUE 5: CALCULADORA -->
+                <section id="block-5" class="mb-24 scroll-mt-24">
+                    <div class="mb-12 border-b border-gray-200 pb-8">
+                        <span class="bg-cyan-100 text-cyan-700 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Nivel 5: La Herramienta</span>
+                        <h2 class="text-3xl font-bold text-gray-900 mt-6 mb-4 flex items-center gap-3">
+                            <i data-lucide="calculator" class="text-cyan-600"></i>
+                            5. Dominando la Calculadora
+                        </h2>
+                        <p class="text-gray-600 mb-8 leading-relaxed">
+                            Tu calculadora científica es la puerta de entrada a los valores precisos. Pero cuidado: si no hablas su mismo idioma, te dará resultados erróneos sin avisar.
+                        </p>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-8 mb-12">
+                        <div class="bg-slate-800 text-white rounded-[2.5rem] p-8 shadow-xl relative overflow-hidden flex flex-col justify-between group">
+                            <div class="absolute -top-4 -right-4 text-cyan-400 opacity-10 group-hover:scale-110 transition-transform"><i data-lucide="settings" class="w-32 h-32"></i></div>
+                            <div class="relative z-10">
+                                <h3 class="text-2xl font-bold mb-6 text-cyan-400 flex items-center gap-3">
+                                    <i data-lucide="alert-octagon" class="animate-pulse text-red-400"></i>
+                                    El Modo "DEG" es Sagrado
+                                </h3>
+                                <p class="text-slate-300 mb-8 text-sm leading-relaxed">
+                                    Las calculadoras usan 3 sistemas. Para 4º ESO, <strong>solo valen los grados sexagesimales (DEG)</strong>.
+                                </p>
+                                <div class="space-y-4">
+                                    <div class="bg-white/10 p-5 rounded-2xl border border-white/20 flex items-center gap-4 hover:bg-white/20 transition-colors cursor-default">
+                                        <div class="bg-green-500 text-white px-3 py-1 rounded-lg font-black text-xs shadow-lg shadow-green-500/20">DEG</div>
+                                        <p class="text-xs">Busca la <strong>'D'</strong> en pantalla. ¡Estás a salvo!</p>
+                                    </div>
+                                    <div class="bg-red-500/10 p-5 rounded-2xl border border-red-500/20 flex items-center gap-4">
+                                        <div class="bg-red-50 text-white px-3 py-1 rounded-lg font-black text-xs text-center">RAD/GRA</div>
+                                        <p class="text-xs opacity-70 italic">Si ves esto, tus resultados serán catastróficos.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-[2.5rem] p-8 border border-gray-200 shadow-sm">
+                            <h3 class="text-xl font-bold mb-8 text-slate-800 flex items-center gap-3">
+                                <i data-lucide="layout-grid" class="text-cyan-600"></i>
+                                Guía de Botones Maestros
+                            </h3>
+                            <div class="space-y-8">
+                                <div class="flex gap-5">
+                                    <div class="bg-cyan-50 p-4 rounded-2xl h-fit text-cyan-700 shadow-inner"><i data-lucide="log-in"></i></div>
+                                    <div>
+                                        <h4 class="font-bold text-sm mb-1 text-slate-800">Cálculo Directo</h4>
+                                        <p class="text-[10px] text-slate-400 uppercase font-bold mb-2 tracking-widest">Ángulo → Número</p>
+                                        <div class="flex gap-2">
+                                            <span class="px-2 py-1 bg-slate-100 rounded border border-slate-200 font-mono text-[10px] font-bold text-pink-600 shadow-sm">sin</span>
+                                            <span class="px-2 py-1 bg-slate-100 rounded border border-slate-200 font-mono text-[10px] font-bold text-blue-600 shadow-sm">cos</span>
+                                            <span class="px-2 py-1 bg-slate-100 rounded border border-slate-200 font-mono text-[10px] font-bold text-amber-600 shadow-sm">tan</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex gap-5">
+                                    <div class="bg-cyan-50 p-4 rounded-2xl h-fit text-cyan-700 shadow-inner"><i data-lucide="log-out"></i></div>
+                                    <div>
+                                        <h4 class="font-bold text-sm mb-1 text-slate-800">Cálculo Inverso (Arco)</h4>
+                                        <p class="text-[10px] text-slate-400 uppercase font-bold mb-2 tracking-widest">Número → Ángulo</p>
+                                        <div class="flex items-center gap-2">
+                                            <span class="bg-slate-800 text-white px-2 py-1 rounded text-[10px] font-bold shadow-lg">SHIFT</span>
+                                            <span class="text-slate-300 font-bold">+</span>
+                                            <span class="px-2 py-1 bg-slate-100 rounded border border-slate-200 font-mono text-[10px] font-bold text-slate-600 shadow-sm">sin/cos/tan</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Truco Maestro Bloque 5 -->
+                    <div class="bg-cyan-50 border border-cyan-100 rounded-[2rem] p-8 shadow-inner">
+                        <h4 class="text-lg font-bold text-cyan-900 mb-4 flex items-center gap-3">
+                            <i data-lucide="target" class="text-cyan-600 w-6 h-6"></i>
+                            Truco Maestro: El Peso de los Decimales
+                        </h4>
+                        <p class="text-sm text-cyan-800 leading-relaxed mb-6">
+                            Usa siempre <strong>4 decimales</strong>. Un error de solo 0.01 puede desviar tu ángulo más de un grado entero.
+                        </p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
+                            <div class="bg-white p-4 rounded-2xl border border-cyan-100 shadow-sm">
+                                <div class="text-[10px] font-bold text-slate-400 uppercase mb-2">Con 0.80</div>
+                                <div class="font-mono text-xs text-cyan-700 font-bold">$sin^{-1}(0.80) = 53.13^\circ$</div>
+                            </div>
+                            <div class="bg-white p-4 rounded-2xl border border-cyan-100 shadow-sm">
+                                <div class="text-[10px] font-bold text-slate-400 uppercase mb-2">Con 0.81</div>
+                                <div class="font-mono text-xs text-red-600 font-bold">$sin^{-1}(0.81) = 54.09^\circ$</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <hr class="my-16 border-gray-100">
+
+                <!-- BLOQUE 6: CÁLCULO DE LADOS -->
+                <section id="block-6" class="mb-24 scroll-mt-24">
+                    <div class="mb-12 border-b border-gray-200 pb-8">
+                        <span class="bg-orange-100 text-orange-700 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Nivel 6: Resolviendo el Puzzle</span>
+                        <h2 class="text-3xl font-bold text-gray-900 mt-6 mb-4 flex items-center gap-3">
+                            <i data-lucide="puzzle" class="text-orange-600"></i>
+                            6. Cálculo de Lados
+                        </h2>
+                        <p class="text-gray-600 mb-8 leading-relaxed">
+                            Este es el corazón práctico de la trigonometría: encontrar una distancia desconocida usando solo un ángulo y otro lado como pistas.
+                        </p>
+                    </div>
+
+                    <!-- Protocolo -->
+                    <div class="nextra-card p-10 border border-gray-200 shadow-sm relative overflow-hidden mb-12 bg-white rounded-[2.5rem]">
+                        <div class="absolute top-0 right-0 p-10 opacity-5 -mr-10 -mt-10 group-hover:scale-110 transition-transform"><i data-lucide="clipboard-list" class="w-64 h-64"></i></div>
+                        <h3 class="text-2xl font-bold mb-10 text-slate-800 flex items-center gap-3">
+                            <i data-lucide="check-circle-2" class="text-orange-500"></i>
+                            Protocolo de Actuación
+                        </h3>
+                        <div class="space-y-10 relative z-10">
+                            <div class="flex gap-8 items-start group">
+                                <div class="bg-orange-500 text-white w-10 h-10 rounded-2xl flex items-center justify-center font-bold shrink-0 shadow-lg shadow-orange-200 group-hover:rotate-12 transition-transform">1</div>
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-lg mb-1 italic">¿Dónde estoy?</h4>
+                                    <p class="text-slate-600 text-sm">Párate en el ángulo conocido y ponle nombre a los lados (Hipotenusa, Opuesto, Contiguo).</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-8 items-start group">
+                                <div class="bg-orange-500 text-white w-10 h-10 rounded-2xl flex items-center justify-center font-bold shrink-0 shadow-lg shadow-orange-200 group-hover:rotate-12 transition-transform">2</div>
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-lg mb-1 italic">¿Qué herramienta uso?</h4>
+                                    <p class="text-slate-600 text-sm">Usa <strong>SOH-CAH-TOA</strong>. Pregúntate: "¿Qué tengo y qué busco?"</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-8 items-start group">
+                                <div class="bg-orange-500 text-white w-10 h-10 rounded-2xl flex items-center justify-center font-bold shrink-0 shadow-lg shadow-orange-200 group-hover:rotate-12 transition-transform">3</div>
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-lg mb-1 italic">El Despeje Maestro</h4>
+                                    <div class="mt-6 grid md:grid-cols-2 gap-6">
+                                        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 font-mono text-xs shadow-inner">
+                                            <p class="text-slate-400 mb-3 uppercase font-bold tracking-widest text-[9px]">Caso A: x arriba</p>
+                                            <div class="text-slate-700 bg-white p-3 rounded-xl border border-slate-100">$Razon = \frac{x}{Lado} \implies x = Lado \cdot Razon$</div>
+                                        </div>
+                                        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 font-mono text-xs shadow-inner">
+                                            <p class="text-slate-400 mb-3 uppercase font-bold tracking-widest text-[9px]">Caso B: x abajo</p>
+                                            <div class="text-slate-700 bg-white p-3 rounded-xl border border-slate-100">$Razon = \frac{Lado}{x} \implies x = \frac{Lado}{Razon}$</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ejemplo 1: Torre -->
+                    <div class="bg-indigo-50 rounded-[2.5rem] p-8 border-2 border-indigo-100 shadow-inner mb-12">
+                        <h4 class="text-xl font-bold text-indigo-900 mb-6 flex items-center gap-2">
+                            <i data-lucide="mountain" class="text-indigo-600"></i>
+                            Ejemplo 1: La Sombra de la Torre
+                        </h4>
+                        <div class="grid md:grid-cols-2 gap-8 items-center">
+                            <div class="text-sm text-indigo-800">
+                                <p class="mb-6 leading-relaxed">Si proyectas una sombra de <strong>15m</strong> con un ángulo solar de <strong>30º</strong>, ¿cuál es la altura real?</p>
+                                <div class="bg-white p-6 rounded-[1.5rem] font-mono text-xs border border-indigo-100 shadow-sm space-y-2 text-indigo-900">
+                                    <p class="opacity-50 tracking-tighter">// Paso a paso</p>
+                                    <p>$tan(30^\circ) = \frac{x}{15}$</p>
+                                    <p>$x = 15 \cdot tan(30^\circ)$</p>
+                                    <p class="text-lg font-bold mt-2">$x \approx 8.66m$</p>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-[2rem] p-6 flex justify-center shadow-lg border border-indigo-50">
+                                <svg viewBox="0 0 200 150" class="w-48 h-auto drop-shadow-md">
+                                    <line x1="20" y1="130" x2="180" y2="130" stroke="#6366f1" stroke-width="2.5"></line>
+                                    <rect x="150" y="30" width="20" height="100" fill="#e0e7ff" stroke="#6366f1" stroke-width="2.5"></rect>
+                                    <line x1="20" y1="130" x2="150" y2="30" stroke="#fbbf24" stroke-width="2" stroke-dasharray="5"></line>
+                                    <text x="80" y="145" font-size="10" fill="#6366f1" font-weight="bold">15m</text>
+                                    <text x="175" y="80" font-size="12" fill="#6366f1" font-weight="black">x?</text>
+                                    <text x="35" y="125" font-size="10" fill="#b45309">30º</text>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ejemplo 2: Escalera -->
+                    <div class="bg-pink-50 rounded-[2.5rem] p-8 border-2 border-pink-100 shadow-inner mt-8">
+                        <h4 class="text-xl font-bold text-pink-900 mb-6 flex items-center gap-2">
+                            <i data-lucide="external-link" class="text-pink-600"></i>
+                            Ejemplo 2: La Escalera Apoyada (Caso B)
+                        </h4>
+                        <div class="grid md:grid-cols-2 gap-8 items-center text-sm">
+                            <div class="text-pink-800">
+                                <p class="mb-6 leading-relaxed">Escalera apoyada formando <strong>60º</strong> con el suelo. Si llega a <strong>4m</strong> de alto, ¿cuánto mide la escalera?</p>
+                                <div class="bg-white p-6 rounded-[1.5rem] font-mono text-xs border border-pink-100 shadow-sm space-y-2 text-pink-900">
+                                    <p class="opacity-50 tracking-tighter">// Paso a paso</p>
+                                    <p>$sen(60^\circ) = \frac{4}{x}$</p>
+                                    <p>$x = \frac{4}{sen(60^\circ)}$</p>
+                                    <p class="text-lg font-bold mt-2">$x \approx 4.62m$</p>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-[2.5rem] p-6 flex justify-center shadow-lg border border-pink-50">
+                                <svg viewBox="0 0 200 150" class="w-48 h-auto drop-shadow-md">
+                                    <line x1="20" y1="130" x2="180" y2="130" stroke="#f43f5e" stroke-width="2.5"></line>
+                                    <line x1="150" y1="130" x2="150" y2="30" stroke="#f43f5e" stroke-width="5" stroke-linecap="round"></line>
+                                    <line x1="80" y1="130" x2="150" y2="30" stroke="#6366f1" stroke-width="4" stroke-linecap="round"></line>
+                                    <text x="155" y="80" font-size="10" fill="#f43f5e" font-weight="bold">4m</text>
+                                    <text x="95" y="125" font-size="10" fill="#b45309">60º</text>
+                                    <text x="90" y="80" font-size="12" fill="#6366f1" font-weight="black" transform="rotate(-55, 90, 80)">x?</text>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <hr class="my-16 border-gray-100">
+
+                <!-- BLOQUE 7: CÁLCULO DE ÁNGULOS -->
+                <section id="block-7" class="mb-24 scroll-mt-24">
+                    <div class="mb-12 border-b border-slate-200 pb-8">
+                        <span class="bg-teal-100 text-teal-700 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Nivel 7: El Detective de Ángulos</span>
+                        <h2 class="text-3xl font-bold text-gray-900 mt-6 mb-4 flex items-center gap-3">
+                            <i data-lucide="search" class="text-teal-600"></i>
+                            7. Cálculo de Ángulos
+                        </h2>
+                        <p class="text-gray-600 mb-8 leading-relaxed">
+                            Es la "ingeniería inversa". Usamos los lados para desbloquear el valor del ángulo secreto.
+                        </p>
+                    </div>
+
+                    <!-- Concepto -->
+                    <div class="nextra-card p-10 bg-white border border-slate-200 mb-12 flex flex-col md:flex-row gap-10 items-center rounded-[2.5rem] shadow-sm group">
+                        <div class="bg-teal-50 p-8 rounded-[2rem] text-teal-600 shrink-0 group-hover:rotate-[360deg] transition-all duration-1000">
+                            <i data-lucide="refresh-ccw" class="w-16 h-16"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold mb-4 text-slate-800 flex items-center gap-3">
+                                <i data-lucide="wrench" class="text-teal-500 w-6 h-6"></i>
+                                🛠️ Ingeniería Inversa
+                            </h3>
+                            <p class="text-slate-600 leading-relaxed text-base">
+                                Si el seno nos da el número a partir del ángulo, las <strong>funciones inversas</strong> hacen lo contrario: les damos el número (la razón) y nos devuelven el ángulo. Es como seguir el rastro de una sombra para encontrar el objeto que la proyecta.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-8 mb-12">
+                        <div class="bg-teal-900 text-white rounded-[2.5rem] p-10 shadow-xl border border-teal-800 relative overflow-hidden">
+                            <div class="absolute -bottom-10 -right-10 opacity-10"><i data-lucide="list-checks" class="w-48 h-48"></i></div>
+                            <h4 class="text-xl font-bold mb-8 flex items-center gap-3">
+                                <i data-lucide="activity" class="text-teal-400"></i>
+                                Pasos a seguir
+                            </h4>
+                            <ul class="space-y-8 text-teal-100 relative z-10">
+                                <li class="flex gap-5">
+                                    <div class="bg-white/10 w-10 h-10 rounded-xl flex items-center justify-center shrink-0 font-bold shadow-lg">1</div>
+                                    <div>
+                                        <p class="font-bold text-teal-300">Elijo dos lados</p>
+                                        <p class="text-xs opacity-70">Debes conocer al menos dos para empezar la búsqueda.</p>
+                                    </div>
+                                </li>
+                                <li class="flex gap-5">
+                                    <div class="bg-white/10 w-10 h-10 rounded-xl flex items-center justify-center shrink-0 font-bold shadow-lg">2</div>
+                                    <div>
+                                        <p class="font-bold text-teal-300">Divido</p>
+                                        <p class="text-xs opacity-70">Obtén el decimal de la razón (sen, cos o tan).</p>
+                                    </div>
+                                </li>
+                                <li class="flex gap-5">
+                                    <div class="bg-white/10 w-10 h-10 rounded-xl flex items-center justify-center shrink-0 font-bold shadow-lg">3</div>
+                                    <div>
+                                        <p class="font-bold text-teal-300">Aplico "Arco"</p>
+                                        <p class="text-xs opacity-70">Usa SHIFT + tecla ($sin^{-1}$, $cos^{-1}$, $tan^{-1}$).</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="nextra-card p-10 bg-white border-slate-200 rounded-[2.5rem] shadow-sm">
+                            <h4 class="font-bold text-slate-800 mb-8 flex items-center gap-3">
+                                <i data-lucide="key" class="text-teal-600"></i>
+                                Terminología Profesional
+                            </h4>
+                            <div class="space-y-4 font-mono text-sm">
+                                <div class="flex justify-between items-center p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:border-teal-200 transition-colors">
+                                    <span class="text-slate-500 text-xs">SENO</span>
+                                    <div class="flex gap-4">
+                                        <span class="font-bold text-slate-700">arcsen x</span>
+                                        <span class="text-teal-600 font-black">sin⁻¹</span>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:border-teal-200 transition-colors">
+                                    <span class="text-slate-500 text-xs">COSENO</span>
+                                    <div class="flex gap-4">
+                                        <span class="font-bold text-slate-700">arccos x</span>
+                                        <span class="text-teal-600 font-black">cos⁻¹</span>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:border-teal-200 transition-colors">
+                                    <span class="text-slate-500 text-xs">TANGENTE</span>
+                                    <div class="flex gap-4">
+                                        <span class="font-bold text-slate-700">arctan x</span>
+                                        <span class="text-teal-600 font-black">tan⁻¹</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reglas de Oro -->
+                    <div class="bg-teal-50 border border-teal-100 rounded-[2rem] p-8 mb-12 shadow-inner">
+                        <h4 class="font-bold text-teal-900 mb-6 flex items-center gap-3">
+                            <i data-lucide="award" class="text-teal-600 animate-bounce"></i> Reglas de Oro del Detective
+                        </h4>
+                        <ul class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs text-teal-800">
+                            <li class="flex gap-4 items-start bg-white/50 p-4 rounded-2xl border border-teal-100/50">
+                                <i data-lucide="shield-alert" class="w-6 h-6 text-red-500 shrink-0"></i>
+                                <span><strong>El límite vital:</strong> Si el número es > 1 en Seno/Coseno, la calculadora dará error. ¡Es físicamente imposible!</span>
+                            </li>
+                            <li class="flex gap-4 items-start bg-white/50 p-4 rounded-2xl border border-teal-100/50">
+                                <i data-lucide="target" class="w-6 h-6 text-teal-600 shrink-0"></i>
+                                <span><strong>Precisión extrema:</strong> Usa siempre 4 decimales antes de darle al botón de arco. Un fallo de 0.01 lo cambia todo.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Ejemplo: Rampa -->
+                    <div class="bg-teal-50 rounded-[3rem] p-10 border-2 border-teal-100 shadow-inner relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 p-8 opacity-5 group-hover:scale-110 transition-transform"><i data-lucide="trending-up" class="w-48 h-48"></i></div>
+                        <h4 class="text-xl font-bold text-teal-900 mb-8 flex items-center gap-3">
+                            <i data-lucide="star" class="fill-teal-500 text-teal-500"></i>
+                            Ejemplo: El Ángulo de la Rampa
+                        </h4>
+                        <div class="grid md:grid-cols-2 gap-10 items-center text-sm relative z-10">
+                            <div class="text-teal-800 space-y-6">
+                                <p class="leading-relaxed">Una rampa de <strong>10m</strong> de largo sube hasta <strong>2m</strong>. ¿Cuál es su ángulo de inclinación?</p>
+                                <div class="bg-white p-6 rounded-2xl font-mono text-xs border border-teal-100 shadow-sm space-y-3">
+                                    <p class="opacity-50 text-[10px] tracking-widest uppercase">// Cálculo inverso</p>
+                                    <p>$sen(\alpha) = 2 / 10 = 0.2$</p>
+                                    <p>$\alpha = sin^{-1}(0.2)$</p>
+                                    <p class="text-lg font-bold text-teal-700 mt-2">$\alpha \approx 11.54^\circ$</p>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-[2rem] p-6 flex justify-center shadow-xl border border-teal-50">
+                                <svg viewBox="0 0 200 150" class="w-48 h-auto drop-shadow-md">
+                                    <path d="M 30 130 L 170 130 L 170 100 Z" fill="#f0fdfa" stroke="#0d9488" stroke-width="2.5"></path>
+                                    <text x="100" y="110" font-size="10" transform="rotate(-12, 100, 110)" fill="#0d9488" font-weight="bold">10m</text>
+                                    <text x="175" y="115" font-size="10" fill="#0d9488" font-weight="bold">2m</text>
+                                    <text x="45" y="125" font-size="12" fill="#0d9488" font-weight="black">α?</text>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <hr class="my-16 border-gray-100">
+
+                <!-- BLOQUE 8: APLICACIONES REALES -->
+                <section id="block-8" class="mb-24 scroll-mt-24">
+                    <div class="mb-12 border-b border-slate-200 pb-8">
+                        <span class="bg-lime-100 text-lime-700 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Nivel 8: Conquistando el Mundo Real</span>
+                        <h2 class="text-3xl font-bold text-gray-900 mt-6 mb-4 flex items-center gap-3">
+                            <i data-lucide="globe" class="text-lime-600"></i>
+                            8. Aplicaciones Reales
+                        </h2>
+                        <p class="text-gray-600 mb-8 leading-relaxed">
+                            La trigonometría no vive solo en los libros. Es la herramienta que usamos para medir aquello que no podemos tocar.
+                        </p>
+                    </div>
+
+                    <!-- Ejemplo: Faro -->
+                    <div class="bg-lime-50 rounded-[2.5rem] p-10 border-2 border-lime-100 shadow-inner mb-12 relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 p-10 opacity-5 group-hover:scale-110 transition-transform"><i data-lucide="anchor" class="w-64 h-64 text-lime-600"></i></div>
+                        <h4 class="text-2xl font-bold text-lime-900 mb-8 flex items-center gap-3 relative z-10">
+                            <i data-lucide="life-buoy" class="text-lime-600"></i>
+                            Caso Práctico: Rescate en el Mar
+                        </h4>
+                        <div class="flex flex-col md:flex-row gap-10 relative z-10">
+                            <div class="flex-1 space-y-6 text-sm">
+                                <p class="text-slate-700 text-lg leading-relaxed italic">"Un faro de <strong>40m</strong> de altura avista un barco con un ángulo de depresión de <strong>10º</strong>. ¿A qué distancia está el barco?"</p>
+                                <div class="bg-white/80 backdrop-blur-sm p-6 rounded-2xl border border-lime-200 shadow-sm flex gap-4 items-start">
+                                    <i data-lucide="lightbulb" class="w-6 h-6 text-amber-500 shrink-0"></i>
+                                    <p class="text-xs text-lime-900 leading-relaxed font-medium"><strong>Tip Maestro:</strong> El ángulo de depresión (mirando abajo) es igual al ángulo de elevación (mirando arriba) por la ley de ángulos alternos internos.</p>
+                                </div>
+                            </div>
+                            <div class="flex-1 bg-white p-8 rounded-[2rem] border border-lime-100 font-mono text-sm shadow-xl space-y-4">
+                                <div class="flex items-center gap-2 text-lime-700 font-bold mb-2">
+                                    <i data-lucide="terminal" class="w-4 h-4"></i>
+                                    <span>Lógica de resolución</span>
+                                </div>
+                                <p class="text-slate-400 text-xs">// Despejando la distancia (x)</p>
+                                <p>$tan(10^\circ) = \frac{40}{x}$</p>
+                                <p>$x = \frac{40}{tan(10^\circ)}$</p>
+                                <p class="text-2xl font-bold text-slate-800 border-t border-slate-50 pt-4">$\approx 226.8$ metros</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-3 gap-8 mb-16">
+                        <!-- Geometría Plana -->
+                        <div class="nextra-card p-8 bg-white border border-slate-200 rounded-[2rem] hover:shadow-md transition-all group">
+                            <div class="w-14 h-14 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                                <i data-lucide="layout-template"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-3">Geometría</h3>
+                            <p class="text-xs text-slate-500 leading-relaxed">Hallar áreas y apotemas de polígonos regulares descomponiéndolos en triángulos.</p>
+                        </div>
+
+                        <!-- Cometa -->
+                        <div class="nextra-card p-8 bg-white border border-slate-200 rounded-[2rem] hover:shadow-md transition-all group">
+                            <div class="w-14 h-14 bg-sky-100 text-sky-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                                <i data-lucide="wind"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-3">Vuelo</h3>
+                            <p class="text-xs text-slate-500 leading-relaxed">Calcular la altura de cometas o drones sabiendo cuánto cable has soltado y el ángulo.</p>
+                        </div>
+
+                        <!-- Arquitectura -->
+                        <div class="nextra-card p-8 bg-white border border-slate-200 rounded-[2rem] hover:shadow-md transition-all group">
+                            <div class="w-14 h-14 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                                <i data-lucide="construction"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-3">Diseño</h3>
+                            <p class="text-xs text-slate-500 leading-relaxed">Rampas de acceso, pendientes de tejados y estabilidad de vigas de carga.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <hr class="my-16 border-gray-100">
+
+                <!-- BLOQUE 9: ERRORES COMUNES -->
+                <section id="block-9" class="mb-24 scroll-mt-24">
+                    <div class="mb-12 border-b border-slate-200 pb-8">
+                        <span class="bg-red-100 text-red-700 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Nivel 9: Zona de Peligro</span>
+                        <h2 class="text-3xl font-bold text-gray-900 mt-6 mb-4 flex items-center gap-3">
+                            <i data-lucide="skull" class="text-red-600"></i>
+                            9. Errores Comunes
+                        </h2>
+                        <p class="text-gray-600 mb-8 leading-relaxed">
+                            Incluso los mejores cometen estos fallos. Conocerlos es la única forma de evitarlos en el examen final.
+                        </p>
+                    </div>
+
+                    <!-- Caso Real: Radian -->
+                    <div class="bg-red-50 rounded-[2.5rem] p-10 border-2 border-red-100 shadow-inner mb-12 group">
+                        <h4 class="text-xl font-bold text-red-900 mb-8 flex items-center gap-3">
+                            <i data-lucide="shield-alert" class="animate-bounce"></i>
+                            Caso Real: El Desastre del Radián
+                        </h4>
+                        <div class="grid md:grid-cols-2 gap-10">
+                            <div class="bg-white p-8 rounded-[2rem] border border-red-200 shadow-sm relative overflow-hidden">
+                                <div class="absolute -top-4 -right-4 text-red-50 opacity-10"><i data-lucide="x-circle" class="w-24 h-24"></i></div>
+                                <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">Error</span>
+                                <p class="mt-6 text-slate-600 italic leading-relaxed text-sm">"Calculo la altura de un árbol de 10m con un ángulo de 30º y me sale <strong>-9.8 metros</strong>. ¡Imposible!"</p>
+                                <div class="mt-6 p-4 bg-red-50 rounded-xl border border-red-100 font-mono text-xs text-red-800 shadow-inner">
+                                    <p class="mb-1 opacity-50">// Modo RAD (incorrecto)</p>
+                                    <p>10 * tan(30) = -6.40...</p>
+                                </div>
+                            </div>
+                            <div class="bg-white p-8 rounded-[2rem] border border-green-200 shadow-sm relative overflow-hidden">
+                                <div class="absolute -top-4 -right-4 text-green-50 opacity-10"><i data-lucide="check-circle" class="w-24 h-24"></i></div>
+                                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">Solución</span>
+                                <p class="mt-6 text-slate-600 leading-relaxed text-sm">Cambia a modo <strong>DEG</strong> inmediatamente. La tangente de 30º debe ser positiva (~0.577).</p>
+                                <div class="mt-6 p-4 bg-green-50 rounded-xl border border-green-100 font-mono text-xs text-green-800 shadow-inner">
+                                    <p class="mb-1 opacity-50">// Modo DEG (correcto)</p>
+                                    <p>10 * tan(30º) = 5.77 metros</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6 mb-12">
+                        <div class="p-6 bg-white border border-slate-200 rounded-[2rem] flex gap-6 items-center shadow-sm hover:border-red-200 transition-colors">
+                            <div class="bg-red-100 p-4 rounded-2xl text-red-600 shrink-0 shadow-lg shadow-red-100"><i data-lucide="split" class="w-8 h-8"></i></div>
+                            <div>
+                                <h4 class="font-bold text-slate-800 mb-1">Confusión de Lados</h4>
+                                <p class="text-xs text-slate-500 leading-relaxed">No creas que el vertical siempre es el opuesto. Dibuja siempre un monigote en el ángulo: el opuesto es el que mira de frente.</p>
+                            </div>
+                        </div>
+                        <div class="p-6 bg-white border border-slate-200 rounded-[2rem] flex gap-6 items-center shadow-sm hover:border-red-200 transition-colors">
+                            <div class="bg-red-100 p-4 rounded-2xl text-red-600 shrink-0 shadow-lg shadow-red-100"><i data-lucide="ruler" class="w-8 h-8"></i></div>
+                            <div>
+                                <h4 class="font-bold text-slate-800 mb-1">Resultados Imposibles</h4>
+                                <p class="text-xs text-slate-500 leading-relaxed">Seno o Coseno nunca pueden ser mayores que 1. La hipotenusa siempre es el lado más largo. Si no, ¡revisa!</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Checklist -->
+                    <div class="bg-slate-900 text-white rounded-[3rem] p-10 md:p-16 shadow-2xl relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-br from-red-500/10 to-transparent pointer-events-none"></div>
+                        <h3 class="text-3xl font-bold mb-10 flex items-center gap-4 text-red-400">
+                            <i data-lucide="check-square" class="w-10 h-10"></i>
+                            Checklist de Supervivencia
+                        </h3>
+                        <ul class="grid md:grid-cols-2 gap-x-12 gap-y-8 text-sm text-slate-300 relative z-10">
+                            <li class="flex gap-4 items-center border-b border-white/10 pb-4 group">
+                                <i data-lucide="circle" class="w-4 h-4 text-red-500 group-hover:scale-150 transition-transform"></i>
+                                <span>¿He puesto el símbolo de grados <strong>º</strong> en los ángulos?</span>
+                            </li>
+                            <li class="flex gap-4 items-center border-b border-white/10 pb-4 group">
+                                <i data-lucide="circle" class="w-4 h-4 text-red-500 group-hover:scale-150 transition-transform"></i>
+                                <span>¿Es la <strong>hipotenusa</strong> el lado mayor del resultado?</span>
+                            </li>
+                            <li class="flex gap-4 items-center border-b border-white/10 pb-4 group">
+                                <i data-lucide="circle" class="w-4 h-4 text-red-500 group-hover:scale-150 transition-transform"></i>
+                                <span>¿He usado <strong>4 decimales</strong> en mis cálculos?</span>
+                            </li>
+                            <li class="flex gap-4 items-center border-b border-white/10 pb-4 group">
+                                <i data-lucide="circle" class="w-4 h-4 text-red-500 group-hover:scale-150 transition-transform"></i>
+                                <span>¿Está la calculadora en modo <strong>DEG</strong>?</span>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+
+                <hr class="my-16 border-gray-100">
+
+                <!-- BLOQUE 10: EL GPS -->
+                <section id="block-10" class="mb-24 scroll-mt-24">
+                    <div class="mb-12 border-b border-slate-200 pb-8">
+                        <span class="bg-blue-100 text-indigo-700 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Nivel 10: Tecnología del Futuro</span>
+                        <h2 class="text-3xl font-bold text-gray-900 mt-6 mb-4">10. El Secreto del GPS</h2>
+                        <p class="text-gray-600 mb-8 leading-relaxed">
+                            Tu móvil no usa magia para ubicarte, usa <strong>Trilateración Trigonométrica</strong>.
+                        </p>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-8 mb-12 text-sm">
+                        <div class="nextra-card p-8 bg-slate-900 text-white relative overflow-hidden group">
+                            <div class="absolute top-0 right-0 p-10 opacity-10 group-hover:scale-110 transition-transform"><i data-lucide="satellite" class="w-32 h-32 text-indigo-400"></i></div>
+                            <h3 class="text-xl font-bold mb-4 text-indigo-400">Trilateración</h3>
+                            <p class="text-slate-300 leading-relaxed mb-4">
+                                El GPS mide distancias, no ángulos. Calcula cuánto tarda la señal del satélite en llegar y usa la velocidad de la luz.
+                            </p>
+                            <div class="bg-white/5 p-4 rounded-xl italic text-xs text-indigo-200 border border-white/10">
+                                💡 Imagina 3 esferas cruzándose: solo hay un punto posible donde estés tú.
+                            </div>
+                        </div>
+                        <div class="nextra-card p-8 bg-white border-gray-200">
+                            <h3 class="text-xl font-bold mb-4 text-slate-800 flex items-center gap-2">
+                                <i data-lucide="alert-triangle" class="text-amber-500"></i>
+                                ¿Por qué falla bajo techo?
+                            </h3>
+                            <p class="text-slate-600 leading-relaxed mb-4">
+                                Las ondas rebotan en techos y paredes (multipath). Al rebotar, tardan más en llegar, la "hipotenusa" se alarga y el móvil cree que estás en otro sitio.
+                            </p>
+                            <div class="flex justify-center">
+                                <svg viewBox="0 0 200 150" class="w-32 h-auto drop-shadow-xl">
+                                    <path d="M 100 20 L 40 130 L 160 130 Z" fill="none" stroke="#6366f1" stroke-width="3"></path>
+                                    <circle cx="100" cy="20" r="8" fill="#6366f1"></circle>
+                                    <circle cx="40" cy="130" r="5" fill="#ef4444"></circle>
+                                    <text x="110" y="25" font-size="10" fill="#6366f1" font-weight="bold">SATÉLITE</text>
+                                    <text x="105" y="85" font-size="8" fill="#94a3b8" transform="rotate(60, 105, 85)">HIPOTENUSA d</text>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <hr class="my-16 border-gray-100">
+
+                <!-- BLOQUE 11: MINI-EXAMEN -->
+                <section id="block-11" class="mb-24 scroll-mt-24">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                        <i data-lucide="award" class="text-indigo-600"></i>
+                        Desafío Maestro Final
+                    </h2>
+                    <p class="text-gray-500 mb-8 italic">Supera este quiz de 8 preguntas (Total 10 hoy) para completar la sesión.</p>
+                    
+                    <div class="space-y-4">
+                        <div v-for="(q, index) in quizQuestions" :key="index" class="nextra-card p-6 bg-gray-50 border-gray-200">
+                            <p class="text-sm font-bold text-gray-800 mb-4">{{ index + 3 }}. {{ q.text }}</p>
+                            <div class="flex flex-wrap gap-2">
+                                <button v-for="opt in q.options" :key="opt" 
+                                        @click="checkAnswer(opt === q.ans)"
+                                        class="px-4 py-2 bg-white border border-gray-200 rounded-lg text-xs font-medium hover:border-indigo-500 hover:text-indigo-600 transition-all">
+                                    {{ opt }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Final Quiz Feedback -->
+                    <div v-if="quizFeedback" 
+                         class="mt-8 p-6 rounded-2xl border-2 text-center font-bold transition-all"
+                         :class="quizFeedback.type === 'success' ? 'bg-green-50 border-green-200 text-green-700' : 'bg-red-50 border-red-200 text-red-700'">
+                        {{ quizFeedback.text }}
+                    </div>
+                </section>
+
+                <!-- FOOTER DE NEXTRA -->
+                <footer class="mt-32 pt-12 border-t border-gray-100">
+                    <div class="bg-gray-50 p-8 rounded-2xl flex flex-col md:flex-row justify-between gap-6">
+                        <div>
+                            <div class="font-bold text-gray-900 mb-1">TrigoMaster System</div>
+                            <p class="text-xs text-gray-500 max-w-xs leading-relaxed">Educación de alto impacto diseñada para cerebros brillantes de 4º ESO.</p>
+                        </div>
+                        <div class="text-xs text-gray-400 font-medium">© 2026 · Documentación Maestra</div>
+                    </div>
+                </footer>
+            </div>
+        </main>
+
+        <!-- SIDEBAR DERECHA (On this page) -->
+        <aside class="sticky top-16 h-[calc(100vh-64px)] w-64 shrink-0 overflow-y-auto p-6 no-scrollbar hidden xl:block">
+            <h4 class="mb-4 text-xs font-bold uppercase tracking-widest text-gray-900">En esta página</h4>
+            <nav class="space-y-3">
+                <a v-for="level in levels" :key="'toc-'+level.id" :href="'#' + level.id" 
+                   class="block text-xs text-gray-500 hover:text-indigo-600 transition-colors leading-relaxed">
+                    {{ level.title }}
+                </a>
+            </nav>
+        </aside>
+    </div>
+</div>
+
+<script>
+    const { createApp, ref, computed, onMounted, onUnmounted } = Vue;
+
+    createApp({
+        setup() {
+            const scrollProgress = ref(0);
+            const isStudyTime = ref(true);
+            const timeLeft = ref(600); // 10 minutos
+            const levels = ref([
+                { id: 'block-1', title: '1. Introducción' },
+                { id: 'block-2', title: '2. El Triángulo Rectángulo' },
+                { id: 'block-3', title: '3. Razones Trigonométricas' },
+                { id: 'block-4', title: '4. Relaciones Fundamentales' },
+                { id: 'block-5', title: '5. Uso de Calculadora' },
+                { id: 'block-6', title: '6. Cálculo de Lados' },
+                { id: 'block-7', title: '7. Cálculo de Ángulos' },
+                { id: 'block-8', title: '8. Aplicaciones Reales' },
+                { id: 'block-9', title: '9. Errores Comunes' },
+                { id: 'block-10', title: '10. El GPS Espacial' },
+                { id: 'block-11', title: '11. Desafío Maestro' }
+            ]);
+
+            const quizQuestions = ref([
+                { text: '¿Qué modo debe tener la calculadora?', options: ['RAD', 'DEG', 'GRA'], ans: 'DEG' },
+                { text: '¿Cuál es el lado más largo?', options: ['Opuesto', 'Contiguo', 'Hipotenusa'], ans: 'Hipotenusa' },
+                { text: 'sen² + cos² = ...', options: ['0', '1', '∞'], ans: '1' },
+                { text: 'Tangente es Opuesto entre...', options: ['Hipotenusa', 'Contiguo'], ans: 'Contiguo' },
+                { text: 'SOH significa Seno = Op / ...', options: ['Hipotenusa', 'Adyacente'], ans: 'Hipotenusa' },
+                { text: 'Si el ángulo es 45º, Seno y Coseno son...', options: ['Iguales', 'Diferentes'], ans: 'Iguales' },
+                { text: '¿Puede el Seno ser 1.2?', options: ['Sí', 'No'], ans: 'No' },
+                { text: 'El GPS usa...', options: ['Triangulación', 'Trilateración'], ans: 'Trilateración' }
+            ]);
+
+            const flashFeedback = ref(null);
+            const quizFeedback = ref(null);
+
+            const checkAnswer = (correct) => {
+                quizFeedback.value = { 
+                    text: correct ? '¡Genial! 🌟 ¡Sigue así!' : '¡Casi! Inténtalo de nuevo. 💪', 
+                    type: correct ? 'success' : 'error' 
+                };
+                setTimeout(() => quizFeedback.value = null, 3000);
+            };
+
+            const checkAnswerSimple = (correct, msg) => {
+                flashFeedback.value = { text: msg, type: correct ? 'success' : 'error' };
+                setTimeout(() => flashFeedback.value = null, 4000);
+            };
+
+            const formattedTime = computed(() => {
+                const m = Math.floor(timeLeft.value / 60);
+                const s = timeLeft.value % 60;
+                const label = isStudyTime.value ? 'Enfoque' : 'Recreo';
+                return `${label}: ${m}:${s < 10 ? '0' : ''}${s}`;
+            });
+
+            const updateScroll = () => {
+                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                scrollProgress.value = (winScroll / height) * 100;
+            };
+
+            onMounted(() => {
+                lucide.createIcons();
+                window.addEventListener('scroll', updateScroll);
+                setInterval(() => {
+                    if (timeLeft.value > 0) timeLeft.value--;
+                    else {
+                        isStudyTime.value = !isStudyTime.value;
+                        timeLeft.value = isStudyTime.value ? 600 : 240;
+                    }
+                }, 1000);
+            });
+            
+            onUnmounted(() => window.removeEventListener('scroll', updateScroll));
+
+            return { formattedTime, scrollProgress, isStudyTime, levels, quizQuestions, checkAnswer, checkAnswerSimple, flashFeedback, quizFeedback };
+        }
+    }).mount('#app');
+</script>
+
+</body>
+</html>
