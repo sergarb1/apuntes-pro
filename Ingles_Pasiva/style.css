@@ -1,0 +1,384 @@
+:root {
+    --primary-color: #bb86fc; /* Purple (for emphasis on dark theme) */
+    --secondary-color: #03dac6; /* Teal (for accent on dark theme) */
+    --accent-color: #cf6679; /* Red-Pink (for warnings/highlights on dark theme) */
+    --bg-color: #121212; /* Dark background */
+    --surface-color: #1e1e1e; /* Slightly lighter dark for cards/surfaces */
+    --text-color: #e0e0e0; /* Light gray for main text */
+    --light-text-color: #a0a0a0; /* Gray for secondary text */
+    --success-color: #018786; /* Darker Teal success on dark */
+    --danger-color: #cf6679; /* Red-Pink danger on dark */
+    --info-color: #2196f3; /* Blue info on dark */
+    --warning-color: #ffeb3b; /* Yellow warning on dark */
+    --light-bg-card: var(--surface-color); /* Use surface color for cards */
+    --header-gradient-start: #1e1e1e; /* Darker gradient start */
+    --header-gradient-end: #333333; /* Lighter gradient end */
+
+    /* Reveal.js overrides for dark theme */
+    --r-main-color: var(--text-color);
+    --r-heading-color: var(--primary-color);
+    --r-link-color: var(--secondary-color);
+    --r-link-color-hover: var(--primary-color);
+    --r-background-color: var(--bg-color);
+}
+
+/* General Body Styling */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-color);
+    line-height: 1.6;
+    background-color: var(--bg-color);
+}
+
+/* Header Sections (common to Apuntes and Hub) */
+.header-section {
+    background: linear-gradient(135deg, var(--header-gradient-start), var(--header-gradient-end));
+    color: var(--text-color); /* Light text on dark header */
+    padding: 60px 0;
+    margin-bottom: 40px;
+    border-bottom: 5px solid var(--primary-color); /* Use primary for accent */
+}
+.header-section h1 {
+    color: var(--primary-color); /* Ensure header title stands out */
+}
+.header-section .lead {
+    color: var(--light-text-color);
+}
+
+/* Card Styling (common) */
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4); /* Darker shadow for dark theme */
+    margin-bottom: 30px;
+    background-color: var(--light-bg-card); /* Use surface color */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    color: var(--text-color);
+}
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+}
+.card-title {
+    color: var(--primary-color);
+}
+.card-text {
+    color: var(--light-text-color);
+}
+
+/* Headings (common) */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--primary-color);
+    font-weight: 700;
+}
+h2 {
+    margin-top: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #121212; /* Dark text on primary button */
+}
+.btn-primary:hover {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    color: #121212;
+}
+.btn-secondary {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    color: #121212;
+}
+.btn-secondary:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #121212;
+}
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    color: #121212;
+}
+
+/* Icons */
+.fas, .far, .fal, .fab {
+    color: var(--secondary-color); /* Default icon color */
+}
+.text-primary .fas, .text-primary .far, .text-primary .fal, .text-primary .fab { color: var(--primary-color) !important; }
+.text-secondary .fas, .text-secondary .far, .text-secondary .fal, .text-secondary .fab { color: var(--secondary-color) !important; }
+.text-success .fas, .text-success .far, .text-success .fal, .text-success .fab { color: var(--success-color) !important; }
+.text-danger .fas, .text-danger .far, .text-danger .fal, .text-danger .fab { color: var(--danger-color) !important; }
+.text-info .fas, .text-info .far, .text-info .fal, .text-info .fab { color: var(--info-color) !important; }
+.text-warning .fas, .text-warning .far, .text-warning .fal, .text-warning .fab { color: var(--warning-color) !important; }
+
+
+/* Specific for Apuntes */
+.formula-box {
+    background-color: var(--surface-color); /* Use surface for formula box */
+    border-left: 5px solid var(--secondary-color);
+    padding: 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    display: inline-block;
+    margin: 20px 0;
+    border-radius: 5px;
+    color: var(--text-color);
+}
+.example-table th {
+    background-color: var(--primary-color);
+    color: #121212; /* Dark text on primary header */
+}
+.example-table td {
+    color: var(--text-color);
+    background-color: var(--surface-color);
+    border-color: #333;
+}
+.example-table tr:nth-child(even) td {
+    background-color: #282828; /* Slightly different stripe for readability */
+}
+
+.step-circle {
+    width: 40px;
+    height: 40px;
+    background-color: var(--secondary-color);
+    color: #121212; /* Dark text on secondary circle */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.timer-warning {
+    background-color: rgba(var(--warning-color-rgb, 255, 235, 59), 0.15); /* Light yellow background for warning */
+    border: 1px solid var(--warning-color);
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 20px;
+    font-style: italic;
+    color: var(--text-color);
+}
+.timer-warning .fas {
+    color: var(--warning-color);
+}
+/* Ensure small text also has good contrast */
+small {
+    color: var(--light-text-color);
+}
+
+
+/* Specific for Infografia */
+/* Infografia will now follow general dark theme styling, no special body or card backgrounds */
+.infografia-body { /* This class will no longer be used */
+    background: var(--bg-color);
+    color: var(--text-color);
+}
+.infografia-body .title-gradient { /* This class will no longer be used as specific element styles will govern */
+    background: var(--primary-color);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.infografia-body .info-card { /* This class will no longer be used as general .card applies */
+    background: var(--surface-color);
+    backdrop-filter: none; /* No blur on dark cards */
+    border: 1px solid #333;
+    color: var(--text-color);
+}
+.infografia-body .step-num { /* This class will no longer be used as general step-circle applies */
+    color: var(--primary-color);
+}
+.infografia-body .formula { /* This class will no longer be used as formula-box applies */
+    background: linear-gradient(to right, var(--accent-color), var(--primary-color));
+    color: var(--text-color);
+}
+.infografia-body .check-icon { color: var(--success-color); } /* Specific for old infografia, now use .text-success */
+.infografia-body .timer-box { /* This class will no longer be used as timer-warning applies */
+    border-left: 4px solid var(--warning-color);
+    color: var(--text-color);
+}
+
+/* Specific for Game */
+.game-body {
+    background-color: var(--bg-color);
+}
+.game-container {
+    background: var(--surface-color);
+    color: var(--text-color);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+}
+.game-container h1 {
+    color: var(--primary-color);
+}
+.question-box {
+    background-color: var(--info-color);
+    color: #121212; /* Dark text on info box */
+    border: 2px solid var(--primary-color);
+}
+.feedback-box {
+    border: 1px solid #333;
+    color: var(--text-color);
+    background-color: #282828;
+}
+.feedback-correct { background-color: rgba(var(--success-color-rgb, 1, 135, 134), 0.2); color: var(--success-color); border-color: var(--success-color); }
+.feedback-incorrect { background-color: rgba(var(--danger-color-rgb, 207, 102, 121), 0.2); color: var(--danger-color); border-color: var(--danger-color); }
+.form-control {
+    border: 1px solid #555;
+    background-color: #333;
+    color: var(--text-color);
+}
+.form-control::placeholder {
+    color: var(--light-text-color);
+    opacity: 0.7;
+}
+.btn-check {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #121212;
+}
+.btn-check:hover {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    color: #121212;
+}
+.btn-next {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    color: #121212;
+}
+.btn-next:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #121212;
+}
+.score-display {
+    color: var(--light-text-color);
+}
+.timer-bar-container {
+    background-color: #333;
+}
+.timer-bar {
+    background-color: var(--primary-color);
+    height: 100%;
+    width: 100%;
+}
+
+@keyframes timer-countdown {
+    from { width: 100%; }
+    to { width: 0%; }
+}
+
+.final-score {
+    color: var(--primary-color);
+}
+.game-body .concentration-box {
+    background: rgba(var(--info-color-rgb, 33, 150, 243), 0.15);
+    color: var(--info-color);
+    border: 1px solid var(--info-color);
+}
+.game-body .concentration-box .fas {
+    color: var(--info-color);
+}
+
+
+/* Specific for Reveal.js Presentation */
+.reveal {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+    font-family: 'Montserrat', sans-serif;
+    text-transform: none;
+    color: var(--primary-color); /* Headings use primary color */
+}
+.reveal p {
+    color: var(--text-color);
+}
+.reveal .controls button {
+    color: var(--secondary-color);
+}
+.reveal table th {
+    background-color: var(--primary-color);
+    color: #121212; /* Dark text on primary header */
+}
+.reveal table td {
+    background-color: var(--surface-color); /* Ensure cells are readable on dark */
+    color: var(--text-color);
+    border-color: #333;
+}
+.reveal table tr:nth-child(even) td {
+    background-color: #282828;
+}
+
+.reveal .active-label {
+    background-color: rgba(var(--success-color-rgb, 1, 135, 134), 0.2);
+    color: var(--success-color);
+    border-left: 5px solid var(--success-color);
+}
+.reveal .passive-label {
+    background-color: rgba(var(--danger-color-rgb, 207, 102, 121), 0.2);
+    color: var(--danger-color);
+    border-left: 5px solid var(--danger-color);
+}
+.reveal .formula-box {
+    background: var(--surface-color);
+    border: 2px dashed var(--accent-color);
+    color: var(--text-color);
+}
+.reveal .formula-box .fas {
+    color: var(--primary-color);
+}
+.reveal .list-item {
+    color: var(--text-color);
+}
+.reveal .mistake-box {
+    background: rgba(var(--danger-color-rgb, 207, 102, 121), 0.2);
+    color: var(--danger-color);
+    border: 1px solid var(--danger-color);
+}
+.reveal .mistake-box .fas {
+    color: var(--danger-color);
+}
+
+.reveal .concentration-box {
+    background: rgba(var(--info-color-rgb, 33, 150, 243), 0.15);
+    color: var(--info-color);
+    border: 1px solid var(--info-color);
+}
+.reveal .concentration-box .fas {
+    color: var(--info-color);
+}
+.reveal small {
+    color: var(--light-text-color);
+}
+.reveal .lead {
+    color: var(--text-color);
+}
+
+
+/* Mobile-specific refinements for Game (max-width: 576px, typical for small phones) */
+@media (max-width: 576px) {
+    .game-container h1 {
+        font-size: 1.75rem; /* Smaller heading for mobile */
+    }
+    .game-container .question-box,
+    .game-container .feedback-box {
+        padding: 15px; /* More padding on smaller screens */
+    }
+    .game-container .btn-check,
+    .game-container .btn-next {
+        padding: 10px 20px; /* Slightly smaller buttons */
+        font-size: 1rem;
+    }
+    .game-container .input-group .form-control {
+        padding: 10px 12px;
+        font-size: 1rem;
+    }
+    .game-container .score-display {
+        font-size: 1rem;
+    }
+}

@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Passive Voice Master: Neon Quiz</title>
+    <!-- Bootstrap 5 & FontAwesome 6 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser-arcade-physics.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --surface-color: #1e1e1e;
+            --primary-color: #bb86fc;
+            --secondary-color: #03dac6;
+            --error-color: #cf6679;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: var(--bg-color);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text-primary);
+            height: 100dvh; /* Mobile adaptive height */
+            user-select: none;
+        }
+
+        #game-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            pointer-events: none; /* Let clicks pass through to game if needed, but we use overlays */
+            display: flex;
+            flex-direction: column;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+        }
+
+        .interactive-area {
+            pointer-events: auto;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(30, 30, 30, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            pointer-events: auto;
+        }
+
+        .score-badge {
+            background: rgba(187, 134, 252, 0.2);
+            color: var(--primary-color);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            border: 1px solid var(--primary-color);
+        }
+
+        .timer-bar {
+            height: 6px;
+            background: #333;
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+
+        .timer-fill {
+            height: 100%;
+            background: var(--secondary-color);
+            width: 100%;
+            transition: width 0.1s linear;
+        }
+
+        /* Question Card */
+        .question-card {
+            background: rgba(30, 30, 30, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .question-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .question-subtext {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        /* Options */
+        .options-grid {
+            display: grid;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .option-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            text-align: left;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+
+        .option-btn:hover, .option-btn:focus {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .option-btn.selected {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: #000;
+        }
+
+        .option-btn.correct {
+            background: rgba(3, 218, 198, 0.2);
+            border-color: var(--secondary-color);
+            color: var(--secondary-color);
+        }
+
+        .option-btn.incorrect {
+            background: rgba(207, 102, 121, 0.2);
+            border-color: var(--error-color);
+            color: var(--error-color);
+        }
+
+        .option-icon {
+            margin-right: 15px;
+            width: 30px;
+            text-align: center;
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .feedback-card {
+            background: var(--surface-color);
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 90%;
+            width: 500px;
+            text-align: center;
+            border: 2px solid;
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .modal-overlay.active .feedback-card {
+            transform: scale(1);
+        }
+
+        .feedback-success { border-color: var(--secondary-color); box-shadow: 0 0 30px rgba(3, 218, 198, 0.3); }
+        .feedback-error { border-color: var(--error-color); box-shadow: 0 0 30px rgba(207, 102, 121, 0.3); }
+
+        .btn-action {
+            background: var(--primary-color);
+            color: #000;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 20px;
+            width: 100%;
+            transition: transform 0.1s;
+        }
+
+        .btn-action:active { transform: scale(0.95); }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Animations for Phaser Background */
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Phaser Game Container -->
+<div id="game-container"></div>
+
+<!-- UI Layer -->
+<div id="ui-layer">
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="d-flex align-items-center">
+            <i class="fas fa-layer-group text-primary me-2"></i>
+            <span id="question-counter">1/20</span>
+        </div>
+        <div class="score-badge">
+            <i class="fas fa-star me-2"></i><span id="score-display">0</span>
+        </div>
+        <div class="timer-bar"><div class="timer-fill" id="timer-bar"></div></div>
+    </div>
+
+    <!-- Main Quiz Area -->
+    <div class="interactive-area" id="quiz-area">
+        <div class="question-card">
+            <h2 class="question-text" id="question-text">Loading...</h2>
+            <p class="question-subtext" id="question-subtext">Select the correct option</p>
+        </div>
+
+        <div class="options-grid" id="options-container">
+            <!-- Options injected by JS -->
+        </div>
+    </div>
+</div>
+
+<!-- Feedback Modal -->
+<div class="modal-overlay" id="feedback-modal">
+    <div class="feedback-card" id="feedback-card-inner">
+        <div class="mb-3">
+            <i class="fas fa-4x" id="feedback-icon"></i>
+        </div>
+        <h3 id="feedback-title" class="mb-3">Title</h3>
+        <p id="feedback-message" class="mb-4 lead">Message goes here</p>
+        <div id="feedback-detail" class="text-muted mb-4 small"></div>
+        <button class="btn-action" id="next-btn">Next Question <i class="fas fa-arrow-right ms-2"></i></button>
+    </div>
+</div>
+
+<!-- TDAH Pause Modal -->
+<div class="modal-overlay" id="pause-modal">
+    <div class="feedback-card" style="border-color: #3b82f6;">
+        <div class="mb-3">
+            <i class="fas fa-brain fa-4x text-primary fa-spin" style="animation-duration: 3s;"></i>
+        </div>
+        <h3>Brain Break! 🧠</h3>
+        <p class="mb-4">Great focus! Take 10 seconds to stretch, look away from the screen, or take a deep breath.</p>
+        <button class="btn-action" onclick="gameLogic.resumeFromPause()">I'm Ready!</button>
+    </div>
+</div>
+
+<script>
+    // --- Data: 3-Option Quiz Questions ---
+    const quizData = [
+        {
+            q: "The students cleaned the classroom.",
+            sub: "Transform to Passive Voice",
+            options: [
+                "The classroom was cleaned by the students.",
+                "The classroom is cleaned by the students.",
+                "The classroom were cleaned by the students."
+            ],
+            correct: 0,
+            feedback: "Past Simple ('cleaned') changes to 'was/were cleaned'. Classroom is singular -> 'was'."
+        },
+        {
+            q: "The new bridge will be built next year.",
+            sub: "Identify the Voice",
+            options: [
+                "Passive Voice",
+                "Active Voice",
+                "Future Perfect"
+            ],
+            correct: 0,
+            feedback: "'Will be built' follows the structure 'be + past participle', making it Passive."
+        },
+        {
+            q: "People speak English all over the world.",
+            sub: "Transform to Passive Voice",
+            options: [
+                "English is spoken all over the world.",
+                "English was spoken all over the world.",
+                "English speaks all over the world."
+            ],
+            correct: 0,
+            feedback: "Present Simple ('speak') changes to 'is/are spoken'. English is singular."
+        },
+        {
+            q: "My mother is baking a cake.",
+            sub: "Identify the Voice",
+            options: [
+                "Active Voice",
+                "Passive Voice",
+                "Present Perfect"
+            ],
+            correct: 0,
+            feedback: "The subject 'My mother' is performing the action 'baking'. This is Active."
+        },
+        {
+            q: "They have finished the project.",
+            sub: "Transform to Passive Voice",
+            options: [
+                "The project has been finished.",
+                "The project have been finished.",
+                "The project was finished."
+            ],
+            correct: 0,
+            feedback: "Present Perfect ('have finished') becomes 'has/have been finished'. Project is singular -> 'has'."
+        },
+        {
+            q: "Someone stole my car.",
+            sub: "Transform to Passive Voice",
+            options: [
+                "My car was stolen.",
+                "My car is stolen.",
+                "My car has been stolen."
+            ],
+            correct: 0,
+            feedback: "Past Simple ('stole') changes to 'was/were stolen'. We omit 'someone' as the agent."
+        },
+        {
+            q: "The strong wind damaged the roof.",
+            sub: "Select the correct passive form",
+            options: [
+                "The roof was damaged by the strong wind.",
+                "The roof damaged by the strong wind.",
+                "The roof is damaged by the strong wind."
+            ],
+            correct: 0,
+            feedback: "We need the auxiliary 'was' for the past simple passive."
+        },
+        {
+            q: "They are building a new hospital.",
+            sub: "Transform to Passive Voice",
+            options: [
+                "A new hospital is being built.",
+                "A new hospital is built.",
+                "A new hospital was being built."
+            ],
+            correct: 0,
+            feedback: "Present Continuous ('are building') needs 'being': 'is being built'."
+        },
+        {
+            q: "Doctors have discovered a new cure.",
+            sub: "Transform to Passive Voice",
+            options: [
+                "A new cure has been discovered.",
+                "A new cure is discovered.",
+                "A new cure have been discovered."
+            ],
+            correct: 0,
+            feedback: "Present Perfect uses 'has been' for singular objects."
+        },
+        {
+            q: "The police arrested the suspect.",
+            sub: "Transform to Passive Voice",
+            options: [
+                "The suspect was arrested.",
+                "The suspect were arrested.",
+                "The suspect is arrested."
+            ],
+            correct: 0,
+            feedback: "Past Simple -> 'was arrested'. 'Suspect' is singular."
+        },
+        {
+            q: "Shakespeare wrote Hamlet.",
+            sub: "Transform to Passive Voice",
+            options: [
+                "Hamlet was written by Shakespeare.",
+                "Hamlet wrote by Shakespeare.",
+                "Hamlet is written by Shakespeare."
+            ],
+            correct: 0,
+            feedback: "A classic Past Simple sentence. Use 'was written'."
+        },
+        {
+            q: "We must sign the contract.",
+            sub: "Transform to Passive Voice",
+            options: [
+                "The contract must be signed.",
+                "The contract must sign.",
+                "The contract was signed."
+            ],
+            correct: 0,
+            feedback: "Modals (must) are followed by 'be' + participle: 'must be signed'."
+        },
+        {
+            q: "I will send the email tomorrow.",
+            sub: "Identify the Voice",
+            options: [
+                "Active Voice",
+                "Passive Voice",
+                "Past Continuous"
+            ],
+            correct: 0,
+            feedback: "'I' (subject) performs the action 'will send'. It is Active."
+        },
+        {
+            q: "Did they fix the window?",
+            sub: "Transform Question to Passive",
+            options: [
+                "Was the window fixed?",
+                "Did the window fixed?",
+                "Is the window fixed?"
+            ],
+            correct: 0,
+            feedback: "In questions, the auxiliary 'Was' comes before the subject."
+        },
+        {
+            q: "The chef prepares the food daily.",
+            sub: "Complete the Passive: The food ___ daily.",
+            options: [
+                "is prepared",
+                "was prepared",
+                "is being prepared"
+            ],
+            correct: 0,
+            feedback: "Daily routine = Present Simple. Passive = 'is prepared'."
+        }
+    ];
+
+    // --- Phaser Background Scene ---
+    class BackgroundScene extends Phaser.Scene {
+        constructor() {
+            super({ key: 'BackgroundScene' });
+        }
+
+        create() {
+            // Gradient Background
+            const width = this.scale.width;
+            const height = this.scale.height;
+            
+            this.graphics = this.add.graphics();
+            this.drawBackground();
+
+            // Floating Particles
+            const particles = this.add.particles(0, 0, 'flare', {
+                x: { min: 0, max: width },
+                y: { min: 0, max: height },
+                quantity: 2,
+                frequency: 100,
+                lifespan: 4000,
+                gravityY: -10,
+                scale: { start: 0.05, end: 0 },
+                alpha: { start: 0.5, end: 0 },
+                blendMode: 'ADD'
+            });
+
+            // Create texture programmatically
+            const flare = this.make.graphics({x: 0, y: 0, add: false});
+            flare.fillStyle(0xbb86fc, 1);
+            flare.fillCircle(10, 10, 10);
+            flare.generateTexture('flare', 20, 20);
+
+            // Responsive resize
+            this.scale.on('resize', this.resize, this);
+        }
+
+        drawBackground() {
+            const w = this.scale.width;
+            const h = this.scale.height;
+            this.graphics.clear();
+            this.graphics.fillGradientStyle(0x121212, 0x121212, 0x2a0a38, 0x2a0a38, 1);
+            this.graphics.fillRect(0, 0, w, h);
+        }
+
+        resize(gameSize) {
+            this.cameras.main.setViewport(0, 0, gameSize.width, gameSize.height);
+            this.drawBackground();
+        }
+    }
+
+    // --- Game Logic Manager ---
+    const gameLogic = {
+        currentIndex: 0,
+        score: 0,
+        timer: 100,
+        timerInterval: null,
+        isPaused: false,
+        streak: 0,
+
+        init() {
+            this.currentIndex = 0;
+            this.score = 0;
+            this.streak = 0;
+            this.updateUI();
+            this.loadQuestion();
+            this.startTimer();
+        },
+
+        startTimer() {
+            clearInterval(this.timerInterval);
+            this.timer = 100;
+            document.getElementById('timer-bar').style.width = '100%';
+            
+            this.timerInterval = setInterval(() => {
+                if (this.isPaused) return;
+                
+                this.timer -= 0.5; // Controls speed
+                const bar = document.getElementById('timer-bar');
+                bar.style.width = `${this.timer}%`;
+
+                if (this.timer < 30) bar.style.backgroundColor = '#cf6679'; // Red warning
+                else bar.style.backgroundColor = '#03dac6';
+
+                if (this.timer <= 0) {
+                    this.handleTimeUp();
+                }
+            }, 100);
+        },
+
+        handleTimeUp() {
+            clearInterval(this.timerInterval);
+            this.showFeedback(false, -1);
+        },
+
+        loadQuestion() {
+            if (this.currentIndex >= quizData.length) {
+                this.endGame();
+                return;
+            }
+
+            // TDAH Check: Pause every 5 questions
+            if (this.currentIndex > 0 && this.currentIndex % 5 === 0) {
+                this.isPaused = true;
+                document.getElementById('pause-modal').classList.add('active');
+                return; 
+            }
+
+            const data = quizData[this.currentIndex];
+            document.getElementById('question-counter').innerText = `${this.currentIndex + 1}/${quizData.length}`;
+            
+            // Text animation
+            const qText = document.getElementById('question-text');
+            qText.style.opacity = 0;
+            setTimeout(() => {
+                qText.innerText = data.q;
+                document.getElementById('question-subtext').innerText = data.sub;
+                qText.style.opacity = 1;
+            }, 200);
+
+            // Generate Options
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            
+            data.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerHTML = `
+                    <div class="option-icon"><i class="far fa-circle"></i></div>
+                    <div>${opt}</div>
+                `;
+                btn.onclick = () => this.checkAnswer(index, btn);
+                container.appendChild(btn);
+            });
+
+            this.startTimer();
+        },
+
+        checkAnswer(selectedIndex, btnElement) {
+            clearInterval(this.timerInterval);
+            
+            // Disable all buttons
+            const btns = document.querySelectorAll('.option-btn');
+            btns.forEach(b => b.style.pointerEvents = 'none');
+
+            const currentQ = quizData[this.currentIndex];
+            const isCorrect = selectedIndex === currentQ.correct;
+
+            if (isCorrect) {
+                btnElement.classList.add('correct', 'selected');
+                btnElement.querySelector('.option-icon i').className = 'fas fa-check-circle';
+                this.score += 10 + (this.streak * 2); // Streak bonus
+                this.streak++;
+                this.playSound('success');
+            } else {
+                btnElement.classList.add('incorrect', 'selected');
+                btnElement.querySelector('.option-icon i').className = 'fas fa-times-circle';
+                
+                // Highlight correct one
+                btns[currentQ.correct].classList.add('correct');
+                btns[currentQ.correct].querySelector('.option-icon i').className = 'fas fa-check-circle';
+                
+                this.streak = 0;
+                this.playSound('error');
+            }
+
+            this.updateUI();
+            
+            // Delay feedback modal slightly for visual impact
+            setTimeout(() => this.showFeedback(isCorrect, selectedIndex), 800);
+        },
+
+        showFeedback(isCorrect, selectedIndex) {
+            const currentQ = quizData[this.currentIndex];
+            const modal = document.getElementById('feedback-modal');
+            const card = document.getElementById('feedback-card-inner');
+            const icon = document.getElementById('feedback-icon');
+            const title = document.getElementById('feedback-title');
+            const msg = document.getElementById('feedback-message');
+            const detail = document.getElementById('feedback-detail');
+
+            modal.classList.add('active');
+            
+            if (isCorrect) {
+                card.className = 'feedback-card feedback-success';
+                icon.className = 'fas fa-trophy text-success';
+                title.innerText = "Excellent!";
+                title.className = "mb-3 text-success";
+                msg.innerHTML = "That's the correct structure.";
+            } else {
+                card.className = 'feedback-card feedback-error';
+                icon.className = 'fas fa-exclamation-triangle text-danger';
+                title.innerText = selectedIndex === -1 ? "Time's Up!" : "Not quite...";
+                title.className = "mb-3 text-danger";
+                msg.innerHTML = "Remember the rule:";
+            }
+
+            detail.innerHTML = `<strong>Tip:</strong> ${currentQ.feedback}`;
+        },
+
+        nextQuestion() {
+            document.getElementById('feedback-modal').classList.remove('active');
+            this.currentIndex++;
+            this.loadQuestion();
+        },
+
+        resumeFromPause() {
+            document.getElementById('pause-modal').classList.remove('active');
+            this.isPaused = false;
+            this.loadQuestion(); // Will continue flow
+        },
+
+        updateUI() {
+            document.getElementById('score-display').innerText = this.score;
+        },
+
+        endGame() {
+            const container = document.getElementById('quiz-area');
+            container.innerHTML = `
+                <div class="question-card">
+                    <h1 class="display-4 text-primary mb-4">Quiz Complete!</h1>
+                    <div class="display-1 mb-4">Score: ${this.score}</div>
+                    <p class="lead text-muted">You've mastered the Passive Voice structures.</p>
+                    <button class="btn-action" onclick="location.reload()">Play Again</button>
+                </div>
+            `;
+            document.querySelector('.timer-bar').style.display = 'none';
+        },
+
+        playSound(type) {
+            // Placeholder for sound logic (AudioContext) if desired later
+        }
+    };
+
+    // Event Listeners
+    document.getElementById('next-btn').addEventListener('click', () => gameLogic.nextQuestion());
+
+    // Initialize Phaser
+    const config = {
+        type: Phaser.AUTO,
+        parent: 'game-container',
+        width: window.innerWidth,
+        height: window.innerHeight,
+        transparent: true,
+        scale: {
+            mode: Phaser.Scale.RESIZE
+        },
+        scene: BackgroundScene
+    };
+
+    const game = new Phaser.Game(config);
+
+    // Start Game Logic
+    gameLogic.init();
+
+</script>
+</body>
+</html>

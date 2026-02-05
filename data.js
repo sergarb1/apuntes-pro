@@ -120,6 +120,17 @@ const APUNTES_DATA = {
             "iconBg": "bg-teal-50 text-teal-500"
         },
         {
+            "category": "english",
+            "level": "4º ESO",
+            "title": "Passive Voice Mastery",
+            "description": "Centro de recursos interactivos para dominar la voz pasiva: apuntes, infografía, presentación y juego de quizes.",
+            "path": "Ingles_Pasiva/index.html",
+            "icon": "fas fa-bullseye",
+            "colorClass": "bg-violet-500",
+            "badgeClass": "bg-violet-50 text-violet-700",
+            "iconBg": "bg-violet-50 text-violet-500"
+        },
+        {
             "category": "community",
             "level": "2º SMR",
             "title": "Workshop: Mentoring SMR",
