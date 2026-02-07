@@ -3,44 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Shelf Challenge Pro | Elite Mobile</title>
+    <title>Retail Command Center | Elite Edition</title>
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         [v-cloak] { display: none; }
-        body { margin: 0; background: #020617; font-family: 'Outfit', sans-serif; overflow: hidden; touch-action: none; position: fixed; width: 100%; height: 100%; }
-        #game-container { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background: #020617; }
-        .modal-blur { background: rgba(2, 6, 23, 0.95); backdrop-filter: blur(16px); display: none; z-index: 200; position: fixed; inset: 0; }
-        .text-gradient { background: linear-gradient(135deg, #60a5fa, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        canvas { touch-action: none; user-select: none; -webkit-tap-highlight-color: rgba(0,0,0,0); }
+        body { 
+            margin: 0; 
+            background: #0f172a; 
+            font-family: 'Outfit', sans-serif; 
+            overflow: hidden; 
+            touch-action: none; 
+            position: fixed; 
+            width: 100%; 
+            height: 100%; 
+            color: white;
+        }
+        #game-container { 
+            width: 100%; 
+            height: 100%; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            background: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%);
+        }
+        .modal-blur { 
+            background: rgba(15, 23, 42, 0.9); 
+            backdrop-filter: blur(20px); 
+            display: none; 
+            z-index: 200; 
+            position: fixed; 
+            inset: 0; 
+        }
+        canvas { 
+            touch-action: none; 
+            user-select: none; 
+            -webkit-tap-highlight-color: rgba(0,0,0,0); 
+            max-width: 100%; 
+            max-height: 100%; 
+            object-fit: contain;
+        }
         
         .custom-scroll::-webkit-scrollbar { width: 4px; }
         .custom-scroll::-webkit-scrollbar-track { background: transparent; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
+
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .legible-text {
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        @keyframes scan {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+        .scanner-line {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #3b82f6, transparent);
+            position: absolute;
+            width: 100%;
+            top: 0;
+            animation: scan 8s linear infinite;
+            opacity: 0.1;
+        }
     </style>
 </head>
-<body>
+<body class="legible-text">
 
     <!-- PANTALLA DE INICIO -->
-    <div id="intro-screen" class="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-[#020617]">
-        <div class="max-w-2xl w-full bg-slate-900/80 border border-white/10 rounded-[3rem] p-8 md:p-12 backdrop-blur-3xl shadow-2xl text-center">
-            <div class="w-20 h-20 bg-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl">
-                <i data-lucide="shopping-cart" class="text-white w-10 h-10"></i>
+    <div id="intro-screen" class="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-slate-900">
+        <div class="max-w-2xl w-full glass-panel rounded-[3rem] p-10 text-center relative overflow-hidden shadow-2xl border-2 border-blue-500/20">
+            <div class="w-20 h-20 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-xl">
+                <i data-lucide="shopping-bag" class="text-white w-10 h-10"></i>
             </div>
-            <h1 class="text-4xl md:text-6xl font-black text-white tracking-tighter mb-4 font-display italic text-center">
-                Shelf <span class="text-blue-400">Master</span>
-            </h1>
-            <p class="text-slate-400 text-sm md:text-base font-light mb-8 text-center">Simulador profesional de implantación en el lineal.</p>
             
-            <div class="bg-white/5 rounded-2xl p-6 mb-8 border border-white/5 text-left">
-                <h3 class="text-blue-400 font-black uppercase text-[10px] tracking-widest mb-4 italic">Objetivo de la misión</h3>
-                <p class="text-slate-300 text-xs leading-relaxed">Analiza el <strong>Peso y Margen</strong> del producto que aparece a la izquierda y arrástralo a su nivel ideal en la estantería.</p>
+            <h1 class="text-4xl font-black text-white tracking-tighter mb-4 font-display italic uppercase">
+                Retail <span class="text-blue-500">Command</span> Center
+            </h1>
+            
+            <div class="bg-white/5 rounded-2xl p-6 mb-8 text-left border border-white/5">
+                <h3 class="text-blue-400 font-black text-[10px] uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <i data-lucide="info" class="w-3 h-3"></i> Instrucciones de Operación
+                </h3>
+                <ul class="space-y-3 text-slate-300 text-sm">
+                    <li class="flex items-start gap-3">
+                        <i data-lucide="target" class="text-blue-500 w-4 h-4 shrink-0 mt-0.5"></i>
+                        <span>Enfrentarás <strong>10 desafíos aleatorios</strong> de gestión comercial.</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <i data-lucide="brain-circuit" class="text-purple-500 w-4 h-4 shrink-0 mt-0.5"></i>
+                        <span>Analiza la psicología del cliente y la logística del lineal para decidir.</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <i data-lucide="zap" class="text-orange-500 w-4 h-4 shrink-0 mt-0.5"></i>
+                        <span>Cada acierto suma <strong>250€ de Profit</strong>. Los fallos penalizan el beneficio.</span>
+                    </li>
+                </ul>
             </div>
 
-            <button onclick="startGame()" class="w-full py-5 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-black uppercase tracking-[0.3em] text-xs transition-all shadow-xl flex items-center justify-center gap-4 group">
-                INICIAR GESTIÓN <i data-lucide="play" class="w-4 h-4 fill-current group-hover:translate-x-1 transition-transform"></i>
+            <button onclick="startGame()" class="w-full py-5 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-black uppercase tracking-[0.3em] text-[10px] transition-all shadow-xl flex items-center justify-center gap-4 group">
+                INICIAR DESAFÍO <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
             </button>
         </div>
     </div>
@@ -48,63 +118,78 @@
     <!-- UI DEL JUEGO -->
     <div id="game-ui" class="hidden pointer-events-none">
         <div class="fixed top-4 left-4 right-4 flex justify-between z-10">
-            <div class="bg-slate-900/90 border border-white/10 p-3 rounded-2xl backdrop-blur-md shadow-2xl pointer-events-auto">
-                <div class="text-[8px] font-black text-blue-500 uppercase tracking-widest mb-1">PROFIT</div>
-                <div id="score-ui" class="text-xl font-black text-white tabular-nums text-center">0€</div>
+            <div class="flex gap-3">
+                <div class="bg-slate-900/90 glass-panel p-3 px-5 rounded-xl pointer-events-auto min-w-[130px]">
+                    <div class="text-[8px] font-black text-blue-400 uppercase tracking-widest mb-0.5">PROFIT</div>
+                    <div id="score-ui" class="text-2xl font-black text-white tabular-nums">0€</div>
+                </div>
+                <div class="bg-slate-900/90 glass-panel p-3 px-5 rounded-xl pointer-events-auto min-w-[100px]">
+                    <div class="text-[8px] font-black text-purple-400 uppercase tracking-widest mb-0.5">NIVEL</div>
+                    <div id="level-ui" class="text-2xl font-black text-white tabular-nums text-center">1/10</div>
+                </div>
             </div>
-            <div class="bg-slate-900/90 border border-white/10 p-3 rounded-2xl backdrop-blur-md shadow-2xl pointer-events-auto">
-                <div class="text-[8px] font-black text-orange-500 uppercase tracking-widest mb-1">RELOJ</div>
-                <div id="timer-ui" class="text-xl font-black text-white tabular-nums text-center">90</div>
+            
+            <div class="bg-slate-900/90 glass-panel p-3 px-5 rounded-xl pointer-events-auto min-w-[130px]">
+                <div class="text-[8px] font-black text-orange-400 uppercase tracking-widest mb-0.5 text-right">TIEMPO</div>
+                <div id="timer-ui" class="text-2xl font-black text-white tabular-nums text-right">120s</div>
             </div>
         </div>
 
-        <a href="index.html" class="fixed bottom-4 left-4 bg-white/5 text-white/50 px-4 py-2 rounded-xl text-[8px] font-black uppercase tracking-widest border border-white/5 pointer-events-auto">
-            TERMINAR
-        </a>
+        <div class="fixed bottom-4 left-4 right-4 flex justify-between items-center z-10">
+            <div class="flex gap-2 pointer-events-auto">
+                <a href="index.html" class="bg-slate-900/90 glass-panel hover:bg-red-600/20 hover:text-red-400 text-white/50 px-4 py-2 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all flex items-center gap-2">
+                    <i data-lucide="power" class="w-3 h-3"></i> SALIR
+                </a>
+                <button onclick="restartGame()" class="bg-slate-900/90 glass-panel hover:bg-blue-600/20 hover:text-blue-400 text-white/50 px-4 py-2 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all flex items-center gap-2">
+                    <i data-lucide="refresh-cw" class="w-3 h-3"></i> REINICIAR
+                </button>
+            </div>
+            <div class="text-[8px] font-black text-slate-500 uppercase tracking-[0.4em]">RETAIL_PROTOCOL_v2.9</div>
+        </div>
     </div>
 
     <!-- MODAL DE FEEDBACK / GAME OVER -->
     <div id="feedback-modal" class="modal-blur items-center justify-center p-4">
-        <div class="bg-slate-900 border border-white/10 rounded-[2.5rem] max-w-lg w-full max-h-[85vh] flex flex-col overflow-hidden shadow-2xl">
-            <div id="modal-header" class="p-6 md:p-8 text-white flex justify-between items-center bg-blue-600 shrink-0">
+        <div class="bg-slate-900 glass-panel rounded-[2.5rem] max-w-md w-full max-h-[85vh] flex flex-col overflow-hidden shadow-2xl relative border border-white/10">
+            
+            <div id="modal-header" class="p-6 text-white flex justify-between items-center bg-blue-600 shrink-0">
                 <div>
-                    <span id="modal-status" class="text-[8px] font-black uppercase tracking-[0.4em] opacity-70 block mb-1">ANÁLISIS DE LINEAL</span>
-                    <h3 id="modal-title" class="text-xl md:text-2xl font-black uppercase italic leading-none">¡MOVIMIENTO PRO!</h3>
+                    <span id="modal-status" class="text-[8px] font-black uppercase tracking-[0.4em] opacity-80 block mb-1">REPORTE COMERCIAL</span>
+                    <h3 id="modal-title" class="text-xl font-black uppercase italic leading-none">¡RESULTADO OK!</h3>
                 </div>
-                <i id="modal-icon" data-lucide="check-circle" class="w-8 h-8"></i>
+                <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                    <i id="modal-icon" data-lucide="check-circle" class="w-6 h-6"></i>
+                </div>
             </div>
             
-            <div id="modal-content" class="p-6 md:p-8 space-y-6 overflow-y-auto custom-scroll">
+            <div id="modal-content" class="p-8 space-y-6 overflow-y-auto custom-scroll relative z-10">
                 <div id="feedback-body">
-                    <div>
-                        <h4 class="text-[9px] font-black text-blue-400 uppercase tracking-[0.2em] mb-3">Lógica del Experto</h4>
-                        <p id="modal-desc" class="text-slate-300 text-sm leading-relaxed">...</p>
+                    <div class="mb-6">
+                        <p id="modal-desc" class="text-slate-100 text-lg leading-relaxed font-semibold italic text-center">...</p>
                     </div>
                     
-                    <div class="bg-white/5 p-5 rounded-2xl border border-white/5 mt-6">
-                        <h4 class="text-[9px] font-black text-orange-400 uppercase tracking-[0.2em] mb-2">Impacto Comercial</h4>
-                        <p id="modal-impact" class="text-slate-400 text-xs italic">...</p>
-                    </div>
-
-                    <div class="bg-indigo-600/20 p-5 rounded-2xl border border-indigo-500/30 flex gap-4 items-center mt-6">
-                        <div class="w-10 h-10 bg-indigo-600 text-white rounded-xl flex items-center justify-center shrink-0">
+                    <div class="bg-blue-600/10 p-5 rounded-2xl border border-blue-500/20 flex items-start gap-4">
+                        <div class="w-10 h-10 bg-orange-600 text-white rounded-xl flex items-center justify-center shrink-0 shadow-lg">
                             <i data-lucide="zap" class="w-5 h-5"></i>
                         </div>
-                        <p id="modal-tip" class="text-white text-[11px] font-medium leading-snug">...</p>
+                        <div>
+                            <h4 class="text-[8px] font-black text-orange-400 uppercase tracking-widest mb-1">PRO TIP</h4>
+                            <p id="modal-tip" class="text-white text-[13px] font-bold leading-snug">...</p>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Botones -->
-                <div class="pt-4">
-                    <button id="next-btn" onclick="closeModal()" class="w-full bg-white text-black py-4 rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-blue-500 hover:text-white transition-all">
-                        Siguiente Producto
+                <div class="pt-2">
+                    <button id="next-btn" onclick="closeModal()" class="w-full bg-white text-black py-4 rounded-xl font-black uppercase tracking-[0.2em] text-[10px] hover:bg-blue-600 hover:text-white transition-all shadow-xl flex items-center justify-center gap-3">
+                        SIGUIENTE NIVEL <i data-lucide="chevron-right" class="w-4 h-4"></i>
                     </button>
+                    
                     <div id="gameover-btns" class="hidden space-y-3">
-                        <button onclick="location.reload()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-blue-500 transition-all">
-                            Reiniciar Turno
+                        <button onclick="restartGame()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black uppercase tracking-[0.2em] text-[10px] hover:bg-blue-500 transition-all">
+                            NUEVO INTENTO
                         </button>
-                        <a href="index.html" class="block w-full bg-white/5 text-white py-4 rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-white/10 text-center border border-white/5">
-                            Volver al Hub
+                        <a href="index.html" class="block w-full bg-white/5 text-white py-4 rounded-xl font-black uppercase tracking-[0.2em] text-[10px] hover:bg-white/10 text-center border border-white/5 transition-all">
+                            VOLVER AL HUB
                         </a>
                     </div>
                 </div>
@@ -115,28 +200,53 @@
     <div id="game-container"></div>
 
     <script>
-        const products = [
-            { name: 'iPhone 15 Pro', color: 0x3b82f6, ideal: 3, weight: 'Ligero', margin: 'Muy Alto',
-              logic: 'El nivel de los ojos es el "Diamante" del retail. Los productos caros necesitan impacto visual inmediato.',
-              correct: '¡Perfecto! Has maximizado la visibilidad del producto más rentable de la sección.',
-              wrong: 'Nadie se agacha para ver un iPhone. Lo has escondido y eso supone pérdidas masivas.',
-              tip: 'El 52% de las ventas ocurren en el nivel de los ojos.' },
-            { name: 'Leche (Caja 12L)', color: 0xffffff, ideal: 1, weight: 'Pesado', margin: 'Bajo',
-              logic: 'La leche es básica y pesada. Va al suelo por seguridad y porque el cliente ya la busca.',
-              correct: '¡Eficiente! Liberas espacio de visibilidad para productos que dejan más dinero.',
-              wrong: '¡Peligro! 12kg a la altura de la cara es un riesgo. Además malgastas el estante premium.',
-              tip: 'Los productos pesados siempre abajo para mantener el centro de gravedad.' },
-            { name: 'Perfume Dior', color: 0xf472b6, ideal: 3, weight: 'Ligero', margin: 'Ultra',
-              logic: 'El lujo se vende por los ojos. Necesita estar a 1.50m para brillar ante el cliente.',
-              correct: '¡Impecable! Cada segundo que el cliente mira el perfume es dinero potencial.',
-              wrong: 'El lujo en el suelo parece saldo. Pierdes la imagen premium y el margen de beneficio.',
-              tip: 'Ilumina este nivel con focos directos para resaltar el cristal.' },
-            { name: 'Cereales Niños', color: 0xfacc15, ideal: 2, weight: 'Ligero', margin: 'Normal',
-              logic: 'Deben estar a la altura de los ojos del niño (nivel manos del adulto) para que lo pida.',
-              correct: '¡Estrategia infantil! Justo donde el niño puede verlo y meterlo en el carro.',
-              wrong: 'Demasiado alto. Si el niño no lo ve, el impulso de compra desaparece.',
-              tip: 'Si vendes a niños, tu nivel diamante está en el estante 2.' }
+        const allQuestions = [
+            { icon: "🏗️", text: "¿Cuál es el nivel del lineal apodado como el 'Nivel Diamante'?", options: ["Nivel del Suelo", "Nivel de las Manos", "Nivel de los Ojos", "Nivel de la Cabeza"], correct: 2, explanation: "El nivel de los ojos genera el impacto visual inmediato sin esfuerzo. Es donde se sitúan los productos con mayor margen.", tip: "Coloca siempre las novedades tecnológicas o perfumes de lujo en este nivel para maximizar el deseo de compra." },
+            { icon: "📊", text: "¿Qué porcentaje de ventas suele representar el Nivel de los Ojos?", options: ["Alrededor del 10%", "Alrededor del 25%", "Más del 50%", "El 100%"], correct: 2, explanation: "Más de la mitad de las compras decididas en el lineal ocurren en este nivel gracias a la percepción directa.", tip: "Si un producto no se vende, súbelo a los ojos. Las ventas pueden aumentar un 35% de forma instantánea." },
+            { icon: "👐", text: "¿Para qué tipo de productos es ideal el Nivel de las Manos (80-120cm)?", options: ["Productos pesados", "Productos de consumo diario y alta rotación", "Productos de máximo lujo", "Cajas vacías"], correct: 1, explanation: "Es el nivel de la 'comodidad física'. El cliente solo tiene que estirar el brazo. Ideal para productos de hábito.", tip: "Pon aquí productos que el cliente busca por hábito para agilizar su recorrido de compra." },
+            { icon: "⚖️", text: "Si un producto es voluminoso y de bajo precio, ¿dónde va?", options: ["Nivel de la Cabeza", "Nivel de los Ojos", "Nivel de las Manos", "Nivel del Suelo"], correct: 3, explanation: "El suelo es para productos que el cliente carga por su bajo precio o necesidad (agua, sacos de pienso).", tip: "Los productos pesados abajo evitan accidentes y dan sensación de abundancia en la tienda." },
+            { icon: "👀", text: "¿Qué es el 'Facing' mínimo recomendado para ser detectado?", options: ["1 unidad", "2 unidades", "3 unidades", "10 unidades"], correct: 2, explanation: "El cerebro humano necesita repetición visual. Menos de 3 caras de un producto suelen pasar desapercibidas.", tip: "Si tienes poco stock de un producto, júntalo todo en un solo bloque para simular un facing potente." },
+            { icon: "🔥", text: "¿Qué es una Zona Caliente en el punto de venta?", options: ["La sección de panadería", "Zonas de paso obligado como entrada y cajas", "Zonas oscuras del fondo", "El probador"], correct: 1, explanation: "Son las 'autopistas' de la tienda. El cliente fluye por ellas de forma natural. Minas de oro para impulsos.", tip: "Usa la línea de cajas para vender productos pequeños de alto margen como chicles o pilas." },
+            { icon: "➡️", text: "La 'Regla de la Derecha' indica que el cliente...", options: ["Gira a la izquierda siempre", "Busca siempre el lado derecho al entrar", "Solo compra a la derecha", "Entra por la derecha"], correct: 1, explanation: "Por inercia física, la mayoría tiende a girar hacia la derecha al entrar en un espacio desconocido.", tip: "Sitúa tu producto con más margen justo en esa primera zona de giro a la derecha." },
+            { icon: "🪝", text: "¿Qué es un producto 'Gancho'?", options: ["Un producto que se cuelga", "Un producto básico que atrae al fondo", "Un producto de regalo", "Un descuento falso"], correct: 1, explanation: "Productos como la leche o el pan se ponen al fondo para obligar al cliente a cruzar toda la tienda.", tip: "Al poner el pan al fondo, el cliente verá decenas de ofertas 'calientes' antes de llegar a lo que buscaba." },
+            { icon: "📏", text: "La implantación VERTICAL se caracteriza por...", options: ["Poner productos en el techo", "Ocupar todos los niveles con una marca", "Poner productos tumbados", "Usar solo el estante central"], correct: 1, explanation: "Crea un bloque visual de arriba a abajo. Es la más efectiva porque el cliente ve la marca a cualquier altura.", tip: "Usa la implantación vertical para dar imagen de orden y profesionalidad." },
+            { icon: "⚡", text: "¿Qué es la 'Venta por Impulso'?", options: ["Ventas que se hacen rápido", "Compras no planeadas decididas al ver el producto", "Devoluciones rápidas", "Ventas a presión"], correct: 1, explanation: "Ocurre cuando el cliente ve algo que no buscaba pero lo desea en ese momento (caprichos, snacks).", tip: "Los productos de impulso deben tener un precio bajo para que el cliente no tenga que 'pensar' la compra." },
+            { icon: "🗑️", text: "¿Para qué sirve un poco de desorden en cubetas de ofertas?", options: ["Mala imagen", "Sugerir que es una 'ganga' o liquidación", "Menos trabajo", "Para nada"], correct: 1, explanation: "Psicología de precios: un contenedor revuelto indica que el producto es muy barato y hay que 'rebuscar'.", tip: "No ordenes perfectamente las cestas de calcetines baratos; venderás menos." },
+            { icon: "🔗", text: "¿Qué es el Cross-Merchandising?", options: ["Vender productos de otro país", "Poner juntos productos que se complementan", "Vender cruzado", "Poner productos en cruz"], correct: 1, explanation: "Poner juntos productos que se complementan: patatas fritas junto a cervezas. Facilita la vida al cliente.", tip: "Si vendes pasta, pon el tomate frito justo al lado. Ticket medio garantizado." },
+            { icon: "👶", text: "¿Cuál es el nivel ideal para productos infantiles?", options: ["Nivel Cabeza", "Nivel Ojos Adultos", "Nivel Manos / Suelo (a su altura)", "En el almacén"], correct: 2, explanation: "Situar el producto a la altura de los ojos del niño (80-100cm) para que lo pida directamente.", tip: "Si el niño puede tocar el juguete, las probabilidades de que sus padres lo compren suben un 70%." },
+            { icon: "🔚", text: "¿Qué es una 'Cabecera de Góndola'?", options: ["El principio de la tienda", "Los extremos de los pasillos", "El techo", "Donde se sienta el jefe"], correct: 1, explanation: "Zonas de máxima visibilidad de un pasillo. Por ellas pasa todo el tráfico transversal.", tip: "Reserva las cabeceras para promociones temporales muy fuertes o lanzamientos." },
+            { icon: "💰", text: "El margen de beneficio se calcula como...", options: ["Precio Venta + Coste", "Precio Venta - Coste", "Precio Venta / 2", "Solo el IVA"], correct: 1, explanation: "Es el beneficio bruto por unidad. Si vendo por 10 y me costó 6, mi margen son 4 euros.", tip: "Un producto con poco margen debe compensarse con una rotación altísima." },
+            { icon: "🔄", text: "¿Qué es la 'Alta Rotación'?", options: ["Productos que giran", "Productos que se venden y reponen muy rápido", "Cambio de personal", "Productos que caducan"], correct: 1, explanation: "Productos básicos que 'vuelan' de los estantes. Motores de flujo de la tienda.", tip: "La alta rotación genera tráfico, pero el alto margen genera la riqueza real." },
+            { icon: "📦", text: "¿Qué significa el término 'Stock de Seguridad'?", options: ["Stock para evitar robos", "Cantidad mínima para evitar roturas", "Stock bajo llave", "Stock caro"], correct: 1, explanation: "Es el inventario extra para absorber fluctuaciones en la demanda o retrasos.", tip: "Calcula bien tu stock de seguridad para no perder ventas ni tener dinero inmovilizado." },
+            { icon: "🧊", text: "¿Qué es una 'Zona Fría' en retail?", options: ["Zona de congelados", "Espacios con poco flujo natural", "La entrada", "Oficinas"], correct: 1, explanation: "Zonas donde los clientes no circulan por inercia. Esquinas o pasillos sin salida.", tip: "Coloca un producto gancho en una zona fría para 'calentarla' y atraer tráfico." },
+            { icon: "🏷️", text: "¿Qué es el 'Pricing' psicológico de terminar en ,99?", options: ["Es obligatorio", "Percepción de que el precio es menor", "Fácil de cobrar", "Contar monedas"], correct: 1, explanation: "El cerebro procesa el primer dígito primero. 9,99€ se percibe más cerca de 9€ que de 10€.", tip: "Usa precios terminados en impar para ofertas y redondos para lujo." },
+            { icon: "🔈", text: "¿Cómo afecta el hilo musical rápido a las ventas?", options: ["Compran más", "Aumenta la velocidad de circulación", "Relaja", "No afecta"], correct: 1, explanation: "La música rápida aumenta el ritmo cardíaco y hace que el cliente se mueva más rápido.", tip: "Usa música lenta en horas valle para que el cliente pase más tiempo y gaste más." },
+            { icon: "🔦", text: "¿Qué tipo de luz resalta la frescura de la carne?", options: ["Luz azulada", "Luz con tonos rosados", "Luz blanca fría", "Luz verde"], correct: 1, explanation: "La luz rosada acentúa el color rojo de la carne haciéndola parecer más fresca.", tip: "Usa luz cálida para panadería y blanca potente para tecnología." },
+            { icon: "🛑", text: "¿Qué es un 'Stop-Client' o rompetráfico?", options: ["Guardia", "Elemento visual que sobresale del lineal", "Cartel prohibido", "Oferta falsa"], correct: 1, explanation: "Elemento perpendicular al lineal que obliga al ojo a detenerse mientras se camina.", tip: "No abuses de los stop-clients o crearás un ruido visual que el cliente ignorará." },
+            { icon: "📉", text: "¿Qué es la 'Merma' en un comercio?", options: ["Descuento", "Pérdida de valor o cantidad del stock", "Beneficio neto", "Sueldo"], correct: 1, explanation: "Diferencia entre stock teórico y real por hurtos, errores o deterioro.", tip: "Una merma superior al 2% puede destruir la rentabilidad de una sección." },
+            { icon: "💎", text: "El Merchandising de Gestión busca...", options: ["Tienda bonita", "Optimizar rotación y rentabilidad", "Contratar gente", "Publicidad"], correct: 1, explanation: "Se centra en los números: ventas por m2, gestión de stocks y márgenes.", tip: "Lo que no se mide, no se puede mejorar. Analiza semanalmente tu rentabilidad." },
+            { icon: "🧥", text: "¿Qué es el 'Visual Merchandising'?", options: ["Contar dinero", "Presentación estética de productos", "Vender ropa", "Limpiar"], correct: 1, explanation: "Arte de presentar el producto de forma que se venda solo a través de la vista.", tip: "Un maniquí con el look completo vende un 40% más que las prendas dobladas." },
+            { icon: "🏷️", text: "¿Qué es el etiquetado 'EAN'?", options: ["Un nombre", "Código de barras estándar", "Tipo de tela", "Precio"], correct: 1, explanation: "Permite la gestión automatizada del stock y el paso rápido por caja.", tip: "Un código de barras mal impreso ralentiza la caja y genera frustración." },
+            { icon: "🆙", text: "¿Qué es el 'Up-selling'?", options: ["Bajar precio", "Comprar versión superior o cara", "Vender arriba", "Vender techo"], correct: 1, explanation: "Ofrecer el modelo Pro al cliente que pregunta por el básico, destacando beneficios.", tip: "El up-selling funciona si el cliente percibe que el valor extra compensa el precio." },
+            { icon: "🚥", text: "¿Qué indican los 'Pasillos de Aspiración'?", options: ["Aspiradora", "Pasillos anchos que dirigen el flujo", "Con aire", "Salida"], correct: 1, explanation: "Arterias principales que permiten cruzar la tienda rápidamente y ver secciones.", tip: "Coloca las mejores promociones en los bordes de estos pasillos para máxima exposición." },
+            { icon: "🧮", text: "¿Qué es el 'Lineal'?", options: ["Regla", "Longitud de exposición en estantería", "Fila", "Líneas"], correct: 1, explanation: "Espacio físico asignado a una categoría o producto dentro de la tienda.", tip: "El lineal es el recurso más caro. Optimiza cada centímetro según rentabilidad." },
+            { icon: "📅", text: "¿Qué es la 'Estacionalidad'?", options: ["Cambiar estantes", "Variación según época del año", "Inventario", "Estaciones"], correct: 1, explanation: "Productos que solo se venden en fechas clave (turrones, bañadores).", tip: "Anticípate: el 30% del éxito es tener el stock antes de que empiece la temporada." }
         ];
+
+        let questions = [];
+        let score = 0;
+        let currentQuestionIdx = 0;
+        let timeLeft = 120;
+        let gameActive = false;
+        let phaserInstance = null;
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
 
         const config = {
             type: Phaser.AUTO,
@@ -144,46 +254,37 @@
             scale: {
                 mode: Phaser.Scale.FIT,
                 autoCenter: Phaser.Scale.CENTER_BOTH,
-                width: 1000,
-                height: 1400
+                width: 1200,
+                height: 700
             },
             transparent: true,
             scene: { preload, create, update }
         };
 
-        let score = 0;
-        let timeLeft = 90;
-        let gameActive = false;
-        let phaserInstance = null;
-
         function preload() {}
 
         function create() {
-            const shelfX = 650; 
-            const shelfWidth = 600;
-            
-            this.levels = [
-                { y: 300, name: 'CABEZA (>170cm)', color: 0x475569, id: 4, label: 'STOCK' },
-                { y: 550, name: 'OJOS (120-170cm)', color: 0x2563eb, id: 3, label: 'VENTA TOP' },
-                { y: 800, name: 'MANOS (80-120cm)', color: 0x6366f1, id: 2, label: 'COMODIDAD' },
-                { y: 1050, name: 'SUELO (<80cm)', color: 0x1e293b, id: 1, label: 'PESADOS' }
-            ];
+            phaserInstance = this;
+            const graphics = this.add.graphics();
+            graphics.lineStyle(1, 0x3b82f6, 0.05);
+            for(let i=0; i<30; i++) {
+                graphics.moveTo(i*40, 0); graphics.lineTo(i*40, 700);
+                graphics.moveTo(0, i*40); graphics.lineTo(1200, i*40);
+            }
+            graphics.strokePath();
 
-            this.levels.forEach(lvl => {
-                const rect = this.add.rectangle(shelfX, lvl.y, shelfWidth, 200, lvl.color, 0.1);
-                rect.setStrokeStyle(4, lvl.color, 0.3);
-                this.add.text(shelfX - 280, lvl.y - 80, lvl.name, { fontSize: '20px', fontWeight: '900', color: '#64748b' });
-                this.add.text(shelfX + 150, lvl.y - 80, lvl.label, { fontSize: '18px', fontWeight: 'black', color: lvl.color });
-            });
-
-            spawnProduct.call(this);
+            if (questions.length > 0) showQuestion.call(this);
 
             this.time.addEvent({
                 delay: 1000,
                 callback: () => {
                     if (gameActive && timeLeft > 0) {
                         timeLeft--;
-                        document.getElementById('timer-ui').innerText = timeLeft;
+                        const timerUi = document.getElementById('timer-ui');
+                        if(timerUi) {
+                            timerUi.innerText = timeLeft + 's';
+                            if(timeLeft < 20) timerUi.classList.add('text-red-500', 'animate-pulse');
+                        }
                         if (timeLeft <= 0) gameOver();
                     }
                 },
@@ -191,100 +292,122 @@
             });
         }
 
-        function spawnProduct() {
-            const pData = Phaser.Utils.Array.GetRandom(products);
-            const container = this.add.container(250, 700); 
+        function update() {}
+
+        function showQuestion() {
+            const q = questions[currentQuestionIdx];
+            if(this.qContainer) this.qContainer.destroy();
+
+            const container = this.add.container(600, 350);
+            this.qContainer = container;
+
+            // BLOQUE PREGUNTA - Estilo Slate/Blue
+            const qBox = this.add.rectangle(-280, 0, 480, 340, 0x1e293b, 0.95);
+            qBox.setStrokeStyle(2, 0x3b82f6, 0.5);
             
-            const bg = this.add.graphics();
-            bg.fillStyle(pData.color, 1);
-            bg.fillRoundedRect(-200, -120, 400, 240, 40); 
-            bg.lineStyle(10, 0xffffff, 0.4);
-            bg.strokeRoundedRect(-200, -120, 400, 240, 40);
-            
-            const hitArea = new Phaser.Geom.Rectangle(-200, -120, 400, 240);
-            bg.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
-            
-            const nameTxt = this.add.text(0, -40, pData.name, { 
-                fontSize: '48px', 
-                fontWeight: '900', 
-                color: pData.color === 0xffffff ? '#000' : '#fff',
-                fontFamily: 'Outfit'
+            const qIcon = this.add.text(-280, -110, q.icon, {
+                fontSize: '64px', fontFamily: 'serif'
             }).setOrigin(0.5);
-            
-            const info = this.add.text(0, 50, `PESO: ${pData.weight}\nMARGEN: ${pData.margin}`, { 
-                fontSize: '24px', 
-                fontWeight: 'bold', 
-                color: pData.color === 0xffffff ? '#333' : '#cbd5e1',
+
+            const qTxt = this.add.text(-280, 40, q.text, {
+                fontSize: '26px',
+                fontWeight: '900',
+                color: '#ffffff',
+                fontFamily: 'Outfit',
                 align: 'center',
-                lineSpacing: 10
+                wordWrap: { width: 400 },
+                lineSpacing: 8
             }).setOrigin(0.5);
-            
-            container.add([bg, nameTxt, info]);
-            this.input.setDraggable(bg);
 
-            bg.on('drag', (p, dragX, dragY) => { container.x = dragX; container.y = dragY; });
+            // BLOQUE OPCIONES
+            q.options.forEach((opt, idx) => {
+                const yPos = -120 + (idx * 80); 
+                
+                const btnBg = this.add.rectangle(210, yPos, 420, 68, 0x334155, 1);
+                btnBg.setStrokeStyle(1, 0x3b82f6, 0.3);
+                btnBg.setInteractive({ useHandCursor: true });
+                
+                const btnLetter = this.add.text(25, yPos, String.fromCharCode(65 + idx), {
+                    fontSize: '14px', fontWeight: '900', color: '#ffffff', fontFamily: 'Space Grotesk',
+                    backgroundColor: '#2563eb', padding: { x: 10, y: 10 }
+                }).setOrigin(0.5);
 
-            bg.on('dragend', () => {
-                let placed = false;
-                this.levels.forEach(lvl => {
-                    const dist = Math.abs(container.y - lvl.y);
-                    if (dist < 120 && container.x > 400) {
-                        handlePlacement(lvl.id === pData.ideal, pData);
-                        container.destroy();
-                        placed = true;
-                    }
+                const btnTxt = this.add.text(75, yPos, opt, {
+                    fontSize: '17px',
+                    fontWeight: '700',
+                    color: '#f1f5f9',
+                    fontFamily: 'Outfit',
+                    wordWrap: { width: 320 }
+                }).setOrigin(0, 0.5);
+
+                btnBg.on('pointerdown', () => {
+                    if(gameActive) handleAnswer.call(this, idx === q.correct);
                 });
-                if (!placed) this.tweens.add({ targets: container, x: 250, y: 700, duration: 500, ease: 'Back.easeOut' });
+
+                btnBg.on('pointerover', () => {
+                    btnBg.setFillStyle(0x2563eb, 1);
+                    btnBg.setStrokeStyle(2, 0xffffff, 0.5);
+                    this.tweens.add({ targets: btnBg, x: 220, duration: 150 });
+                });
+
+                btnBg.on('pointerout', () => {
+                    btnBg.setFillStyle(0x334155, 1);
+                    btnBg.setStrokeStyle(1, 0x3b82f6, 0.3);
+                    this.tweens.add({ targets: btnBg, x: 210, duration: 150 });
+                });
+
+                container.add([btnBg, btnLetter, btnTxt]);
             });
+
+            container.add([qBox, qIcon, qTxt]);
+            container.alpha = 0;
+            this.tweens.add({ targets: container, alpha: 1, duration: 300 });
+
+            document.getElementById('level-ui').innerText = `${currentQuestionIdx + 1}/10`;
         }
 
-        function handlePlacement(isCorrect, data) {
+        function handleAnswer(isCorrect) {
             gameActive = false;
-            score += isCorrect ? 100 : 25;
+            score += isCorrect ? 250 : 50;
             document.getElementById('score-ui').innerText = score + '€';
+            showFeedbackModal(isCorrect, questions[currentQuestionIdx]);
+        }
 
+        function showFeedbackModal(isCorrect, data) {
             const modal = document.getElementById('feedback-modal');
             const title = document.getElementById('modal-title');
             const header = document.getElementById('modal-header');
-            const status = document.getElementById('modal-status');
             const icon = document.getElementById('modal-icon');
 
             modal.style.display = 'flex';
-            status.innerText = 'ANÁLISIS DE LINEAL';
-            title.innerText = isCorrect ? '¡MOVIMIENTO PRO!' : 'FALLO TÉCNICO';
-            header.className = isCorrect ? 'p-6 md:p-8 text-white flex justify-between items-center bg-emerald-600 shrink-0' : 'p-6 md:p-8 text-white flex justify-between items-center bg-orange-500 shrink-0';
+            title.innerText = isCorrect ? '¡MOVIMIENTO ELITE!' : 'FALLO DE SISTEMA';
+            header.className = isCorrect ? 'p-6 text-white flex justify-between items-center bg-emerald-600 shrink-0' : 'p-6 text-white flex justify-between items-center bg-rose-600 shrink-0';
             
-            document.getElementById('modal-desc').innerHTML = isCorrect ? data.correct : data.wrong;
-            document.getElementById('modal-impact').innerHTML = '<strong>Lógica:</strong> ' + data.logic;
+            document.getElementById('modal-desc').innerHTML = data.explanation;
             document.getElementById('modal-tip').innerText = data.tip;
-            
-            icon.setAttribute('data-lucide', isCorrect ? 'check-circle' : 'alert-triangle');
+            icon.setAttribute('data-lucide', isCorrect ? 'shield-check' : 'alert-octagon');
             
             document.getElementById('feedback-body').classList.remove('hidden');
             document.getElementById('next-btn').classList.remove('hidden');
             document.getElementById('gameover-btns').classList.add('hidden');
-            
             lucide.createIcons();
         }
 
         window.closeModal = function() {
             document.getElementById('feedback-modal').style.display = 'none';
-            gameActive = true;
-            spawnProduct.call(phaserInstance.scene.scenes[0]);
+            currentQuestionIdx++;
+            if (currentQuestionIdx >= 10) gameOver(true);
+            else { gameActive = true; showQuestion.call(phaserInstance); }
         }
 
-        function gameOver() {
+        function gameOver(completed = false) {
             gameActive = false;
             const modal = document.getElementById('feedback-modal');
             const title = document.getElementById('modal-title');
             const header = document.getElementById('modal-header');
-            const status = document.getElementById('modal-status');
-            const icon = document.getElementById('modal-icon');
-
             modal.style.display = 'flex';
-            status.innerText = 'GESTIÓN FINALIZADA';
-            title.innerText = 'TIEMPO AGOTADO';
-            header.className = 'p-6 md:p-8 text-white flex justify-between items-center bg-slate-800 shrink-0';
+            title.innerText = completed ? 'AUDITORÍA FINALIZADA' : 'TIEMPO AGOTADO';
+            header.className = 'p-6 text-white flex justify-between items-center bg-indigo-900 shrink-0';
             
             document.getElementById('feedback-body').classList.add('hidden');
             document.getElementById('next-btn').classList.add('hidden');
@@ -293,26 +416,44 @@
             const body = document.getElementById('modal-content');
             const summary = document.createElement('div');
             summary.id = 'final-summary';
-            summary.className = 'text-center py-10';
-            summary.innerHTML = '
-                <div class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">Beneficio Total Generado</div>
-                <div class="text-6xl font-black text-white mb-4 italic">' + score + '€</div>
-                <p class="text-slate-400 text-sm italic">Has completado tu turno en el lineal.</p>
-            ';
+            summary.className = 'text-center py-10 rounded-[3rem] bg-slate-800 border-2 border-blue-500/20 shadow-2xl';
+            
+            const efficiency = Math.round((score / 2500) * 100);
+            summary.innerHTML = `
+                <div class="text-[10px] font-black text-blue-500 uppercase tracking-[0.5em] mb-4">TOTAL_PROFIT_GENERATED</div>
+                <div class="text-7xl font-black text-white mb-8 italic">${score}€</div>
+                <div class="inline-block px-8 py-3 bg-blue-600 rounded-2xl text-xs font-black uppercase tracking-widest text-white">Efficiency_Rating: ${efficiency}%</div>
+            `;
             
             const oldSummary = document.getElementById('final-summary');
             if(oldSummary) oldSummary.remove();
             body.prepend(summary);
-
-            icon.setAttribute('data-lucide', 'award');
             lucide.createIcons();
         }
 
         window.startGame = function() {
+            questions = shuffle([...allQuestions]).slice(0, 10);
+            currentQuestionIdx = 0;
+            score = 0;
+            timeLeft = 120;
+            gameActive = true;
+            
             document.getElementById('intro-screen').style.display = 'none';
             document.getElementById('game-ui').classList.remove('hidden');
-            phaserInstance = new Phaser.Game(config);
-            gameActive = true;
+            document.getElementById('score-ui').innerText = '0€';
+            document.getElementById('timer-ui').innerText = '120s';
+            document.getElementById('timer-ui').classList.remove('text-red-500', 'animate-pulse');
+            
+            if(!phaserInstance) {
+                new Phaser.Game(config);
+            } else {
+                showQuestion.call(phaserInstance);
+            }
+        }
+
+        window.restartGame = function() {
+            document.getElementById('feedback-modal').style.display = 'none';
+            startGame();
         }
 
         lucide.createIcons();
