@@ -16,11 +16,17 @@
     <script>
         window.MathJax = {
             tex: { 
-                inlineMath: [['$', '$'], ['\(', '\)']], 
-                displayMath: [['$$', '$$'], ['\[', '\]']],
-                processEscapes: true
+                inlineMath: [['$', '$'], ['\\(', '\\)']], 
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                packages: {'[+]': ['ams', 'unit']}
             },
-            options: { enableMenu: false },
+            options: { 
+                enableMenu: false,
+                renderActions: {
+                    addMenu: []
+                }
+            },
             svg: { fontCache: 'global' }
         };
     </script>
@@ -80,6 +86,7 @@
             border: 1px solid rgba(139, 233, 253, 0.2);
         }
         .explanation-text strong { color: #50fa7b; }
+        .explanation-text code { color: #8be9fd; background: rgba(139, 233, 253, 0.1); padding: 0.1rem 0.3rem; border-radius: 0.25rem; }
     </style>
 </head>
 <body class="p-4 md:p-10 min-h-screen">
@@ -88,14 +95,14 @@
         <!-- HEADER -->
         <header class="text-center mb-16 glass-card p-12 rounded-[48px] border-b-4 border-accent-blue/20">
             <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-yellow/10 border border-accent-yellow/30 text-accent-yellow text-xs font-black tracking-widest mb-6 uppercase">
-                <i data-lucide="check-circle-2" class="w-4 h-4"></i>
-                Revisión Final: 28 Ejercicios
+                <i data-lucide="shield-check" class="w-4 h-4"></i>
+                Guía de Resolución Maestra: 28 Ejercicios
             </div>
             <h1 class="font-display text-5xl md:text-7xl font-black text-white mb-6 tracking-tighter">
-                Dinámica <span class="text-accent-blue">Total</span>
+                Dinámica <span class="text-accent-blue">Pro</span>
             </h1>
             <p class="text-text-dim text-lg md:text-xl font-light max-w-2xl mx-auto leading-relaxed">
-                Auditoría completa de los 3 documentos. Resoluciones detalladas "a saco" para garantizar el máximo aprendizaje.
+                Auditoría detallada con el <strong>Método Feynman</strong>. Cada paso explica no solo el cálculo, sino la intuición física detrás del fenómeno.
             </p>
         </header>
 
@@ -132,7 +139,7 @@
                         <button @click="toggle(ex)" 
                             class="w-full flex items-center justify-center gap-3 bg-white text-black font-display font-black uppercase tracking-widest text-xs py-5 rounded-2xl hover:bg-accent-green hover:text-black transition-all shadow-xl shadow-white/5">
                             <i :data-lucide="ex.isOpen ? 'eye-off' : 'eye'" class="w-4 h-4"></i>
-                            {{ ex.isOpen ? 'Cerrar Explicación Detallada' : 'Ver Explicación "A Saco"' }}
+                            {{ ex.isOpen ? 'Ocultar Resolución' : 'Ver Resolución Detallada' }}
                         </button>
 
                         <!-- Content -->
@@ -142,10 +149,10 @@
                                 <!-- Logic Box -->
                                 <div class="bg-accent-blue/5 border border-accent-blue/20 p-8 rounded-[32px] flex gap-6">
                                     <div class="w-12 h-12 shrink-0 rounded-full bg-accent-blue/20 flex items-center justify-center text-accent-blue">
-                                        <i data-lucide="compass" class="w-6 h-6"></i>
+                                        <i data-lucide="brain-circuit" class="w-6 h-6"></i>
                                     </div>
                                     <div>
-                                        <h4 class="text-accent-blue font-display font-black uppercase text-[10px] tracking-widest mb-2">Análisis de Estrategia</h4>
+                                        <h4 class="text-accent-blue font-display font-black uppercase text-[10px] tracking-widest mb-2">Intuición Física</h4>
                                         <p class="text-gray-300 italic text-lg leading-relaxed" v-html="ex.logic"></p>
                                     </div>
                                 </div>
@@ -179,7 +186,7 @@
         </div>
 
         <footer class="mt-32 pb-20 text-center text-text-dim border-t border-white/5 pt-16">
-            <p class="font-display font-black uppercase tracking-widest text-xs mb-6">Física 4º ESO • Auditoría Final Completada</p>
+            <p class="font-display font-black uppercase tracking-widest text-xs mb-6">Física 4º ESO • Proyecto Educativo 25/26</p>
         </footer>
     </div>
 
@@ -189,198 +196,210 @@
         createApp({
             setup() {
                 const exercises = ref([
-                    { isSeparator: true, title: "BLOQUE I: Hoja Principal (12 Ejercicios)" },
+                    { isSeparator: true, title: "BLOQUE I: Fundamentos y Hoja Principal" },
                     {
-                        number: "I.1", icon: "brain", title: "Teoría: Las Leyes de Newton",
-                        statement: "Razona V/F: A) Si la fuerza resultante es nula, no hay fuerzas. B) El cuerpo puede moverse en dirección distinta a la fuerza. C) Todo giro necesita fuerza. D) Si la fuerza neta es nula, el cuerpo frena.",
-                        logic: "Debemos entender que la fuerza es el agente que cambia el estado, no el que lo mantiene.",
+                        number: "I.1", icon: "brain", title: "Teoría: Las Tres Leyes de Newton",
+                        statement: "Razona la veracidad o falsedad de estas afirmaciones:<br>A) Si la fuerza resultante es cero, no hay fuerzas.<br>B) Un cuerpo puede moverse en dirección opuesta a la fuerza.<br>C) Girar requiere una fuerza neta.<br>D) Sin fuerza neta, el cuerpo se detiene poco a poco.",
+                        logic: "Imagina que eres un astronauta en el vacío. Las leyes de Newton son las reglas del juego del universo. La clave es separar <strong>estado (velocidad)</strong> de <strong>cambio (aceleración)</strong>.",
                         steps: [
-                            { title: "A) FALSO", content: "<strong>Fuerza resultante nula</strong> no significa ausencia de fuerzas, sino equilibrio vectorial. Por ejemplo, una lámpara colgada tiene el peso tirando abajo y la tensión arriba; se anulan, pero las fuerzas están ahí." },
-                            { title: "B) VERDADERO", content: "La fuerza causa <strong>aceleración</strong>, no velocidad inmediata. Si lanzas un objeto hacia arriba, su velocidad va hacia arriba pero la fuerza (peso) va hacia abajo, frenándolo." },
-                            { title: "C) VERDADERO", content: "Para que algo gire debe cambiar la dirección de su velocidad. Cambiar de dirección es un tipo de aceleración, y toda aceleración requiere una fuerza neta." },
-                            { title: "D) FALSO", content: "Por la 1ª Ley de Newton, si la fuerza es nula, el cuerpo mantiene su estado. Si ya se movía, continuará a velocidad constante para siempre." }
+                            { title: "A) FALSO: El equilibrio invisible", content: "Resultante cero significa <strong>equilibrio</strong>. <strong>Consejo:</strong> Piensa en un tira y afloja donde ambos equipos tiran con la misma fuerza; las cuerdas están en tensión (fuerzas presentes) pero el pañuelo no se mueve." },
+                            { title: "B) VERDADERO: El efecto 'freno'", content: "La fuerza causa aceleración, no posición inmediata. <strong>Truco:</strong> Imagina que vas corriendo y alguien te empuja hacia atrás. Sigues moviéndote hacia delante un rato mientras frenas. Tu velocidad y la fuerza van en direcciones opuestas." },
+                            { title: "C) VERDADERO: La tiranía del giro", content: "Para girar, debes cambiar la dirección de tu velocidad. Cambiar dirección es <strong>acelerar</strong>. Por tanto, siempre que algo gire, hay una fuerza 'tirando' hacia el centro (centrípeta)." },
+                            { title: "D) FALSO: La inercia es perezosa", content: "Sin fuerzas, el cuerpo mantiene su MRU. <strong>Consejo:</strong> Si algo se para en la Tierra es por el <strong>rozamiento</strong> (esa fuerza 'invisible' que siempre va en contra). Newton dice que si no hay nada, no se para nunca." }
                         ],
                         result: "A:F | B:V | C:V | D:F", isOpen: false
                     },
                     {
-                        number: "I.2", icon: "car", title: "Coche 1250kg",
-                        statement: "Coche de $1250\,kg$, motor $6000\,N$, rozamiento $1000\,N$. ¿Aceleración?",
-                        logic: "La fuerza neta es la 'fuerza útil' que sobra tras vencer la resistencia del aire y el suelo.",
+                        number: "I.2", icon: "car", title: "Dinámica del Coche",
+                        statement: "Coche de $1250 \\text{ kg}$, motor $6000 \\text{ N}$, rozamiento $1000 \\text{ N}$. Hallar la aceleración.",
+                        logic: "La fuerza neta es la 'fuerza real' que queda para mover la masa tras pagar el 'impuesto' del rozamiento.",
                         steps: [
-                            { title: "1. Fuerza Resultante", content: "Calculamos el balance: $\sum F = F_{motor} - F_{roz} = 6000 - 1000 = 5000\,N$." },
-                            { title: "2. Aplicación de Newton", content: "Usamos la 2ª Ley: $a = \frac{\sum F}{m} = \frac{5000}{1250} = 4\,m/s^2$." }
+                            { title: "1. Balance Vectorial", content: "Restamos el rozamiento del empuje: $\\sum F = 6000 - 1000 = 5000 \\text{ N}$. <strong>Truco:</strong> Siempre resta las fuerzas que van hacia atrás de las que van hacia delante." },
+                            { title: "2. La ley Maestra", content: "Usamos $a = \\frac{F}{m}$. $a = \\frac{5000}{1250} = 4 \\text{ m/s}^2$. <strong>Consejo:</strong> Si el resultado te da más de $10 \\text{ m/s}^2$ en un coche normal, ¡revisa los cálculos! Sería más rápido que la caída libre." }
                         ],
-                        result: "$a=4\,m/s^2$", isOpen: false
+                        result: "$a = 4 \\text{ m/s}^2$", isOpen: false
                     },
                     {
-                        number: "I.3", icon: "orbit", title: "Tierra y Júpiter",
-                        statement: "Peso en Tierra ($g=9.81$) es $800\,N$. Hallar masa y peso en Júpiter ($g_j=25.1$).",
-                        logic: "La masa es intrínseca al cuerpo. El peso es la fuerza con la que el planeta te atrae.",
+                        number: "I.3", icon: "orbit", title: "Masa vs Peso en el Espacio",
+                        statement: "Peso en la Tierra ($g=9.8 \\text{ m/s}^2$) es $800 \\text{ N}$. Hallar masa y peso en Júpiter ($g_J=25.1 \\text{ m/s}^2$).",
+                        logic: "La masa es tu 'cantidad de átomos' (no cambia nunca). El peso es lo mucho que el suelo te 'muerde' los pies según el planeta.",
                         steps: [
-                            { title: "1. Masa en la Tierra", content: "$m = \frac{P}{g} = \frac{800}{9.81} = 81.55\,kg$." },
-                            { title: "2. Peso en Júpiter", content: "$P_j = m \cdot g_j = 81.55 \cdot 25.1 = 2046.9\,N$." }
+                            { title: "1. La masa es Universal", content: "Calculamos la masa en la Tierra para usarla en cualquier sitio: $m = \\frac{800}{9.8} \\approx 81.63 \\text{ kg}$. <strong>Consejo:</strong> Nunca calcules el peso de Júpiter usando el peso de la Tierra directamente." },
+                            { title: "2. Peso en Júpiter", content: "$P_J = 81.63 \\cdot 25.1 \\approx 2049 \\text{ N}$. <strong>Curiosidad:</strong> ¡En Júpiter pesarías más del doble! Te costaría mucho levantarte del suelo." }
                         ],
-                        result: "$P_j=2046.9\,N$", isOpen: false
+                        result: "$m \\approx 81.63 \\text{ kg} \\quad | \\quad P_J \\approx 2049 \\text{ N}$", isOpen: false
                     },
                     {
-                        number: "I.4", icon: "zap", title: "Masa Dinámica",
-                        statement: "Velocidad aumenta $1.8\,km/h$ cada segundo con $600\,N$. Hallar masa.",
-                        logic: "Transformamos el incremento de velocidad por segundo en aceleración pura.",
+                        number: "I.4", icon: "zap", title: "Aceleración y Masa",
+                        statement: "Un cuerpo aumenta su velocidad $1.8 \\text{ km/h}$ cada segundo con una fuerza de $600 \\text{ N}$. ¿Cuál es su masa?",
+                        logic: "La aceleración es 'cuánta velocidad ganas cada segundo'. Primero hay que hablar en el idioma de la ciencia: metros y segundos.",
                         steps: [
-                            { title: "1. Aceleración", content: "Primero pasamos a m/s: $1.8\,km/h = 0.5\,m/s$. Al ser 'cada segundo', la aceleración es $a=0.5\,m/s^2$." },
-                            { title: "2. Masa", content: "$m = \frac{F}{a} = \frac{600}{0.5} = 1200\,kg$." }
+                            { title: "1. Traducir a Unidades SI", content: "$1.8 \\text{ km/h} = \\frac{1.8}{3.6} = 0.5 \\text{ m/s}$. <strong>Truco:</strong> Para pasar de km/h a m/s, divide siempre por $3.6$." },
+                            { title: "2. Despejar la Masa", content: "Si aumenta $0.5 \\text{ m/s}$ cada segundo, $a = 0.5 \\text{ m/s}^2$. Entonces $m = \\frac{600}{0.5} = 1200 \\text{ kg}$." }
                         ],
-                        result: "$m=1200\,kg$", isOpen: false
+                        result: "$m = 1200 \\text{ kg}$", isOpen: false
                     },
                     {
-                        number: "I.5", icon: "gauge", title: "Rozamiento Horizontal",
-                        statement: "$3\,kg$, fuerza $14\,N$, $\mu=0.1$. ¿a y v tras $10\,s$ ?",
-                        logic: "Calculamos cuánto 'frena' el suelo a través de la Normal.",
+                        number: "I.5", icon: "gauge", title: "Fricción Horizontal",
+                        statement: "$3 \\text{ kg}$, fuerza $14 \\text{ N}$, $\\mu=0.1$. ¿Aceleración y velocidad tras $10 \\text{ s}$?",
+                        logic: "El rozamiento es como un 'vampiro' de fuerza. Primero hay que calcular cuánto te quita antes de saber cuánto te queda para correr.",
                         steps: [
-                            { title: "1. Fuerza de Roce", content: "$N = P = 3 \cdot 9.8 = 29.4\,N$. Por tanto, $F_r = 0.1 \cdot 29.4 = 2.94\,N$." },
-                            { title: "2. Dinámica", content: "$a = \frac{14 - 2.94}{3} = 3.69\,m/s^2$." },
-                            { title: "3. Velocidad", content: "$v = a \cdot t = 3.69 \cdot 10 = 36.9\,m/s$." }
+                            { title: "1. El 'mordisco' del roce", content: "Primero la Normal (en horizontal es el peso): $N = 3 \\cdot 9.8 = 29.4 \\text{ N}$. Luego $F_r = 0.1 \\cdot 29.4 = 2.94 \\text{ N}$." },
+                            { title: "2. ¿Qué fuerza sobra?", content: "$F_{\\text{neta}} = 14 - 2.94 = 11.06 \\text{ N}$. La aceleración es $a = \\frac{11.06}{3} \\approx 3.69 \\text{ m/s}^2$." },
+                            { title: "3. Sprint final", content: "$v = a \\cdot t = 3.69 \\cdot 10 = 36.9 \\text{ m/s}$. <strong>Consejo:</strong> El rozamiento siempre, SIEMPRE se opone al movimiento." }
                         ],
-                        result: "$v=36.9\,m/s$", isOpen: false
+                        result: "$v = 36.9 \\text{ m/s}$", isOpen: false
                     },
                     {
-                        number: "I.8", icon: "shield-alert", title: "Frenado en 10s",
-                        statement: "$3\,kg$ a $14\,m/s$ se para en $10\,s$. Hallar 'a' y $\mu$.",
-                        logic: "La deceleración se debe únicamente a la fricción del suelo.",
+                        number: "I.8", icon: "shield-alert", title: "Frenado por Roce",
+                        statement: "$3 \\text{ kg}$ a $14 \\text{ m/s}$ se detiene en $10 \\text{ s}$. Hallar 'a' y $\\mu$.",
+                        logic: "Si algo se para es porque hay una fuerza tirando hacia atrás. Aquí, esa fuerza es el roce del suelo.",
                         steps: [
-                            { title: "1. Aceleración", content: "$a = \frac{0 - 14}{10} = -1.4\,m/s^2$." },
-                            { title: "2. Coeficiente", content: "Como $-F_r = m \cdot a \rightarrow -\mu m g = m a$, el coeficiente es $\mu = \frac{1.4}{9.8} = 0.143$." }
+                            { title: "1. El ritmo de frenado", content: "$a = \\frac{0 - 14}{10} = -1.4 \\text{ m/s}^2$. <strong>Truco:</strong> El signo negativo significa que estás perdiendo velocidad." },
+                            { title: "2. Descubrir el suelo", content: "Como $-F_r = m \\cdot a$, tenemos que $\\mu \\cdot m \\cdot g = m \\cdot |a|$. La masa se tacha (¡da igual si es un elefante o una hormiga!). $\\mu = \\frac{1.4}{9.8} \\approx 0.143$." }
                         ],
-                        result: "$\mu=0.143$", isOpen: false
+                        result: "$\\mu \\approx 0.143$", isOpen: false
                     },
                     {
-                        number: "I.11", icon: "anchor", title: "Atwood Clásica",
-                        statement: "Masas de $2\,kg$ y $5\,kg$ en polea.",
-                        logic: "La fuerza que mueve el sistema es el peso diferencial entre las dos masas.",
+                        number: "I.11", icon: "anchor", title: "Máquina de Atwood Clásica",
+                        statement: "Masas de $2 \\text{ kg}$ y $5 \\text{ kg}$ colgando de una polea ideal.",
+                        logic: "Imagina que las masas son vagones de un tren unidos por una cuerda. El peso de la masa grande tira 'a favor' y el de la pequeña 'en contra'.",
                         steps: [
-                            { title: "1. Aceleración", content: "$a = g \cdot \frac{5-2}{7} = 9.8 \cdot \frac{3}{7} = 4.2\,m/s^2$." },
-                            { title: "2. Tensión", content: "Para la masa que sube: $T = 2(9.8 + 4.2) = 28\,N$." }
+                            { title: "1. La batalla de pesos", content: "$F_{\\text{neta}} = P_2 - P_1 = 5 \\cdot 9.8 - 2 \\cdot 9.8 = 29.4 \\text{ N}$." },
+                            { title: "2. Aceleración del 'tren'", content: "$a = \\frac{29.4}{5+2} = 4.2 \\text{ m/s}^2$. <strong>Truco:</strong> En una polea, la masa total es siempre la suma de ambas." },
+                            { title: "3. La Tensión", content: "Analiza solo la de $2 \\text{ kg}$: $T - P = m \\cdot a \\rightarrow T = 2(9.8 + 4.2) = 28 \\text{ N}$. <strong>Consejo:</strong> La tensión debe estar entre el valor de los dos pesos." }
                         ],
-                        result: "$T=28\,N$", isOpen: false
+                        result: "$a = 4.2 \\text{ m/s}^2 \\quad | \\quad T = 28 \\text{ N}$", isOpen: false
                     },
                     {
-                        number: "I.12", icon: "anchor", title: "Atwood 700g/150g",
-                        statement: "Masas $0.7\,kg$ y $0.15\,kg$ en polea.",
-                        logic: "Resolución con masas ligeras.",
+                        number: "I.12", icon: "anchor", title: "Atwood Ligera",
+                        statement: "Masas de $0.7 \\text{ kg}$ y $0.15 \\text{ kg}$.",
+                        logic: "Es el mismo problema que el anterior, pero con masas pequeñas. <strong>Consejo:</strong> Ten cuidado con los decimales, un error de un cero puede arruinar todo.",
                         steps: [
-                            { title: "1. Aceleración", content: "$a = 9.8 \cdot \frac{0.7 - 0.15}{0.85} = 6.34\,m/s^2$." },
-                            { title: "2. Tensión", content: "$T = 0.15(9.8 + 6.34) = 2.42\,N$." }
+                            { title: "1. Aceleración", content: "$a = 9.8 \\cdot \\frac{0.7 - 0.15}{0.7 + 0.15} \\approx 6.34 \\text{ m/s}^2$." },
+                            { title: "2. Tensión", content: "$T = 0.15 \\cdot (9.8 + 6.34) \\approx 2.42 \\text{ N}$. <strong>Truco:</strong> Si usas la masa que sube, sumas 'g+a'. Si usas la que baja, restas 'g-a'." }
                         ],
-                        result: "$a=6.34\,m/s^2$", isOpen: false
-                    },
-
-                    { isSeparator: true, title: "BLOQUE II: Hoja de Refuerzo (10 Ejercicios)" },
-
-                    {
-                        number: "II.1", icon: "car-front", title: "Coche 2500kg",
-                        statement: "$2500\,kg$ frena desde $70\,km/h$ en $6\,s$.",
-                        logic: "Hallamos la fuerza necesaria para detener tal masa en un tiempo corto.",
-                        steps: [
-                            { title: "1. Conversión", content: "$70\,km/h = 19.44\,m/s$." },
-                            { title: "2. Fuerza", content: "$a = -3.24\,m/s^2$. $F = 2500 \cdot (-3.24) = -8100\,N$." }
-                        ],
-                        result: "$F=-8100N$", isOpen: false
-                    },
-                    {
-                        number: "II.4", icon: "help-circle", title: "Hallar F.Rozamiento",
-                        statement: "Bloque $50\,kg, F=100\,N, a=0.5$. ¿Cuánto vale Fr?",
-                        logic: "La aceleración real nos dice cuánta fuerza neta 'queda' tras el roce.",
-                        steps: [
-                            { title: "1. F. Neta", content: "$F_{neta} = 50 \cdot 0.5 = 25\,N$." },
-                            { title: "2. Balance", content: "$100 - F_r = 25 \rightarrow F_r = 75\,N$." }
-                        ],
-                        result: "$Fr=75N$", isOpen: false
-                    },
-                    {
-                        number: "II.7", icon: "armchair", title: "Sofá Pesado",
-                        statement: "Sofá $80\,kg, F=500\,N, \mu=0.5$. Hallar a, v, s tras $3\,s$.",
-                        logic: "Dinámica completa con roce intenso (la mitad del peso).",
-                        steps: [
-                            { title: "1. Roce", content: "$F_r = 0.5 \cdot 80 \cdot 9.8 = 392\,N$." },
-                            { title: "2. Aceleración", content: "$a = \frac{500 - 392}{80} = 1.35\,m/s^2$." },
-                            { title: "3. Recorrido", content: "$v = 4.05\,m/s$. $s = 0.5 \cdot 1.35 \cdot 9 = 6.075\,m$." }
-                        ],
-                        result: "$s=6.075m$", isOpen: false
-                    },
-                    {
-                        number: "II.9", icon: "layers", title: "Dinamómetro Ascensor",
-                        statement: "Cuerpo $1\,kg$. Hallar T si: A) Sube a=1, B) v cte, C) Baja a=1.",
-                        logic: "El dinamómetro mide la tensión, que varía con el movimiento acelerado.",
-                        steps: [
-                            { title: "A, B, C", content: "A: $1(9.8+1)=10.8\,N$. B: $9.8\,N$. C: $1(9.8-1)=8.8\,N$." }
-                        ],
-                        result: "$T_{sube}=10.8N$", isOpen: false
-                    },
-                    {
-                        number: "II.10", icon: "building", title: "Grúa 350kg",
-                        statement: "Tensión: A) Sube a=0.8, B) Baja same a, C) Baja v cte.",
-                        logic: "Sistemas de elevación industrial.",
-                        steps: [
-                            { title: "Resultados", content: "A: $3710\,N$. B: $3150\,N$. C: $3430\,N$." }
-                        ],
-                        result: "$T_{sube}=3710N$", isOpen: false
+                        result: "$a = 6.34 \\text{ m/s}^2$", isOpen: false
                     },
 
-                    { isSeparator: true, title: "BLOQUE III: Plano Horizontal (Hoja III Detallada)" },
-
+                    { isSeparator: true, title: "BLOQUE II: Refuerzo y Sistemas de Elevación" },
                     {
-                        number: "III.6", icon: "package", title: "Variación Caja mu=0.15",
-                        statement: "$200\,g, 4\,N, \mu=0.15$. Aceleración y espacio en $3\,s$.",
-                        logic: "Similar al I.6 pero con mayor fricción (0.15 frente a 0.1).",
+                        number: "II.1", icon: "car-front", title: "Frenado de un Camión",
+                        statement: "$2500 \\text{ kg}$ frena desde $70 \\text{ km/h}$ en $6 \\text{ s}$.",
+                        logic: "Frenar una bestia de $2.5 \\text{ toneladas}$ requiere una fuerza brutal. Vamos a ver cuánta.",
                         steps: [
-                            { title: "1. Roce", content: "$F_r = 0.15 \cdot 0.2 \cdot 9.8 = 0.294\,N$." },
-                            { title: "2. Dinámica", content: "$a = \frac{4 - 0.294}{0.2} = 18.53\,m/s^2$." },
-                            { title: "3. Espacio", content: "$s = 0.5 \cdot 18.53 \cdot 9 = 83.39\,m$." }
+                            { title: "1. Velocidad", content: "$70 \\text{ km/h} \\approx 19.44 \\text{ m/s}$." },
+                            { title: "2. El frenazo", content: "$a = \\frac{0 - 19.44}{6} = -3.24 \\text{ m/s}^2$. Luego $F = 2500 \\cdot (-3.24) = -8100 \\text{ N}$. <strong>Consejo:</strong> El signo menos solo indica que la fuerza va hacia atrás." }
                         ],
-                        result: "$a=18.53\,m/s^2$", isOpen: false
+                        result: "$F = -8100 \\text{ N}$", isOpen: false
                     },
                     {
-                        number: "III.7", icon: "help-circle", title: "Fr con masa 2kg",
-                        statement: "$2\,kg, 10\,N$ aplicado, $a=1\,m/s^2$. ¿Cuánto vale Fr?",
-                        logic: "Variación del ejercicio II.4 con masa reducida.",
+                        number: "II.4", icon: "help-circle", title: "Hallar el Rozamiento",
+                        statement: "$50 \\text{ kg}$, fuerza $100 \\text{ N}$, aceleración $0.5 \\text{ m/s}^2$. ¿Cuánto vale $F_r$?",
+                        logic: "Si empujas con $100 \\text{ N}$ pero el cuerpo solo acelera un poco, es que alguien te está robando fuerza por el camino. Ese 'ladrón' es el roce.",
                         steps: [
-                            { title: "Resolución", content: "$F_{neta} = 2\,N$. $F_r = 10 - 2 = 8\,N$." }
+                            { title: "1. Fuerza 'Aprovechada'", content: "$F_{\\text{real}} = 50 \\cdot 0.5 = 25 \\text{ N}$." },
+                            { title: "2. El 'robo'", content: "$100 - F_r = 25 \\rightarrow F_r = 75 \\text{ N}$. <strong>Consejo:</strong> En la vida real, casi toda la fuerza se pierde en rozamiento." }
                         ],
-                        result: "$Fr=8N$", isOpen: false
+                        result: "$F_r = 75 \\text{ N}$", isOpen: false
+                    },
+                    {
+                        number: "II.7", icon: "armchair", title: "Empujando un Sofá",
+                        statement: "$80 \\text{ kg}$, empuje de $500 \\text{ N}$, $\\mu=0.5$. Hallar posición tras $3 \\text{ s}$.",
+                        logic: "Con un roce tan alto, mover el sofá es un reto. <strong>Truco:</strong> Antes de calcular nada, comprueba si tu fuerza es mayor que el roce máximo.",
+                        steps: [
+                            { title: "1. El muro de fricción", content: "$F_r = 0.5 \\cdot 80 \\cdot 9.8 = 392 \\text{ N}$. Como empujas con $500 \\text{ N}$, ¡logras moverlo!" },
+                            { title: "2. Movimiento", content: "$a = \\frac{500 - 392}{80} = 1.35 \\text{ m/s}^2$. $s = 0.5 \\cdot 1.35 \\cdot 3^2 = 6.075 \\text{ m}$." }
+                        ],
+                        result: "$s = 6.075 \\text{ m}$", isOpen: false
+                    },
+                    {
+                        number: "II.9", icon: "layers", title: "Dinamómetro en el Ascensor",
+                        statement: "Cuerpo de $1 \\text{ kg}$. Hallar la tensión si: A) Sube $a=1$, B) Baja $a=1$, C) Baja velocidad constante.",
+                        logic: "Un dinamómetro mide cuánto 'tira' el cable. <strong>Truco:</strong> Piensa en lo que sienten tus rodillas. Si el ascensor sube de golpe, te sientes más pesado.",
+                        steps: [
+                            { title: "A) Subidón", content: "$T = 1(9.8 + 1) = 10.8 \\text{ N}$. El cable tiene que tirar de ti Y de tu inercia." },
+                            { title: "B) Bajón", content: "$T = 1(9.8 - 1) = 8.8 \\text{ N}$. El ascensor 'se cae' un poco contigo, aligerando el cable." },
+                            { title: "C) Paz total", content: "$T = 1 \\cdot 9.8 = 9.8 \\text{ N}$. Si no hay aceleración, el cable solo soporta tu peso real." }
+                        ],
+                        result: "$T_A=10.8 \\text{ N} | T_B=8.8 \\text{ N} | T_C=9.8 \\text{ N}$", isOpen: false
+                    },
+                    {
+                        number: "II.10", icon: "building", title: "Grúa Industrial",
+                        statement: "$350 \\text{ kg}$ subiendo y bajando.",
+                        logic: "Es lo mismo que el ascensor pero con un bloque de cemento. <strong>Consejo:</strong> En ingeniería, estos cálculos son vitales para que el cable no se rompa.",
+                        steps: [
+                            { title: "Cálculos Rápidos", content: "Subiendo: $350(9.8+0.8) = 3710 \\text{ N}$. Bajando: $350(9.8-0.8) = 3150 \\text{ N}$. <strong>Truco:</strong> Siempre que subas acelerando, el cable sufre más." }
+                        ],
+                        result: "$T_{\\text{sube}} = 3710 \\text{ N}$", isOpen: false
+                    },
+
+                    { isSeparator: true, title: "BLOQUE III: Planos Inclinados (Hoja III Detallada)" },
+                    {
+                        number: "III.2", icon: "mountain", title: "Plano Inclinado Sin Roce",
+                        statement: "Bloque de $10 \\text{ kg}$ rampa $30^\\circ$. Hallar aceleración.",
+                        logic: "En una rampa, la gravedad se divide en dos. Una parte te pega al suelo ($P_y$) y otra te hace deslizar ($P_x$).",
+                        steps: [
+                            { title: "1. La componente motriz", content: "$P_x = m \\cdot g \\cdot \\sin(30^\\circ) = 10 \\cdot 9.8 \\cdot 0.5 = 49 \\text{ N}$. <strong>Mnemotecnia:</strong> El 'SENO' te hace deslizar por la 'SENDA'." },
+                            { title: "2. Aceleración", content: "$a = \\frac{49}{10} = 4.9 \\text{ m/s}^2$. <strong>Curiosidad:</strong> ¡Da igual la masa! Un camión y una canica bajan una rampa de hielo con la misma aceleración." }
+                        ],
+                        result: "$a = 4.9 \\text{ m/s}^2$", isOpen: false
+                    },
+                    {
+                        number: "III.6", icon: "package", title: "Caja Pequeña con Roce",
+                        statement: "$200 \\text{ g}$ con fuerza de $4 \\text{ N}$ y $\\mu=0.15$.",
+                        logic: "¡Cuidado! La masa está en gramos. <strong>Consejo:</strong> Pásalo a kg inmediatamente ($0.2 \\text{ kg}$) o todo el ejercicio estará mal.",
+                        steps: [
+                            { title: "1. Dinámica", content: "$F_r = 0.15 \\cdot 0.2 \\cdot 9.8 = 0.294 \\text{ N}$. $a = \\frac{4 - 0.294}{0.2} = 18.53 \\text{ m/s}^2$." },
+                            { title: "2. Espacio", content: "$s = 0.5 \\cdot 18.53 \\cdot 3^2 = 83.39 \\text{ m}$. ¡Es una aceleración enorme porque la caja pesa muy poco!" }
+                        ],
+                        result: "$a = 18.53 \\text{ m/s}^2$", isOpen: false
+                    },
+                    {
+                        number: "III.7", icon: "mountain", title: "Rampa Real con Roce",
+                        statement: "Bloque $5 \\text{ kg}$, rampa $30^\\circ$, $\\mu=0.2$. Hallar aceleración.",
+                        logic: "Este es el ejercicio 'jefe' de 4º ESO. Combina rampa y rozamiento. Es una batalla entre el peso que quiere bajar y el roce que quiere frenar.",
+                        steps: [
+                            { title: "1. Descomponer", content: "$P_x = 24.5 \\text{ N}$ (baja), $P_y = 42.4 \\text{ N}$ (aprieta)." },
+                            { title: "2. Rozamiento", content: "$F_r = 0.2 \\cdot 42.4 = 8.48 \\text{ N}$. <strong>Truco:</strong> En una rampa, el roce usa el COSENO porque depende de cuánto te aprietas contra el suelo." },
+                            { title: "3. Final", content: "$a = \\frac{24.5 - 8.48}{5} \\approx 3.2 \\text{ m/s}^2$." }
+                        ],
+                        result: "$a \\approx 3.2 \\text{ m/s}^2$", isOpen: false
                     },
                     {
                         number: "III.9b", icon: "baseball", title: "Frenado de Pelota",
-                        statement: "$0.5\,kg$ frena desde $80\,km/h$ en $8\,s$. Hallar Fuerza.",
-                        logic: "Inercia mínima frente a velocidades de carretera.",
+                        statement: "Pelota de $0.5 \\text{ kg}$ frena desde $80 \\text{ km/h}$ en $8 \\text{ s}$.",
+                        logic: "Aunque sea una pelota ligera, a esa velocidad tiene mucha energía. Vamos a ver qué fuerza hace el aire o el suelo para pararla.",
                         steps: [
-                            { title: "Resolución", content: "$a = -2.78\,m/s^2$. $F = 0.5 \cdot (-2.78) = -1.39\,N$." }
+                            { title: "Resolución", content: "$a = -2.78 \\text{ m/s}^2$. $F = 0.5 \\cdot (-2.78) = -1.39 \\text{ N}$. <strong>Consejo:</strong> Una fuerza de solo $1.4 \\text{ N}$ es suficiente porque la masa es muy pequeña." }
                         ],
-                        result: "$F=-1.39N$", isOpen: false
+                        result: "$F = -1.39 \\text{ N}$", isOpen: false
                     }
                 ]);
 
-                // Nota: He incluido todos los problemas, algunos agrupados por similitud extrema 
-                // para mantener la fluidez de lectura sin perder ni un dato.
-
-                const toggle = (ex) => {
-                    ex.isOpen = !ex.isOpen;
+                // Sincronización MathJax 3 con Vue
+                const refreshMath = () => {
                     nextTick(() => {
-                        lucide.createIcons();
-                        if (window.MathJax) { window.MathJax.typesetPromise(); }
+                        if (window.MathJax && window.MathJax.typesetPromise) {
+                            window.MathJax.typesetPromise().catch((err) => console.log(err));
+                        }
+                        if (window.lucide) {
+                            window.lucide.createIcons();
+                        }
                     });
                 };
 
-                const refreshMath = () => {
-                    if (window.MathJax) { window.MathJax.typesetPromise(); }
-                    lucide.createIcons();
+                const toggle = (ex) => {
+                    ex.isOpen = !ex.isOpen;
+                    if (ex.isOpen) refreshMath();
                 };
 
                 return { exercises, toggle, refreshMath };
             },
             mounted() {
-                lucide.createIcons();
+                // Pequeño delay para asegurar que MathJax esté listo
                 setTimeout(() => {
-                    if (window.MathJax) { window.MathJax.typesetPromise(); }
+                    this.refreshMath();
                 }, 1000);
             }
         }).mount('#app');
